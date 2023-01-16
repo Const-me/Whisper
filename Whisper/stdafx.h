@@ -26,6 +26,7 @@
 #define BUILD_BOTH_VERSIONS 0
 
 // Build hybrid model which uses DirectCompute only for the encode step of the algorithm, and decodes on CPU, using AVX SIMD and the Windows' built-in thread pool.
+// Disabled because on all computers I have in this house that hybrid model performed worse than D3D11 GPGPU model
 #define BUILD_HYBRID_VERSION 0
 
 // Enable debug traces. Should be disabled in production, the feature comes with a huge performance overhead.
