@@ -49,6 +49,7 @@ namespace
 		{
 #define V(x) case eCpuBlock::x: return #x
 			V( LoadModel );
+			V( RunComplete );
 			V( Run );
 			V( Callbacks );
 			V( Spectrogram );

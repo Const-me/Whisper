@@ -15,6 +15,7 @@ ContextImpl::ContextImpl( const WhisperModel& modelData, iModel* modelPointer ) 
 
 HRESULT ContextImpl::encode( iSpectrogram& mel, int seek )
 {
+	auto prof = profiler.cpuBlock( eCpuBlock::Encode );
 	// whisper_encode
 	using namespace DirectCompute;
 
@@ -254,6 +255,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 
 	// main loop
 	int seek = seek_start;
+	// Start measuring "Run" profiler value, both CPU and GPU times
 	auto prof = context.completeProfiler();
 	while( true )
 	{
@@ -262,23 +264,16 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 			const int pos = seek - seek_start;
 			const int total = seek_end - seek_start;
 			const double percentage = (double)pos / (double)total;
+			auto cb = profiler.cpuBlock( eCpuBlock::Callbacks );
 			CHECK( progress.pfn( percentage, this, progress.pv ) );
 		}
-		/*
-		const int progress_cur = ( 100 * ( seek - seek_start ) ) / ( seek_end - seek_start );
-		while( progress_cur >= progress_prev + progress_step )
-		{
-			progress_prev += progress_step;
-			if( params.flag( eFullParamsFlags::PrintProgress ) )
-				logInfo( u8"%s: progress = %3d%%", __func__, progress_prev );
-		}
-		*/
 
 		if( seek + 100 >= seek_end )
 			break;
 
 		if( nullptr != params.encoder_begin_callback )
 		{
+			auto cb = profiler.cpuBlock( eCpuBlock::Callbacks );
 			HRESULT hr = params.encoder_begin_callback( this, params.encoder_begin_callback_user_data );
 			if( FAILED( hr ) )
 				return hr;
@@ -323,6 +318,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 		bool has_ts = false; // have we already sampled a non-beg timestamp token for the current segment?
 
 		{
+			// Measure "Decode" profiler value, both CPU and GPU times
 			auto prof = context.decodeProfiler();
 			for( int i = 0, n_max = model.parameters.n_text_ctx / 2 - 4; i < n_max; i++ )
 			{
@@ -402,7 +398,6 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 				}
 			}
 		}
-
 		if( failed )
 		{
 			logError( u8"%s: failed to generate timestamp token - skipping one second", __func__ );
@@ -443,12 +438,9 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 						if( params.flag( eFullParamsFlags::PrintRealtime ) )
 						{
 							if( params.flag( eFullParamsFlags::PrintTimestamps ) )
-								printf( "[%s --> %s]  %s\n", to_timestamp( tt0 ).c_str(), to_timestamp( tt1 ).c_str(), text.c_str() );
+								logDebug( u8"[%s --> %s]  %s", to_timestamp( tt0 ).c_str(), to_timestamp( tt1 ).c_str(), text.c_str() );
 							else
-							{
-								printf( "%s", text.c_str() );
-								fflush( stdout );
-							}
+								logDebug( u8"%s", text.c_str() );
 						}
 
 						result_all.push_back( { tt0, tt1, text, {} } );
@@ -465,6 +457,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 						}
 						if( nullptr != params.new_segment_callback )
 						{
+							auto cb = profiler.cpuBlock( eCpuBlock::Callbacks );
 							HRESULT hr = params.new_segment_callback( this, n_new, params.new_segment_callback_user_data );
 							if( FAILED( hr ) )
 								return hr;
@@ -490,12 +483,9 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 				if( params.flag( eFullParamsFlags::PrintRealtime ) )
 				{
 					if( params.flag( eFullParamsFlags::PrintTimestamps ) )
-						printf( "[%s --> %s]  %s\n", to_timestamp( tt0 ).c_str(), to_timestamp( tt1 ).c_str(), text.c_str() );
+						logDebug( u8"[%s --> %s]  %s", to_timestamp( tt0 ).c_str(), to_timestamp( tt1 ).c_str(), text.c_str() );
 					else
-					{
-						printf( "%s", text.c_str() );
-						fflush( stdout );
-					}
+						logDebug( u8"%s", text.c_str() );
 				}
 
 				result_all.push_back( { tt0, tt1, text, {} } );
@@ -511,6 +501,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 				}
 				if( nullptr != params.new_segment_callback )
 				{
+					auto cb = profiler.cpuBlock( eCpuBlock::Callbacks );
 					HRESULT hr = params.new_segment_callback( this, n_new, params.new_segment_callback_user_data );
 					if( FAILED( hr ) )
 						return hr;
@@ -522,6 +513,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 
 	if( nullptr != progress.pfn )
 	{
+		auto cb = profiler.cpuBlock( eCpuBlock::Callbacks );
 		CHECK( progress.pfn( 1.0, this, progress.pv ) );
 	}
 	return S_OK;

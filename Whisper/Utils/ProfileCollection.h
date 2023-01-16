@@ -15,6 +15,7 @@ namespace Whisper
 	enum struct eCpuBlock : uint8_t
 	{
 		LoadModel,
+		RunComplete,
 		Run,
 		Callbacks,
 		Spectrogram,

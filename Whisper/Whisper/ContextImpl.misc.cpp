@@ -348,7 +348,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFull( const sFullParams& params, const iAud
 #endif
 	CHECK( buffer->getTime( mediaTimeOffset ) );
 
-	auto profCompleteCpu = profiler.cpuBlock( eCpuBlock::Run );
+	auto profCompleteCpu = profiler.cpuBlock( eCpuBlock::RunComplete );
 	{
 		auto p = profiler.cpuBlock( eCpuBlock::Spectrogram );
 		CHECK( spectrogram.pcmToMel( buffer, model.filters, params.cpuThreads ) );
@@ -382,7 +382,7 @@ HRESULT COMLIGHTCALL ContextImpl::runStreamed( const sFullParams& params, const 
 	}
 
 	mediaTimeOffset = 0;
-	auto profCompleteCpu = profiler.cpuBlock( eCpuBlock::Run );
+	auto profCompleteCpu = profiler.cpuBlock( eCpuBlock::RunComplete );
 
 	CComPtr<IMFSourceReader> mfReader;
 	CHECK( reader->getReader( &mfReader ) );

@@ -404,6 +404,7 @@ HRESULT COMLIGHTCALL ContextImpl::runCapture( const sFullParams& params, const s
 		}
 	}
 
+	auto profCompleteCpu = profiler.cpuBlock( eCpuBlock::RunComplete );
 	Capture capture{ callbacks, reader, params, this, profiler };
 	CHECK( capture.startup( reader ) );
 
