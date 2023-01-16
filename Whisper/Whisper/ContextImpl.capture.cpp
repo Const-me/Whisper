@@ -209,6 +209,7 @@ namespace
 		return S_OK;
 	}
 
+	// This method is called in a loop until user stops the audio capture
 	HRESULT Capture::run()
 	{
 		HRESULT hr;
