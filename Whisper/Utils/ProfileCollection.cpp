@@ -50,9 +50,11 @@ namespace
 #define V(x) case eCpuBlock::x: return #x
 			V( LoadModel );
 			V( Run );
+			V( Callbacks );
 			V( Spectrogram );
 			V( Sample );
 			V( VAD );
+			V( Encode );
 			V( Decode );
 			V( DecodeStep );
 			V( DecodeLayer );

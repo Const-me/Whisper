@@ -16,9 +16,11 @@ namespace Whisper
 	{
 		LoadModel,
 		Run,
+		Callbacks,
 		Spectrogram,
 		Sample,
 		VAD,
+		Encode,
 		Decode,
 		DecodeStep,
 		DecodeLayer,
@@ -62,17 +64,27 @@ namespace Whisper
 
 		class CpuRaii
 		{
-			Measure& dest;
+			Measure* dest;
 			const int64_t tsc;
 
 		public:
-			CpuRaii( Measure& m ) : dest( m ), tsc( tscNow() )
+			CpuRaii( Measure& m ) : dest( &m ), tsc( tscNow() )
 			{ }
+			CpuRaii( const CpuRaii& ) = delete;
+			CpuRaii( CpuRaii&& that ) noexcept :
+				tsc( that.tsc )
+			{
+				dest = that.dest;
+				that.dest = nullptr;
+			}
 
 			~CpuRaii()
 			{
-				const int64_t elapsed = tscNow() - tsc;
-				dest.add( ticksFromTsc( elapsed ) );
+				if( nullptr != dest )
+				{
+					const int64_t elapsed = tscNow() - tsc;
+					dest->add( ticksFromTsc( elapsed ) );
+				}
 			}
 		};
 
