@@ -44,10 +44,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Whisper\Source\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(SolutionDir)Whisper\Source\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Whisper\Source\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(SolutionDir)Whisper\Source\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -83,17 +83,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Whisper\source.compat\ggmlMsvc.c" />
     <ClCompile Include="..\..\Whisper\source\ggml.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\Whisper\source\ggmlMsvc.c" />
     <ClCompile Include="..\..\Whisper\source\whisper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Utils\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Whisper\source\ggml.h" />
     <ClInclude Include="..\..\Whisper\source\whisper.h" />
     <ClInclude Include="dr_wav.h" />
+    <ClInclude Include="Utils\Logger.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

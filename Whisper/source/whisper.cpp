@@ -15,6 +15,7 @@
 #include <thread>
 #include <vector>
 #include <regex>
+#include "Utils/Logger.h"
 
 #define USE_FLASH_ATTN
 //#define USE_FLASH_FF
