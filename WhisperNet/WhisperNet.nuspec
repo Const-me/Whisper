@@ -16,6 +16,7 @@
 				<dependency id="ComLightInterop" version="1.3.7" />
 			</group>
 		</dependencies>
+		<readme>docs/Readme.md</readme>
 	</metadata>
 	<files>
 		<!-- Managed DLL with XML documentation -->
@@ -23,5 +24,6 @@
 		<file src="bin/Release/WhisperNet.xml" target="lib/net6.0/" />
 		<!-- The C++ DLL -->
 		<file src="../x64/Release/Whisper.dll" target="runtimes/win-x64/native/" />
+		<file src="Readme.md" target="docs/" />
 	</files>
 </package>
