@@ -42,7 +42,7 @@ and most audio capture devices which work on Windows (except some professional o
 The implementation is based on the [2009 article](https://www.researchgate.net/publication/255667085_A_simple_but_efficient_real-time_voice_activity_detection_algorithm)
 “A simple but efficient real-time voice activity detection algorithm” by Mohammad Moattar and Mahdi Homayoonpoor.
 
-* Easy to use COM-style API, idiomatic C# wrapper available on nuget
+* Easy to use COM-style API, idiomatic C# wrapper [available on nuget](https://www.nuget.org/packages/WhisperNet/)
 
 * Pre-built binaries available
 
