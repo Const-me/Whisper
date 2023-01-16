@@ -3,7 +3,7 @@ Which in turn is a C++ port of [OpenAI's Whisper](https://github.com/openai/whis
 
 # Quick Start Guide
 
-Download WhisperDesktop.zip from “Release” link of this repository, unpack the ZIP, run WhisperDesktop.exe, and follow the instructions.
+Download WhisperDesktop.zip from the “Releases” section of this repository, unpack the ZIP, and run WhisperDesktop.exe.
 
 On the first screen it will ask you to download a model.<br/>
 I recommend `ggml-medium.bin` (1.42GB in size), because I’ve mostly tested the software with that model.<br/>
@@ -25,7 +25,7 @@ There’s another screen which allows to capture and transcribe or translate liv
 On my desktop computer with GeForce [1080Ti](https://en.wikipedia.org/wiki/GeForce_10_series#GeForce_10_(10xx)_series_for_desktops) GPU,
 medium model, [3:24 min speech](https://upload.wikimedia.org/wikipedia/commons/1/1f/George_W_Bush_Columbia_FINAL.ogg)
 took 45 seconds to transcribe with PyTorch and CUDA, but only 19 seconds with my implementation and DirectCompute.<br/>
-Funfact: that’s 9.63 gigabytes runtime dependencies, versus 430 kilobytes `Whisper.dll`
+Funfact: that’s 9.63 gigabytes runtime dependencies, versus 431 kilobytes `Whisper.dll`
 
 * Mixed F16 / F32 precision: Windows 
 [requires support](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/format-support-for-direct3d-feature-level-10-0-hardware#dxgi_format_r16_floatfcs-54)
@@ -80,8 +80,6 @@ The repository includes a lot of code which was only used for development:
 couple alternative model implementations, compatible FP64 versions of some compute shaders, debug tracing and the tool to compare the traces, etc.<br/>
 That stuff is disabled by preprocessor macros or `constexpr` flags, I hope it’s fine to keep here.
 
-
-
 ## Performance Notes
 
 I have a limited selection of GPUs in this house.<br/>
@@ -95,7 +93,8 @@ I have also tested on Intel HD Graphics 4000 inside Core i7-3612QM, the relative
 That’s much slower than realtime, but I was happy to find my software works even on the integrated mobile GPU [launched](https://ark.intel.com/products/64901) in 2012.
 
 I’m not sure the performance is ideal on discrete AMD GPUs, or integrated Intel GPUs, have not specifically optimized for them.<br/>
-Ideally, they might need slightly different builds of a couple of the most expensive compute shaders, `mulMatTiled.hlsl` and `mulMatByRowTiled.hlsl`
+Ideally, they might need slightly different builds of a couple of the most expensive compute shaders, `mulMatTiled.hlsl` and `mulMatByRowTiled.hlsl`<br/>
+And maybe other adjustments, like the `useReshapedMatMul()` value in `Whisper/D3D/device.h` header file.
 
 ## Further Optimisations
 
@@ -134,7 +133,7 @@ I have increased the latency and called it a day, but ideally this needs a bette
 
 # Final Words
 
-From my perspective, this is an unpaid hobby project.<br/>
+From my perspective, this is an unpaid hobby project, which I completed over the 2022-23 winter holydays.<br/>
 The code probably has bugs.<br/>
 The software is provided “as is”, without warranty of any kind.
 
