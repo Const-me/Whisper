@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ContextImpl.h"
 #include "../API/iMediaFoundation.cl.h"
 #include "../MF/AudioBuffer.h"
@@ -49,6 +49,7 @@ namespace
 		}
 	};
 
+	// Same data as in the Whisper.sCaptureParams public structure, the durations are scaled from FP32 seconds into uint32_t samples at 16 kHz
 	struct CaptureParams
 	{
 		uint32_t minDuration, maxDuration, dropStartSilence, pauseDuration;
@@ -90,6 +91,7 @@ namespace
 		ProfileCollection& profiler;
 		iContext* const whisperContext;
 
+		// Set the state bit, and if needed notify user with the callback.
 		HRESULT setStateFlag( eCaptureStatus newBit ) noexcept
 		{
 			const uint8_t bit = (uint8_t)newBit;
@@ -101,6 +103,7 @@ namespace
 			return callbacks.captureStatus( callbacks.pv, (eCaptureStatus)( oldVal | bit ) );
 		}
 
+		// Clear the state bit, and if needed notify user with the callback
 		HRESULT clearStateFlag( eCaptureStatus clearBit ) noexcept
 		{
 			const uint8_t bit = (uint8_t)clearBit;
@@ -293,7 +296,7 @@ namespace
 
 			if( dwFlags & MF_SOURCE_READERF_CURRENTMEDIATYPECHANGED )
 			{
-				logError( u8"Media type changes ain�t supported by the library." );
+				logError( u8"Media type changes ain’t supported by the library." );
 				return E_UNEXPECTED;
 			}
 
