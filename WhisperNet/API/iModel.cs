@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace Whisper
 {
 	/// <summary>A model in VRAM, loaded from GGML file.</summary>
-	/// <remarks>This objetc doesn't keep any mutable state, and can be safely used from multiple threads concurrently</remarks>
+	/// <remarks>This object doesn't keep any mutable state, and can be safely used from multiple threads concurrently</remarks>
 	[ComInterface( "abefb4c9-e8d8-46a3-8747-5afbadef1adb", eMarshalDirection.ToManaged ), CustomConventions( typeof( Internal.NativeLogger ) )]
 	public interface iModel: IDisposable
 	{

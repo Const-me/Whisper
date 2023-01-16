@@ -57,7 +57,7 @@ The most recent GPU without D3D 11.0 support was Intel [Sandy Bridge](https://en
 
 1. Clone this repository
 
-2. Open `WhisperCpp.sln` in Visual Studio 2022
+2. Open `WhisperCpp.sln` in Visual Studio 2022. I’m using the freeware community edition, version 17.4.4.
 
 3. Switch to `Release` configuration
 
