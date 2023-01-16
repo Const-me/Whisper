@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="compareTraces.cpp" />
+    <ClCompile Include="TraceReader.cpp" />
+    <ClCompile Include="compare.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="testUtils.cpp" />
+    <ClCompile Include="CommandLineArgs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TraceReader.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="compare.h" />
+    <ClInclude Include="CommandLineArgs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt" />
+  </ItemGroup>
+</Project>

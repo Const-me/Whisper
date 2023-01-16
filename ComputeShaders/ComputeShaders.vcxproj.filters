@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="ComputeShaders.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="mulMatDotMain.hlsl" />
+    <FxCompile Include="mulMatDotReshape.hlsl" />
+    <FxCompile Include="convolutionMain.hlsl" />
+    <FxCompile Include="convolutionPrep1.hlsl" />
+    <FxCompile Include="convolutionPrep2.hlsl" />
+    <FxCompile Include="add.hlsl" />
+    <FxCompile Include="flashAttention.hlsl" />
+    <FxCompile Include="convolutionMain2.hlsl" />
+    <FxCompile Include="norm.hlsl" />
+    <FxCompile Include="copyConvert.hlsl" />
+    <FxCompile Include="copyTranspose.hlsl" />
+    <FxCompile Include="normCompat.hlsl" />
+    <FxCompile Include="flashAttentionCompat1.hlsl" />
+    <FxCompile Include="flashAttentionCompat3.hlsl" />
+    <FxCompile Include="flashAttentionCompat2.hlsl" />
+    <FxCompile Include="scaleInPlace.hlsl" />
+    <FxCompile Include="diagMaskInf.hlsl" />
+    <FxCompile Include="softMaxCompat.hlsl" />
+    <FxCompile Include="mulMatMadMain.hlsl" />
+    <FxCompile Include="addRepeat.hlsl" />
+    <FxCompile Include="fmaRepeat1.hlsl" />
+    <FxCompile Include="fmaRepeat2.hlsl" />
+    <FxCompile Include="addInPlace.hlsl" />
+    <FxCompile Include="softMax.hlsl" />
+    <FxCompile Include="addRepeatScale.hlsl" />
+    <FxCompile Include="mulMatByRow.hlsl" />
+    <FxCompile Include="mulMatByScalar.hlsl" />
+    <FxCompile Include="mulMatTiled.hlsl" />
+    <FxCompile Include="mulMatByRow64.hlsl" />
+    <FxCompile Include="softMax64.hlsl" />
+    <FxCompile Include="softMaxFixed.hlsl" />
+    <FxCompile Include="addRepeat64.hlsl" />
+    <FxCompile Include="fmaRepeat164.hlsl" />
+    <FxCompile Include="addRepeatGelu.hlsl" />
+    <FxCompile Include="addRepeatGelu64.hlsl" />
+    <FxCompile Include="normFixed.hlsl" />
+    <FxCompile Include="normFixed64.hlsl" />
+    <FxCompile Include="mulMatByRowTiled.hlsl" />
+    <FxCompile Include="convolutionMain2Fixed.hlsl" />
+    <FxCompile Include="mulMatByRowTiled64.hlsl" />
+    <FxCompile Include="addRows.hlsl" />
+    <FxCompile Include="mulMatTiled64.hlsl" />
+    <FxCompile Include="zeroMemory.hlsl" />
+    <FxCompile Include="mulMatTiledEx.hlsl" />
+    <FxCompile Include="matReshapePanels.hlsl" />
+    <FxCompile Include="mulMatByRowTiledEx.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="componentwiseBinaryOp.hlsli" />
+    <None Include="miscUtils.hlsli" />
+    <None Include="groupReduce.hlsli" />
+    <None Include="fp64Utils.hlsli" />
+    <None Include="flashAttentionCommon.hlsli" />
+    <None Include="repeatUtils.hlsli" />
+    <None Include="groupReduce64.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt" />
+  </ItemGroup>
+</Project>

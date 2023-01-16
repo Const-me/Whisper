@@ -1,0 +1,17 @@
+.vs/
+ComLightLib/x64/
+Whisper/x64/
+x64/
+Tools/CompressShaders/bin/
+Tools/CompressShaders/obj/
+Whisper/D3D/shaderData-Debug.inl
+Whisper/D3D/shaderData-Release.inl
+WhisperNet/bin/
+WhisperNet/obj/
+Examples/TranscribeCS/bin/
+Examples/TranscribeCS/obj/
+*.aps
+*.json
+*.user
+Examples/MicrophoneCS/obj/
+Examples/MicrophoneCS/bin/

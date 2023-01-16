@@ -1,0 +1,1 @@
+﻿The code in this folder is dropped by the linker’s dead code elimination optimization pass, unless you change BUILD_HYBRID_VERSION macro in stdafx.h

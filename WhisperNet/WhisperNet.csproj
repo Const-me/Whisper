@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<RootNamespace>Whisper</RootNamespace>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<NuspecFile>WhisperNet.nuspec</NuspecFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="..\x64\Release\Whisper.dll" Link="Whisper.dll" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="ComLightInterop" Version="1.3.7" />
+	</ItemGroup>
+</Project>

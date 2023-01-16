@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{cd9e49f0-75a3-4f91-ac71-336109ee39c6}</ProjectGuid>
+    <RootNamespace>WhisperDesktop</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir);$(SolutionDir)Whisper\API\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir);$(SolutionDir)Whisper\API\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ManifestFile>WhisperDesktop.manifest</ManifestFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ManifestFile>WhisperDesktop.manifest</ManifestFile>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="CircleIndicator.h" />
+    <ClInclude Include="AppState.h" />
+    <ClInclude Include="CaptureDlg.h" />
+    <ClInclude Include="Utils\TranslateCheckbox.h" />
+    <ClInclude Include="Utils\DebugConsole.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="Utils\logger.h" />
+    <ClInclude Include="Utils\PendingState.h" />
+    <ClInclude Include="Utils\LanguageDropdown.h" />
+    <ClInclude Include="LoadModelDlg.h" />
+    <ClInclude Include="TranscribeDlg.h" />
+    <ClInclude Include="Utils\miscUtils.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Utils\WTL\atlapp.h" />
+    <ClInclude Include="Utils\WTL\atlcrack.h" />
+    <ClInclude Include="Utils\WTL\atlctrls.h" />
+    <ClInclude Include="Utils\WTL\atlddx.h" />
+    <ClInclude Include="Utils\WTL\atlgdi.h" />
+    <ClInclude Include="Utils\WTL\atlres.h" />
+    <ClInclude Include="Utils\WTL\atluser.h" />
+    <ClInclude Include="Utils\WTL\atlwinx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CircleIndicator.cpp" />
+    <ClCompile Include="AppState.cpp" />
+    <ClCompile Include="CaptureDlg.cpp" />
+    <ClCompile Include="Utils\TranslateCheckbox.cpp" />
+    <ClCompile Include="Utils\DebugConsole.cpp" />
+    <ClCompile Include="Utils\logger.cpp" />
+    <ClCompile Include="Utils\PendingState.cpp" />
+    <ClCompile Include="Utils\LanguageDropdown.cpp" />
+    <ClCompile Include="LoadModelDlg.cpp" />
+    <ClCompile Include="TranscribeDlg.cpp" />
+    <ClCompile Include="Utils\miscUtils.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="WhisperDesktop.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WhisperDesktop.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="sunflower.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="WhisperDesktop.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Whisper\Whisper.vcxproj">
+      <Project>{701df8c8-e4a5-43ec-9c6b-747bbf4d8e71}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

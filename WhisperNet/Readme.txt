@@ -1,0 +1,1 @@
+﻿This project builds .NET DLL which wraps Whisper.dll into idiomatic C# API.

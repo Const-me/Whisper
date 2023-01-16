@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<!-- This file is only for Visual Studio debugger, it doesn't effect the binary in any way.
+	More info: https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects -->
+
+	<Type Name="__m128i">
+		<DisplayString>[ { m128i_i32[ 0 ] }, { m128i_i32[ 1 ] }, { m128i_i32[ 2 ] }, { m128i_i32[ 3 ] } ]</DisplayString>
+	</Type>
+	<Type Name="__m128">
+		<DisplayString>[ { m128_f32[ 0 ] }, { m128_f32[ 1 ] }, { m128_f32[ 2 ] }, { m128_f32[ 3 ] } ]</DisplayString>
+	</Type>
+	<Type Name="__m256">
+		<DisplayString>[ { m256_f32[ 0 ] }, { m256_f32[ 1 ] }, { m256_f32[ 2 ] }, { m256_f32[ 3 ] }, { m256_f32[ 4 ] }, { m256_f32[ 5 ] }, { m256_f32[ 6 ] }, { m256_f32[ 7 ] } ]</DisplayString>
+	</Type>
+	<Type Name="__m256i">
+		<DisplayString>[ { m256i_i32[ 0 ] }, { m256i_i32[ 1 ] }, { m256i_i32[ 2 ] }, { m256i_i32[ 3 ] }, { m256i_i32[ 4 ] }, { m256i_i32[ 5 ] }, { m256i_i32[ 6 ] }, { m256i_i32[ 7 ] } ]</DisplayString>
+	</Type>
+
+	<Type Name="std::array&lt;*,4&gt;">
+		<DisplayString>[ { _Elems[ 0 ] }, { _Elems[ 1 ] }, { _Elems[ 2 ] }, { _Elems[ 3 ] } ]</DisplayString>
+	</Type>
+	<Type Name="std::array&lt;*,3&gt;">
+		<DisplayString>[ { _Elems[ 0 ] }, { _Elems[ 1 ] }, { _Elems[ 2 ] } ]</DisplayString>
+	</Type>
+	<Type Name="std::array&lt;*,2&gt;">
+		<DisplayString>[ { _Elems[ 0 ] }, { _Elems[ 1 ] } ]</DisplayString>
+	</Type>
+	<Type Name="DirectCompute::Tensor">
+		<DisplayString>Size { ne }, strides { nb }</DisplayString>
+	</Type>
+	<Type Name="CpuCompute::Tensor">
+		<DisplayString Condition="m_type==DirectCompute::eDataType::FP16">FP16 { ne }, strides { nb }</DisplayString>
+		<DisplayString Condition="m_type==DirectCompute::eDataType::FP32">FP32 { ne }, strides { nb }</DisplayString>
+		<DisplayString Condition="m_type==DirectCompute::eDataType::U32">U32 { ne }, strides { nb }</DisplayString>
+		<Expand>
+			<ArrayItems Condition="m_type==DirectCompute::eDataType::FP16">
+				<Size>ne._Elems[ 0 ] * ne._Elems[ 1 ] * ne._Elems[ 2 ] * ne._Elems[ 3 ]</Size>
+				<ValuePointer>(uint16_t*)m_data</ValuePointer>
+			</ArrayItems>
+			<ArrayItems Condition="m_type==DirectCompute::eDataType::FP32">
+				<Size>ne._Elems[ 0 ] * ne._Elems[ 1 ] * ne._Elems[ 2 ] * ne._Elems[ 3 ]</Size>
+				<ValuePointer>(float*)m_data</ValuePointer>
+			</ArrayItems>
+			<ArrayItems Condition="m_type==DirectCompute::eDataType::U32">
+				<Size>ne._Elems[ 0 ] * ne._Elems[ 1 ] * ne._Elems[ 2 ] * ne._Elems[ 3 ]</Size>
+				<ValuePointer>(uint32_t*)m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+</AutoVisualizer>
