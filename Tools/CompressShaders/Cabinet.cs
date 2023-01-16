@@ -5,6 +5,7 @@ namespace CompressShaders
 {
 	/// <summary>Lossless data compressor implemented by <c>Cabinet.dll</c> Windows component</summary>
 	/// <remarks>
+	/// <para>That compression API was introduced in Windows 8.0, and is the only reason why the library won’t build for Windows 7 OS.</para>
 	/// <para>Whisper.dll consumes that component in runtime, to decompress these shader binaries</para>
 	/// <para>If you wonder why not gzip — because the OS doesn’t include an API for that, at least not an API usable from C or C++.<br/>
 	/// .NET standard library includes gzip algorithm, but we don't want Whisper.dll to depend on .NET.</para>

@@ -9,4 +9,7 @@
     <ClInclude Include="params.h" />
     <ClInclude Include="miscUtils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt" />
+  </ItemGroup>
 </Project>

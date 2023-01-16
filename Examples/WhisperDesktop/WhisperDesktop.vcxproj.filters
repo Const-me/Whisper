@@ -139,4 +139,7 @@
   <ItemGroup>
     <Manifest Include="WhisperDesktop.manifest" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt" />
+  </ItemGroup>
 </Project>

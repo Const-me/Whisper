@@ -1,0 +1,1 @@
+﻿This example builds .NET 6 console application which shows how to use audio capture API of the .NET wrapper.

@@ -1,0 +1,1 @@
+﻿This example builds .NET 6 console application which shows how to transcribe or translate audio files with the .NET wrapper.
