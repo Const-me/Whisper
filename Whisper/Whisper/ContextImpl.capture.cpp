@@ -138,8 +138,7 @@ namespace
 
 			workStatus = S_FALSE;
 			buffer.currentOffset = pcmStartTime;
-			buffer.pcm.mono = pcm.mono;
-			buffer.pcm.stereo = pcm.stereo;
+			pcm.swap( buffer.pcm );
 			SubmitThreadpoolWork( work );
 			pcmStartTime = nextSampleTime;
 			pcm.clear();

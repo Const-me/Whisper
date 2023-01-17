@@ -30,6 +30,12 @@ namespace Whisper
 			stereo.clear();
 		}
 
+		void swap( AudioBuffer& that )
+		{
+			mono.swap( that.mono );
+			stereo.swap( that.stereo );
+		}
+
 		void resize( size_t len )
 		{
 			assert( len <= mono.size() );
