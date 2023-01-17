@@ -1,0 +1,43 @@
+    CPU Tasks
+LoadModel       1.39046 seconds
+RunComplete     98.7705 seconds
+Run     98.6893 seconds
+Callbacks       10.9446 milliseconds, 44 calls, 248.741 microseconds average
+Spectrogram     1.10864 seconds, 41 calls, 27.04 milliseconds average
+Sample  62.5537 milliseconds, 527 calls, 118.698 microseconds average
+Encode  60.6321 seconds, 9 calls, 6.7369 seconds average
+Decode  38.0118 seconds, 9 calls, 4.22353 seconds average
+DecodeStep      37.949 seconds, 527 calls, 72.0095 milliseconds average
+    GPU Tasks
+LoadModel       1.19991 seconds
+Run     98.4248 seconds
+Encode  61.0298 seconds, 9 calls, 6.78109 seconds average
+EncodeLayer     51.7844 seconds, 288 calls, 179.807 milliseconds average
+Decode  37.395 seconds, 9 calls, 4.155 seconds average
+DecodeStep      37.3947 seconds, 527 calls, 70.9577 milliseconds average
+DecodeLayer     34.8821 seconds, 16864 calls, 2.06843 milliseconds average
+    Compute Shaders
+mulMatTiled     65.2919 seconds, 6345 calls, 10.2903 milliseconds average
+mulMatByRowTiled        22.3701 seconds, 199430 calls, 112.17 microseconds average
+convolutionMain2Fixed   1.37801 seconds, 9 calls, 153.113 milliseconds average
+softMaxFixed    1.32519 seconds, 17152 calls, 77.2618 microseconds average
+addRepeat       1.0237 seconds, 68896 calls, 14.8586 microseconds average
+copyTranspose   974.149 milliseconds, 34304 calls, 28.3975 microseconds average
+norm    971.572 milliseconds, 51704 calls, 18.791 microseconds average
+softMax 956.611 milliseconds, 17391 calls, 55.0061 microseconds average
+copyConvert     899.362 milliseconds, 34880 calls, 25.7845 microseconds average
+fmaRepeat1      675.729 milliseconds, 51704 calls, 13.0692 microseconds average
+addRepeatGelu   531.623 milliseconds, 17170 calls, 30.9623 microseconds average
+addInPlace      461.61 milliseconds, 34304 calls, 13.4564 microseconds average
+scaleInPlace    394.457 milliseconds, 17152 calls, 22.9978 microseconds average
+convolutionMain 331.124 milliseconds, 9 calls, 36.7915 milliseconds average
+addRepeatScale  329.854 milliseconds, 33728 calls, 9.77983 microseconds average
+add     203.376 milliseconds, 16873 calls, 12.0534 microseconds average
+diagMaskInf     107.127 milliseconds, 16864 calls, 6.3524 microseconds average
+convolutionPrep1        58.8876 milliseconds, 18 calls, 3.27153 milliseconds average
+convolutionPrep2        9.1367 milliseconds, 18 calls, 507.594 microseconds average
+addRows 3.6551 milliseconds, 527 calls, 6.93567 microseconds average
+    Memory Usage
+Model   892.591 KB RAM, 2.8815 GB VRAM
+Context 92.2616 MB RAM, 1.20719 GB VRAM
+Total   93.1333 MB RAM, 4.08869 GB VRAM
