@@ -39,7 +39,7 @@ LRESULT CaptureDlg::OnInitDialog( UINT nMessage, WPARAM wParam, LPARAM lParam, B
 	pendingState.initialize(
 		// Controls to disable while pending, re-enable afterwards
 		{
-			languageSelector,
+			languageSelector, GetDlgItem( IDC_TRANSLATE ),
 			cbCaptureDevice,
 			checkSave, checkAppend, checkTimestamps, transcribeOutputPath, transcribeOutputBrowse,
 			GetDlgItem( IDC_DEV_REFRESH ),

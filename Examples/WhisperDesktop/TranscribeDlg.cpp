@@ -35,7 +35,7 @@ LRESULT TranscribeDlg::OnInitDialog( UINT nMessage, WPARAM wParam, LPARAM lParam
 
 	pendingState.initialize(
 		{
-			languageSelector,
+			languageSelector, GetDlgItem( IDC_TRANSLATE ),
 			sourceMediaPath, GetDlgItem( IDC_BROWSE_MEDIA ),
 			transcribeOutFormat,
 			transcribeOutputPath, GetDlgItem( IDC_BROWSE_RESULT ),
