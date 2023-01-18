@@ -10,8 +10,8 @@ LRESULT ModelAdvancedDlg::onInitDialog( UINT nMessage, WPARAM wParam, LPARAM lPa
 
 	// Setup the "Compute shaders" combobox
 	cbWave.AddString( L"Wave64 shaders on AMD" );
-	cbWave.AddString( L"Always use Wave32" );
-	cbWave.AddString( L"Always use Wave64" );
+	cbWave.AddString( L"Wave32, always" );
+	cbWave.AddString( L"Wave64, always" );
 	int i = 0;
 	if( 0 != ( flags & (uint32_t)eGpuModelFlags::Wave32 ) )
 		i = 1;
@@ -19,10 +19,10 @@ LRESULT ModelAdvancedDlg::onInitDialog( UINT nMessage, WPARAM wParam, LPARAM lPa
 		i = 2;
 	cbWave.SetCurSel( i );
 
-	// Setup the "reshaped multiply" combobox
+	// Setup the "Reshaped multiply" combobox
 	cbReshapedMatMul.AddString( L"Reshape on AMD" );
 	cbReshapedMatMul.AddString( L"Don’t reshape tensors" );
-	cbReshapedMatMul.AddString( L"Reshape tensors" );
+	cbReshapedMatMul.AddString( L"Reshape some tensors" );
 	i = 0;
 	if( 0 != ( flags & (uint32_t)eGpuModelFlags::NoReshapedMatMul ) )
 		i = 1;

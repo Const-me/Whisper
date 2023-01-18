@@ -106,6 +106,18 @@ namespace DirectCompute
 			ef |= (uint8_t)eGpuEffectiveFlags::ReshapedMatMul;
 		s_gpuInfo.flags = (eGpuEffectiveFlags)ef;
 
+
+		if( willLogMessage( Whisper::eLogLevel::Debug ) )
+		{
+			const int fl = g_featureLevel;
+			const int flMajor = ( fl >> 12 ) & 0xF;
+			const int flMinor = ( fl >> 8 ) & 0xF;
+
+			logDebug16( L"Using GPU \"%s\", feature level %i.%i, effective flags %S | %S",
+				s_gpuInfo.description.c_str(), flMajor, flMinor,
+				s_gpuInfo.wave64() ? "Wave64" : "Wave32",
+				s_gpuInfo.useReshapedMatMul() ? "UseReshapedMatMul" : "NoReshapedMatMul" );
+		}
 		return S_OK;
 	}
 
