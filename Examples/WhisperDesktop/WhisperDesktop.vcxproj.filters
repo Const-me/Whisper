@@ -84,6 +84,9 @@
     <ClInclude Include="Utils\TranslateCheckbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModelAdvancedDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WhisperDesktop.cpp">
@@ -123,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils\TranslateCheckbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelAdvancedDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

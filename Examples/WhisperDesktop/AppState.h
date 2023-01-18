@@ -44,6 +44,9 @@ public:
 	HRESULT lastScreenLoad();
 
 	void setupIcon( CWindow* wnd );
+
+	uint32_t gpuFlagsLoad();
+	void gpuFlagsStore( uint32_t flags );
 };
 
 constexpr HRESULT SCREEN_MODEL = 1;

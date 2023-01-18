@@ -14,6 +14,7 @@ namespace
 	const LPCTSTR regValImpl = L"modelImpl";
 	const LPCTSTR regValLang = L"language";
 	const LPCTSTR regValLastScreen = L"screen";
+	const LPCTSTR regValGpuFlags = L"gpuFlags";
 
 	static HRESULT readString( CRegKey& k, LPCTSTR name, CString& rdi )
 	{
@@ -189,4 +190,17 @@ void AppState::setupIcon( CWindow* wnd )
 		wnd->SendMessage( WM_SETICON, ICON_SMALL, (LPARAM)ic );
 		wnd->SendMessage( WM_SETICON, ICON_BIG, (LPARAM)ic );
 	}
+}
+
+uint32_t AppState::gpuFlagsLoad()
+{
+	return dwordLoad( regValGpuFlags, 0 );
+}
+
+void AppState::gpuFlagsStore( uint32_t flags )
+{
+	if( 0 == flags )
+		registryKey.DeleteValue( regValGpuFlags );
+	else
+		dwordStore( regValGpuFlags, flags );
 }

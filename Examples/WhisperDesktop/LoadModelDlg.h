@@ -25,6 +25,7 @@ public:
 		COMMAND_ID_HANDLER( IDC_BROWSE, OnBrowse )
 		MESSAGE_HANDLER( WM_CALLBACK_STATUS, OnCallbackStatus )
 		NOTIFY_ID_HANDLER( IDC_HYPERLINKS, OnHyperlink )
+		ON_BUTTON_CLICK( IDC_MODEL_ADV, onModelAdvanced )
 	END_MSG_MAP()
 
 	BEGIN_DDX_MAP( LoadModelDlg )
@@ -66,4 +67,6 @@ private:
 	LRESULT OnHyperlink( int idCtrl, LPNMHDR pnmh, BOOL& bHandled );
 
 	static HRESULT __stdcall progressCallback( double val, void* pv ) noexcept;
+
+	void onModelAdvanced();
 };

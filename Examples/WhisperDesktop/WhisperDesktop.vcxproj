@@ -92,6 +92,7 @@
     <ClInclude Include="CircleIndicator.h" />
     <ClInclude Include="AppState.h" />
     <ClInclude Include="CaptureDlg.h" />
+    <ClInclude Include="ModelAdvancedDlg.h" />
     <ClInclude Include="Utils\TranslateCheckbox.h" />
     <ClInclude Include="Utils\DebugConsole.h" />
     <ClInclude Include="framework.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="CircleIndicator.cpp" />
     <ClCompile Include="AppState.cpp" />
     <ClCompile Include="CaptureDlg.cpp" />
+    <ClCompile Include="ModelAdvancedDlg.cpp" />
     <ClCompile Include="Utils\TranslateCheckbox.cpp" />
     <ClCompile Include="Utils\DebugConsole.cpp" />
     <ClCompile Include="Utils\logger.cpp" />

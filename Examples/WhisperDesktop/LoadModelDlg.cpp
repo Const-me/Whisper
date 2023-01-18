@@ -2,6 +2,7 @@
 #include "LoadModelDlg.h"
 #include "Utils/miscUtils.h"
 #include "Utils/logger.h"
+#include "ModelAdvancedDlg.h"
 
 constexpr int progressMaxInteger = 1024 * 8;
 
@@ -43,8 +44,8 @@ LRESULT LoadModelDlg::OnInitDialog( UINT nMessage, WPARAM wParam, LPARAM lParam,
 		return TRUE;
 	}
 
-	editorsWindows.reserve( 5 );
-	editorsWindows = { modelPath, cbModelType, GetDlgItem( IDC_BROWSE ), GetDlgItem( IDOK ), GetDlgItem( IDCANCEL ) };
+	editorsWindows.reserve( 6 );
+	editorsWindows = { modelPath, cbModelType, GetDlgItem( IDC_BROWSE ), GetDlgItem( IDC_MODEL_ADV ), GetDlgItem( IDOK ), GetDlgItem( IDCANCEL ) };
 	pendingWindows.reserve( 2 );
 	pendingWindows = { GetDlgItem( IDC_PENDING_TEXT ), progressBar };
 
@@ -140,7 +141,8 @@ void __stdcall LoadModelDlg::poolCallback() noexcept
 	lmcb.cancel = nullptr;
 	lmcb.progress = &LoadModelDlg::progressCallback;
 	lmcb.pv = this;
-	HRESULT hr = Whisper::loadModel( path, impl, 0, &lmcb, &model );
+	const uint32_t flags = appState.gpuFlagsLoad();
+	HRESULT hr = Whisper::loadModel( path, impl, flags, &lmcb, &model );
 	if( SUCCEEDED( hr ) )
 		appState.model = model;
 	else
@@ -203,4 +205,10 @@ LRESULT LoadModelDlg::OnHyperlink( int idCtrl, LPNMHDR pnmh, BOOL& bHandled )
 	ShellExecute( NULL, L"open", url, NULL, NULL, SW_SHOW );
 	bHandled = TRUE;
 	return 0;
+}
+
+void LoadModelDlg::onModelAdvanced()
+{
+	ModelAdvancedDlg dlg{ appState };
+	dlg.show( m_hWnd );
 }

@@ -13,6 +13,7 @@
 #define IDD_MAIN_DIALOG                 130
 #define IDD_TRANSCRIBE_DIALOG           130
 #define IDD_CAPTURE_DIALOG              131
+#define IDD_MODEL_ADV                   132
 #define IDC_PATH                        1000
 #define IDC_BROWSE                      1001
 #define IDC_MODEL_TYPE                  1002
@@ -46,6 +47,10 @@
 #define IDC_STALL_STATUS                1024
 #define IDC_STALL_LBL                   1025
 #define IDC_TRANSLATE                   1026
+#define IDC_MODEL_ADV                   1027
+#define IDC_WAVE                        1028
+#define IDC_WAVE2                       1029
+#define IDC_RESHAPED_MAT_MUL            1029
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -55,7 +60,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif
