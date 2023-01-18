@@ -40,8 +40,11 @@ namespace Whisper
 		Stalled = 0x80,
 	};
 
+	// Return S_OK to continue, or S_FALSE to stop the capture session
 	using pfnShouldCancel = HRESULT( __stdcall* )( void* pv ) noexcept;
+
 	using pfnCaptureStatus = HRESULT( __stdcall* )( void* pv, eCaptureStatus status ) noexcept;
+
 	struct sCaptureCallbacks
 	{
 		pfnShouldCancel shouldCancel;

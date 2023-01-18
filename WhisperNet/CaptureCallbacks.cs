@@ -19,7 +19,7 @@ namespace Whisper
 			{
 				try
 				{
-					return shouldCancel( sender ) ? S_OK : S_FALSE;
+					return shouldCancel( sender ) ? S_FALSE : S_OK;
 				}
 				catch( Exception ex )
 				{

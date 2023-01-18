@@ -3,6 +3,7 @@
 namespace Whisper.Internal
 {
 	/// <summary>Unmanaged code calls this to check for cancellation</summary>
+	/// <remarks>Return 0 to proceed, or 1 to stop the process and return from Context.runFull method</remarks>
 	[UnmanagedFunctionPointer( CallingConvention.StdCall )]
 	public delegate int pfnShouldCancel( IntPtr pv );
 

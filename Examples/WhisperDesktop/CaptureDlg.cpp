@@ -442,8 +442,8 @@ LRESULT CaptureDlg::onThreadStatus( UINT nMessage, WPARAM wParam, LPARAM lParam,
 
 HRESULT __stdcall CaptureDlg::cbCancel( void* pv ) noexcept
 {
-	CaptureDlg& dialog = *(CaptureDlg*)pv;
-	return dialog.threadState.stopRequested ? S_OK : S_FALSE;
+	const bool stopRequested = ( (CaptureDlg*)pv )->threadState.stopRequested;
+	return stopRequested ? S_FALSE : S_OK;
 }
 
 HRESULT __stdcall CaptureDlg::cbStatus( void* pv, Whisper::eCaptureStatus status ) noexcept

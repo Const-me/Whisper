@@ -14,6 +14,8 @@ namespace Whisper
 	};
 
 	using pfnNewSegment = HRESULT( __cdecl* )( iContext* ctx, uint32_t n_new, void* user_data ) noexcept;
+
+	// Return S_OK to proceed, or S_FALSE to stop the process and return S_OK from runFull / runStreamed method
 	using pfnEncoderBegin = HRESULT( __cdecl* )( iContext* ctx, void* user_data ) noexcept;
 
 	enum struct eFullParamsFlags : uint32_t

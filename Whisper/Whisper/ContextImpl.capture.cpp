@@ -171,7 +171,7 @@ namespace
 		HRESULT checkCancel() noexcept
 		{
 			if( nullptr == callbacks.shouldCancel )
-				return S_FALSE;
+				return S_OK;
 			return callbacks.shouldCancel( callbacks.pv );
 		}
 
@@ -415,7 +415,7 @@ HRESULT COMLIGHTCALL ContextImpl::runCapture( const sFullParams& params, const s
 	{
 		HRESULT hr = capture.checkCancel();
 		CHECK( hr );
-		if( hr == S_OK )
+		if( hr != S_OK )
 			return S_OK;
 		CHECK( capture.run() );
 	}

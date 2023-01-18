@@ -257,6 +257,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 	int seek = seek_start;
 	// Start measuring "Run" profiler value, both CPU and GPU times
 	auto prof = context.completeProfiler();
+	bool stoppedPrematurely = false;
 	while( true )
 	{
 		if( nullptr != progress.pfn )
@@ -278,7 +279,10 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 			if( FAILED( hr ) )
 				return hr;
 			if( hr != S_OK )
+			{
+				stoppedPrematurely = true;
 				break;
+			}
 		}
 
 		// encode audio features starting at offset seek
@@ -511,7 +515,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 		seek += seek_delta;
 	}
 
-	if( nullptr != progress.pfn )
+	if( nullptr != progress.pfn && !stoppedPrematurely )
 	{
 		auto cb = profiler.cpuBlock( eCpuBlock::Callbacks );
 		CHECK( progress.pfn( 1.0, this, progress.pv ) );
