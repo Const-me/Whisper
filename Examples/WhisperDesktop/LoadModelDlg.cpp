@@ -140,7 +140,7 @@ void __stdcall LoadModelDlg::poolCallback() noexcept
 	lmcb.cancel = nullptr;
 	lmcb.progress = &LoadModelDlg::progressCallback;
 	lmcb.pv = this;
-	HRESULT hr = Whisper::loadModel( path, impl, &lmcb, &model );
+	HRESULT hr = Whisper::loadModel( path, impl, 0, &lmcb, &model );
 	if( SUCCEEDED( hr ) )
 		appState.model = model;
 	else

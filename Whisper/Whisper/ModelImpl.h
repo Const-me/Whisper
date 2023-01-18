@@ -11,6 +11,7 @@ namespace Whisper
 	class ModelImpl : public ComLight::ObjectRoot<iModel>
 	{
 		WhisperModel model;
+		const uint32_t gpuFlags;
 
 		HRESULT COMLIGHTCALL createContext( iContext** pp ) override final;
 
@@ -31,7 +32,7 @@ namespace Whisper
 		}
 
 	public:
-
+		ModelImpl( uint32_t flags ) : gpuFlags( flags ) { }
 		HRESULT FinalConstruct();
 		void FinalRelease();
 

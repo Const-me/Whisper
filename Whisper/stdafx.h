@@ -37,8 +37,3 @@
 // In addition to collecting total GPU times per compute shader, also collect and print performance data about individual invocations of some of the most expensive shaders
 // The feature is relatively cheap in terms of performance overhead, but pretty much useless in production, and clutters debug console with all these numbers
 #define PROFILER_COLLECT_TAGS 0
-
-// Reshape some of the tensors to a better VRAM layout while loading a model
-// So far, the feature is only used on AMD GPUs. On AMD Vega integrated GPUs it helps by up to 30%.
-// Should be enabled in production build
-#define RESHAPED_MATRIX_MULTIPLY 1

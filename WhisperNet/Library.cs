@@ -35,7 +35,7 @@ namespace Whisper
 		/// <remarks>Models are large, depending on user’s disk speed this might take a while, and this function blocks the calling thread.<br/>
 		/// Consider <see cref="loadModelAsync" /> instead.</remarks>
 		/// <seealso href="https://huggingface.co/datasets/ggerganov/whisper.cpp" />
-		public static iModel loadModel( string path, eModelImplementation impl = eModelImplementation.GPU )
+		public static iModel loadModel( string path, eGpuModelFlags flags = eGpuModelFlags.None, eModelImplementation impl = eModelImplementation.GPU )
 		{
 			iModel model;
 			sLoadModelCallbacks callbacks = default;

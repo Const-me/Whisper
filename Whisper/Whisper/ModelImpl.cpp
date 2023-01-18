@@ -16,7 +16,7 @@ HRESULT ModelImpl::FinalConstruct()
 {
 	if( 1 != InterlockedIncrement( &s_refCounter ) )
 		return S_FALSE;
-	return DirectCompute::mlStartup();
+	return DirectCompute::mlStartup( gpuFlags );
 }
 
 void ModelImpl::FinalRelease()
@@ -75,7 +75,7 @@ inline bool hasAvxAndFma()
 	return true;
 }
 
-HRESULT __stdcall Whisper::loadGpuModel( const wchar_t* path, bool hybrid, const sLoadModelCallbacks* callbacks, iModel** pp )
+HRESULT __stdcall Whisper::loadGpuModel( const wchar_t* path, bool hybrid, uint32_t flags, const sLoadModelCallbacks* callbacks, iModel** pp )
 {
 	if( nullptr == path || nullptr == pp )
 		return E_POINTER;
@@ -108,7 +108,7 @@ HRESULT __stdcall Whisper::loadGpuModel( const wchar_t* path, bool hybrid, const
 	}
 
 	ComLight::CComPtr<ComLight::Object<ModelImpl>> obj;
-	CHECK( ComLight::Object<ModelImpl>::create( obj ) );
+	CHECK( ComLight::Object<ModelImpl>::create( obj, flags ) );
 	hr = obj->load( &stream, hybrid, callbacks );
 	if( FAILED( hr ) )
 	{

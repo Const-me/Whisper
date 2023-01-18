@@ -4,6 +4,7 @@
 #include "loggerApi.h"
 #include "sLanguageList.h"
 #include "sLoadModelCallbacks.h"
+#include "eGpuModelFlags.h"
 
 namespace Whisper
 {
@@ -50,7 +51,7 @@ namespace Whisper
 	};
 
 	HRESULT __stdcall setupLogger( const sLoggerSetup& setup );
-	HRESULT __stdcall loadModel( const wchar_t* path, eModelImplementation impl, const sLoadModelCallbacks* callbacks, iModel** pp );
+	HRESULT __stdcall loadModel( const wchar_t* path, eModelImplementation impl, uint32_t flags, const sLoadModelCallbacks* callbacks, iModel** pp );
 
 	uint32_t __stdcall findLanguageKeyW( const wchar_t* lang );
 	uint32_t __stdcall findLanguageKeyA( const char* lang );

@@ -215,6 +215,7 @@
     <ClCompile Include="whisperCom.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="API\eGpuModelFlags.h" />
     <ClInclude Include="API\iContext.h" />
     <ClInclude Include="API\iMediaFoundation.h" />
     <ClInclude Include="API\iTranscribeResult.h" />

@@ -35,7 +35,6 @@ namespace
 		PendingTensor( DirectCompute::Tensor& tensor, ePostProcessing pp = ePostProcessing::None ) :
 			dest( &tensor ), postProcessing( pp ) { }
 
-#if RESHAPED_MATRIX_MULTIPLY
 		// If you wonder why not reshape them after all tensors are loaded, doing that on the fly is faster because CPU and GPU work in parallel
 		// In the current version, CPU reads data for a next tensor, while in the meantime GPU reshapes a previously loaded tensor.
 		HRESULT postProcess( Reshaper& rs, eDataType dt )
@@ -59,7 +58,6 @@ namespace
 				return E_UNEXPECTED;
 			}
 		}
-#endif
 	};
 
 	void populateEncodeTensorsMap( CAtlMap<CStringA, PendingTensor>& map, int layersEnc, DirectCompute::ModelBuffers& tensors )
@@ -261,9 +259,7 @@ HRESULT WhisperModel::loadGpu( ComLight::iReadStream* stm, CallbacksImpl& callba
 	CAtlMap<CStringA, PendingTensor> map;
 	populateTensorsMap( map, parameters.n_audio_layer, parameters.n_text_layer, tensors, false );
 
-#if RESHAPED_MATRIX_MULTIPLY
 	DirectCompute::Reshaper reshape;
-#endif
 
 	std::vector<uint8_t> bytesVector;
 	size_t countLoaded = 0;
@@ -328,9 +324,7 @@ HRESULT WhisperModel::loadGpu( ComLight::iReadStream* stm, CallbacksImpl& callba
 		CHECK( readBytes( stm, bytesVector.data(), bytesVector.size() ) );
 		cb += bytesVector.size();
 		CHECK( p->m_value.dest->createImmutable( dt, ne, bytesVector.data() ) );
-#if RESHAPED_MATRIX_MULTIPLY
 		CHECK( p->m_value.postProcess( reshape, dt ) );
-#endif
 		countLoaded++;
 	}
 
@@ -350,11 +344,7 @@ HRESULT WhisperModel::loadHybrid( ComLight::iReadStream* stm, CallbacksImpl& cal
 {
 	CAtlMap<CStringA, PendingTensor> map;
 	populateTensorsMap( map, parameters.n_audio_layer, parameters.n_text_layer, tensors, true );
-
-#if RESHAPED_MATRIX_MULTIPLY
 	DirectCompute::Reshaper reshape;
-#endif
-
 	CpuCompute::HybridLoader loader( hybridTensors, parameters.n_text_layer );
 
 	std::vector<uint8_t> bytesVector;
@@ -422,9 +412,7 @@ HRESULT WhisperModel::loadHybrid( ComLight::iReadStream* stm, CallbacksImpl& cal
 		}
 		CHECK( readBytes( stm, bytesVector.data(), bytesVector.size() ) );
 		CHECK( p->m_value.dest->createImmutable( dt, ne, bytesVector.data() ) );
-#if RESHAPED_MATRIX_MULTIPLY
 		CHECK( p->m_value.postProcess( reshape, dt ) );
-#endif
 		countLoaded++;
 		cb += bytesVector.size();
 	}

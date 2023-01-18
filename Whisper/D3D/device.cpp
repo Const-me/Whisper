@@ -4,6 +4,7 @@
 #include <ammintrin.h>
 #pragma comment(lib, "D3D11.lib")
 #include "RenderDoc/renderDoc.h"
+#include "../API/eGpuModelFlags.h"
 
 namespace DirectCompute
 {
@@ -54,7 +55,25 @@ namespace DirectCompute
 	sGpuInfo s_gpuInfo = {};
 	const sGpuInfo& gpuInfo = s_gpuInfo;
 
-	static HRESULT queryDeviceInfo()
+	using Whisper::eGpuModelFlags;
+	inline constexpr uint32_t operator|( eGpuModelFlags a, eGpuModelFlags b )
+	{
+		return (uint32_t)a | (uint32_t)b;
+	}
+	inline bool operator&( uint32_t flags, eGpuModelFlags bit )
+	{
+		return 0 != ( flags & (uint32_t)bit );
+	}
+	inline bool merge3( uint32_t flags, eGpuModelFlags enabled, eGpuModelFlags disabled, bool def )
+	{
+		if( flags & enabled )
+			return true;
+		if( flags & disabled )
+			return false;
+		return def;
+	}
+
+	static HRESULT queryDeviceInfo( uint32_t flags )
 	{
 		if( nullptr == g_device )
 			return OLE_E_BLANK;
@@ -77,15 +96,44 @@ namespace DirectCompute
 		s_gpuInfo.vramDedicated = desc.DedicatedVideoMemory;
 		s_gpuInfo.ramDedicated = desc.DedicatedSystemMemory;
 		s_gpuInfo.ramShared = desc.SharedSystemMemory;
+
+		// Set up these flags
+		uint8_t ef = 0;
+		const bool amd = ( s_gpuInfo.vendor == eGpuVendor::AMD );
+		if( merge3( flags, eGpuModelFlags::Wave64, eGpuModelFlags::Wave32, amd ) )
+			ef |= (uint8_t)eGpuEffectiveFlags::Wave64;
+		if( merge3( flags, eGpuModelFlags::UseReshapedMatMul, eGpuModelFlags::NoReshapedMatMul, amd ) )
+			ef |= (uint8_t)eGpuEffectiveFlags::ReshapedMatMul;
+		s_gpuInfo.flags = (eGpuEffectiveFlags)ef;
+
 		return S_OK;
 	}
 
-	HRESULT initialize()
+	static HRESULT validateFlags( uint32_t flags )
 	{
+		constexpr uint32_t waveBoth = eGpuModelFlags::Wave32 | eGpuModelFlags::Wave64;
+		if( ( flags & waveBoth ) == waveBoth )
+		{
+			logError( u8"eGpuModelFlags.%s and eGpuModelFlags.%s are mutually exclusive", "Wave32", "Wave64" );
+			return E_INVALIDARG;
+		}
+
+		constexpr uint32_t reshapedBoth = eGpuModelFlags::NoReshapedMatMul | eGpuModelFlags::UseReshapedMatMul;
+		if( ( flags & reshapedBoth ) == reshapedBoth )
+		{
+			logError( u8"eGpuModelFlags.%s and eGpuModelFlags.%s are mutually exclusive", "NoReshapedMatMul", "UseReshapedMatMul" );
+			return E_INVALIDARG;
+		}
+		return S_OK;
+	}
+
+	HRESULT initialize( uint32_t flags )
+	{
+		CHECK( validateFlags( flags ) );
 		HRESULT hr = createDevice();
 		if( hr != S_OK )
 			return hr;
-		queryDeviceInfo();
+		queryDeviceInfo( flags );
 		return S_OK;
 	}
 

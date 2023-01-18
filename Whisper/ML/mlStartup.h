@@ -3,6 +3,6 @@ using HRESULT = long;
 
 namespace DirectCompute
 {
-	HRESULT mlStartup();
+	HRESULT mlStartup( uint32_t flags );
 	void mlShutdown();
 }

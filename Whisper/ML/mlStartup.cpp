@@ -12,9 +12,9 @@ namespace DirectCompute
 {
 	const LookupTables& lookupTables = s_tables;
 
-	HRESULT mlStartup()
+	HRESULT mlStartup( uint32_t flags )
 	{
-		CHECK( d3dStartup() );
+		CHECK( d3dStartup( flags ) );
 		CHECK( s_tables.create() );
 		return S_OK;
 	}

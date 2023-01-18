@@ -187,6 +187,7 @@
     <ClInclude Include="API\sLoadModelCallbacks.h" />
     <ClInclude Include="ML\Reshaper.h" />
     <ClInclude Include="ML\reshapedMultiply.h" />
+    <ClInclude Include="API\eGpuModelFlags.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="whisper.def" />

@@ -2,9 +2,9 @@
 #include "startup.h"
 #include "device.h"
 
-HRESULT DirectCompute::d3dStartup()
+HRESULT DirectCompute::d3dStartup( uint32_t flags )
 {
-	HRESULT hr = DirectCompute::initialize();
+	HRESULT hr = DirectCompute::initialize( flags );
 	if( SUCCEEDED( hr ) )
 		hr = createComputeShaders();
 	return hr;
