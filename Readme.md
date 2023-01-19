@@ -47,7 +47,7 @@ The implementation is based on the [2009 article](https://www.researchgate.net/p
 * Pre-built binaries available
 
 The only supported platform is 64-bit Windows.<br/>
-Should work on Windows 8.0 or newer, but I have only tested on Windows 10.<br/>
+Should work on Windows 8.1 or newer, but I have only tested on Windows 10.<br/>
 The library requires a Direct3D 11.0 capable GPU, which in 2023 simply means “any hardware GPU”.
 The most recent GPU without D3D 11.0 support was Intel [Sandy Bridge](https://en.wikipedia.org/wiki/Sandy_Bridge) from 2011.
 

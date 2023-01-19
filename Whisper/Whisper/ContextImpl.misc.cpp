@@ -384,20 +384,16 @@ HRESULT COMLIGHTCALL ContextImpl::runStreamed( const sFullParams& params, const 
 	mediaTimeOffset = 0;
 	auto profCompleteCpu = profiler.cpuBlock( eCpuBlock::RunComplete );
 
-	CComPtr<IMFSourceReader> mfReader;
-	CHECK( reader->getReader( &mfReader ) );
-	const bool stereo = reader->requestedStereo() == S_OK;
-
 	try
 	{
 		if( params.cpuThreads > 1 )
 		{
-			MelStreamerThread mel{ model.filters, profiler, mfReader, params.cpuThreads, stereo };
+			MelStreamerThread mel{ model.filters, profiler, reader, params.cpuThreads };
 			return runFullImpl( params, progress, mel );
 		}
 		else
 		{
-			MelStreamerSimple mel{ model.filters, profiler, mfReader, stereo };
+			MelStreamerSimple mel{ model.filters, profiler, reader };
 			return runFullImpl( params, progress, mel );
 		}
 	}

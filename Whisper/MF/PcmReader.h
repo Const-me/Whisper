@@ -3,6 +3,7 @@
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include "AudioBuffer.h"
+#include "../API/iMediaFoundation.cl.h"
 
 namespace Whisper
 {
@@ -44,7 +45,7 @@ namespace Whisper
 
 	public:
 
-		PcmReader( IMFSourceReader* source, bool stereo );
+		PcmReader( const iAudioReader* reader );
 
 		// Count of chunks in the MEL spectrogram.
 		// The PCM audio is generally slightly longer than that, due to the incomplete last chunk.

@@ -7,6 +7,7 @@
 #include <mfreadwrite.h>
 #include "mfUtils.h"
 #include "AudioCapture.h"
+#include <mfapi.h>
 
 namespace Whisper
 {
@@ -15,6 +16,7 @@ namespace Whisper
 		CComPtr<IMFSourceReader> reader;
 		bool wantStereo;
 		CComPtr<iMediaFoundation> mediaFoundation;
+		mutable int64_t preciseSamplesCount = 0;
 
 		HRESULT COMLIGHTCALL getReader( IMFSourceReader** pp ) const noexcept override final
 		{
@@ -31,7 +33,14 @@ namespace Whisper
 		HRESULT COMLIGHTCALL getDuration( int64_t& rdi ) const noexcept override final
 		{
 			if( reader )
-				return getStreamDuration( reader, rdi );
+			{
+				if( 0 == preciseSamplesCount )
+					return getStreamDuration( reader, rdi );
+				else
+				{	rdi = MFllMulDiv( preciseSamplesCount, 10'000'000, SAMPLE_RATE, 0 );
+					return S_OK;
+				}
+			}
 			return OLE_E_BLANK;
 		}
 	public:
@@ -48,7 +57,17 @@ namespace Whisper
 			logDebug16( L"Created source reader from the file \"%s\"", path );
 			return S_OK;
 		}
+		void setPreciseSamplesCount( int64_t count ) const
+		{
+			preciseSamplesCount = count;
+		}
 	};
+
+	void setPreciseSamplesCount( const iAudioReader* ar, int64_t count )
+	{
+		const AudioReader* r = static_cast<const AudioReader*>( ar );
+		r->setPreciseSamplesCount( count );
+	}
 
 	class MediaFoundation : public ComLight::ObjectRoot<iMediaFoundation>
 	{

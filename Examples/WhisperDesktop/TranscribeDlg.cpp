@@ -298,7 +298,6 @@ HRESULT TranscribeDlg::transcribe()
 	CComPtr<iAudioReader> reader;
 
 	CHECK_EX( appState.mediaFoundation->openAudioFile( transcribeArgs.pathMedia, false, &reader ) );
-	CHECK_EX( reader->getDuration( transcribeArgs.mediaDuration ) );
 
 	const eOutputFormat format = transcribeArgs.format;
 	CAtlFile outputFile;
@@ -323,6 +322,11 @@ HRESULT TranscribeDlg::transcribe()
 	sProgressSink progressSink{ &progressCallbackStatic, this };
 	// Run the transcribe
 	CHECK_EX( context->runStreamed( fullParams, progressSink, reader ) );
+
+	// Once finished, query duration of the audio.
+	// The duration before the processing is sometimes different, by 20 seconds for the file in that issue:
+	// https://github.com/Const-me/Whisper/issues/4
+	CHECK_EX( reader->getDuration( transcribeArgs.mediaDuration ) );
 
 	context->timingsPrint();
 

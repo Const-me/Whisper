@@ -6,6 +6,7 @@
 #include <atlbase.h>
 #include "../Utils/parallelFor.h"
 #include "../Utils/ProfileCollection.h"
+#include "../API/iMediaFoundation.cl.h"
 
 namespace Whisper
 {
@@ -44,7 +45,7 @@ namespace Whisper
 		size_t getLength() const noexcept override final { return reader.getLength(); }
 
 	public:
-		MelStreamer( const Filters& filters, ProfileCollection& profiler, IMFSourceReader* source, bool stereo );
+		MelStreamer( const Filters& filters, ProfileCollection& profiler, const iAudioReader* reader );
 	};
 
 	// Single-threaded MEL streamer: runs these FFTs on-demand, from within makeBuffer() method
@@ -53,8 +54,8 @@ namespace Whisper
 		HRESULT makeBuffer( size_t offset, size_t length, const float** buffer, size_t& stride ) noexcept override final;
 
 	public:
-		MelStreamerSimple( const Filters& filters, ProfileCollection& profiler, IMFSourceReader* source, bool stereo ) :
-			MelStreamer( filters, profiler, source, stereo ) { }
+		MelStreamerSimple( const Filters& filters, ProfileCollection& profiler, const iAudioReader* reader ) :
+			MelStreamer( filters, profiler, reader ) { }
 	};
 
 	// Multi threaded MEL streamers: runs FFT on a background thread ahead of time
@@ -92,7 +93,7 @@ namespace Whisper
 
 	public:
 
-		MelStreamerThread( const Filters& filters, ProfileCollection& profiler, IMFSourceReader* source, int countThreads, bool stereo );
+		MelStreamerThread( const Filters& filters, ProfileCollection& profiler, const iAudioReader* reader, int countThreads );
 
 		~MelStreamerThread();
 	};

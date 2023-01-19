@@ -3,8 +3,8 @@
 #include "../Utils/parallelFor.h"
 using namespace Whisper;
 
-MelStreamer::MelStreamer( const Filters& filters, ProfileCollection& prof, IMFSourceReader* source, bool stereo ) :
-	reader( source, stereo ),
+MelStreamer::MelStreamer( const Filters& filters, ProfileCollection& prof, const iAudioReader* iar ) :
+	reader( iar ),
 	melContext( filters ),
 	profiler( prof )
 { }
@@ -231,8 +231,8 @@ HRESULT MelStreamerSimple::makeBuffer( size_t off, size_t len, const float** buf
 	return S_OK;
 }
 
-MelStreamerThread::MelStreamerThread( const Filters& filters, ProfileCollection& profiler, IMFSourceReader* source, int countThreads, bool stereo ) :
-	MelStreamer( filters, profiler, source, stereo ),
+MelStreamerThread::MelStreamerThread( const Filters& filters, ProfileCollection& profiler, const iAudioReader* iar, int countThreads ) :
+	MelStreamer( filters, profiler, iar ),
 	workerThreads( countThreads )
 {
 	if( workerThreads > 1 )
