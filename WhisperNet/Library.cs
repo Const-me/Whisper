@@ -27,7 +27,7 @@ namespace Whisper
 		internal static extern void setupLogger( [In] ref sLoggerSetup setup );
 
 		[DllImport( dll, CallingConvention = RuntimeClass.defaultCallingConvention, PreserveSig = true )]
-		static extern int loadModel( [MarshalAs( UnmanagedType.LPWStr )] string path, eModelImplementation impl,
+		static extern int loadModel( [MarshalAs( UnmanagedType.LPWStr )] string path, eModelImplementation impl, eGpuModelFlags flags,
 			[In] ref sLoadModelCallbacks callbacks,
 			[MarshalAs( UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof( Marshaler<iModel> ) )] out iModel model );
 
@@ -40,13 +40,13 @@ namespace Whisper
 			iModel model;
 			sLoadModelCallbacks callbacks = default;
 			NativeLogger.prologue();
-			int hr = loadModel( path, impl, ref callbacks, out model );
+			int hr = loadModel( path, impl, flags, ref callbacks, out model );
 			NativeLogger.throwForHR( hr );
 			return model;
 		}
 
 		/// <summary>Load Whisper model on a background thread, with optional progress reporting and cancellation</summary>
-		public static Task<iModel> loadModelAsync( string path, CancellationToken cancelToken, Action<double>? pfnProgress = null, eModelImplementation impl = eModelImplementation.GPU )
+		public static Task<iModel> loadModelAsync( string path, CancellationToken cancelToken, eGpuModelFlags flags = eGpuModelFlags.None, Action<double>? pfnProgress = null, eModelImplementation impl = eModelImplementation.GPU )
 		{
 			TaskCompletionSource<iModel> tcs = new TaskCompletionSource<iModel>();
 
@@ -58,7 +58,7 @@ namespace Whisper
 
 					iModel model;
 					NativeLogger.prologue();
-					int hr = loadModel( path, impl, ref callbacks, out model );
+					int hr = loadModel( path, impl, flags, ref callbacks, out model );
 					NativeLogger.throwForHR( hr );
 
 					tcs.SetResult( model );
