@@ -1,45 +1,45 @@
 ﻿    CPU Tasks
-LoadModel       1.02959 seconds
-RunComplete     82.2062 seconds
-Run     82.1216 seconds
-Callbacks       9.3817 milliseconds, 37 calls, 253.559 microseconds average
-Spectrogram     727.782 milliseconds, 42 calls, 17.3281 milliseconds average
-Sample  86.0688 milliseconds, 511 calls, 168.432 microseconds average
-Encode  47.9066 seconds, 10 calls, 4.79066 seconds average
-Decode  34.2022 seconds, 10 calls, 3.42022 seconds average
-DecodeStep      34.1156 seconds, 511 calls, 66.7624 milliseconds average
+LoadModel       854.438 milliseconds
+RunComplete     76.7069 seconds
+Run     76.6544 seconds
+Callbacks       10.1743 milliseconds, 37 calls, 274.981 microseconds average
+Spectrogram     687.562 milliseconds, 42 calls, 16.3705 milliseconds average
+Sample  73.812 milliseconds, 511 calls, 144.446 microseconds average
+Encode  45.4051 seconds, 10 calls, 4.54051 seconds average
+Decode  31.2366 seconds, 10 calls, 3.12366 seconds average
+DecodeStep      31.1625 seconds, 511 calls, 60.9834 milliseconds average
     GPU Tasks
-LoadModel       521.215 milliseconds
-Run     81.7841 seconds
-Encode  48.6521 seconds, 10 calls, 4.86521 seconds average
-EncodeLayer     41.1815 seconds, 240 calls, 171.589 milliseconds average
-Decode  33.132 seconds, 10 calls, 3.3132 seconds average
-DecodeStep      33.1315 seconds, 511 calls, 64.8366 milliseconds average
-DecodeLayer     29.8613 seconds, 12264 calls, 2.43488 milliseconds average
+LoadModel       473.758 milliseconds
+Run     76.3483 seconds
+Encode  46.1492 seconds, 10 calls, 4.61492 seconds average
+EncodeLayer     39.5117 seconds, 240 calls, 164.632 milliseconds average
+Decode  30.199 seconds, 10 calls, 3.0199 seconds average
+DecodeStep      30.1986 seconds, 511 calls, 59.097 milliseconds average
+DecodeLayer     27.4002 seconds, 12264 calls, 2.2342 milliseconds average
     Compute Shaders
-mulMatTiledEx   34.7452 seconds, 2400 calls, 14.4772 milliseconds average
-mulMatByRowTiled        14.1115 seconds, 120741 calls, 116.874 microseconds average
-mulMatTiled     12.7533 seconds, 2890 calls, 4.4129 milliseconds average
-mulMatByRowTiledEx      6.27617 seconds, 24048 calls, 260.985 microseconds average
-softMaxFixed    2.7865 seconds, 12504 calls, 222.849 microseconds average
-convolutionMain2Fixed   1.89585 seconds, 10 calls, 189.585 milliseconds average
-matReshapePanels        1.31263 seconds, 1450 calls, 905.261 microseconds average
-addRepeat       1.11903 seconds, 50256 calls, 22.2666 microseconds average
-addRepeatGelu   949.823 milliseconds, 12524 calls, 75.8403 microseconds average
-softMax 766.059 milliseconds, 12775 calls, 59.9654 microseconds average
-copyConvert     762.917 milliseconds, 25488 calls, 29.9324 microseconds average
-fmaRepeat1      701.015 milliseconds, 37793 calls, 18.5488 microseconds average
-normFixed       672.62 milliseconds, 37793 calls, 17.7975 microseconds average
-addInPlace      543.904 milliseconds, 25008 calls, 21.7492 microseconds average
-scaleInPlace    517.351 milliseconds, 12504 calls, 41.3749 microseconds average
-addRepeatScale  496.454 milliseconds, 24528 calls, 20.2403 microseconds average
-copyTranspose   411.612 milliseconds, 25008 calls, 16.4592 microseconds average
-convolutionMain 338.765 milliseconds, 10 calls, 33.8765 milliseconds average
-add     272.422 milliseconds, 12274 calls, 22.195 microseconds average
-diagMaskInf     144.462 milliseconds, 12264 calls, 11.7793 microseconds average
-convolutionPrep2        60.9698 milliseconds, 20 calls, 3.04849 milliseconds average
-convolutionPrep1        33.0132 milliseconds, 20 calls, 1.65066 milliseconds average
-addRows 1.5961 milliseconds, 511 calls, 3.12348 microseconds average
+mulMatTiledEx   34.2075 seconds, 2400 calls, 14.2531 milliseconds average
+mulMatTiled     12.4474 seconds, 2890 calls, 4.30705 milliseconds average
+mulMatByRowTiled        11.7568 seconds, 120741 calls, 97.3723 microseconds average
+mulMatByRowTiledEx      4.9317 seconds, 24048 calls, 205.077 microseconds average
+softMaxFixed    2.26629 seconds, 12504 calls, 181.245 microseconds average
+convolutionMain2Fixed   1.29108 seconds, 10 calls, 129.108 milliseconds average
+addRepeat       1.11767 seconds, 50256 calls, 22.2396 microseconds average
+matReshapePanels        1.06919 seconds, 1450 calls, 737.369 microseconds average
+copyConvert     881.162 milliseconds, 25488 calls, 34.5717 microseconds average
+addRepeatGelu   767.11 milliseconds, 12524 calls, 61.2512 microseconds average
+softMax 759.06 milliseconds, 12775 calls, 59.4176 microseconds average
+addRepeatScale  727.529 milliseconds, 24528 calls, 29.6612 microseconds average
+addInPlace      695.233 milliseconds, 25008 calls, 27.8004 microseconds average
+fmaRepeat1      608.837 milliseconds, 37793 calls, 16.1098 microseconds average
+normFixed       574.785 milliseconds, 37793 calls, 15.2088 microseconds average
+copyTranspose   559.208 milliseconds, 25008 calls, 22.3612 microseconds average
+scaleInPlace    512.856 milliseconds, 12504 calls, 41.0153 microseconds average
+convolutionMain 328.414 milliseconds, 10 calls, 32.8414 milliseconds average
+add     254.621 milliseconds, 12274 calls, 20.7447 microseconds average
+diagMaskInf     223.898 milliseconds, 12264 calls, 18.2565 microseconds average
+convolutionPrep2        42.5244 milliseconds, 20 calls, 2.12622 milliseconds average
+convolutionPrep1        31.1691 milliseconds, 20 calls, 1.55845 milliseconds average
+addRows 1.4072 milliseconds, 511 calls, 2.75382 microseconds average
     Memory Usage
 Model   877.966 KB RAM, 1.42785 GB VRAM
 Context 91.0721 MB RAM, 893.634 MB VRAM
