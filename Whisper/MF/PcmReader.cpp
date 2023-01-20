@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "PcmReader.h"
 #include <mfapi.h>
+#include <Mferror.h>
 #include "mfUtils.h"
 
 namespace Whisper
@@ -130,6 +131,12 @@ namespace
 		{
 			CComPtr<IMFTransform> mft;
 			HRESULT hr = readerEx->GetTransformForStream( stream, i, &category, &mft );
+			if( hr == MF_E_INVALIDINDEX )
+			{
+				// This happens for *.wav input files
+				// They don't have any MFT_CATEGORY_AUDIO_DECODER MFTs in the source reader, and it's not an error
+				return S_FALSE;
+			}
 			if( FAILED( hr ) )
 				return hr;
 			const __m128i cat = _mm_load_si128( ( const __m128i* ) & category );
