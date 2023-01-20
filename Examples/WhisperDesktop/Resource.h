@@ -49,8 +49,9 @@
 #define IDC_TRANSLATE                   1026
 #define IDC_MODEL_ADV                   1027
 #define IDC_WAVE                        1028
-#define IDC_WAVE2                       1029
 #define IDC_RESHAPED_MAT_MUL            1029
+#define IDC_CHECK2                      1029
+#define IDC_USE_INPUT_FOLDER            1029
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -60,7 +61,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1029
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

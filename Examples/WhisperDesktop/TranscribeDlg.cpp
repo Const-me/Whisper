@@ -37,7 +37,7 @@ LRESULT TranscribeDlg::OnInitDialog( UINT nMessage, WPARAM wParam, LPARAM lParam
 		{
 			languageSelector, GetDlgItem( IDC_TRANSLATE ),
 			sourceMediaPath, GetDlgItem( IDC_BROWSE_MEDIA ),
-			transcribeOutFormat,
+			transcribeOutFormat, useInputFolder,
 			transcribeOutputPath, GetDlgItem( IDC_BROWSE_RESULT ),
 			GetDlgItem( IDC_TRANSCRIBE ),
 			GetDlgItem( IDCANCEL ),
@@ -120,9 +120,17 @@ enum struct TranscribeDlg::eOutputFormat : uint8_t
 
 LRESULT TranscribeDlg::OnOutFormatChange( UINT, INT, HWND, BOOL& bHandled )
 {
-	const BOOL enabled = transcribeOutFormat.GetCurSel() != 0;
+	BOOL enabled = transcribeOutFormat.GetCurSel() != 0;
+	useInputFolder.EnableWindow( enabled );
+
+	if( isChecked( useInputFolder ) && enabled )
+	{
+		enabled = FALSE;
+		setOutputPath();
+	}
 	transcribeOutputPath.EnableWindow( enabled );
 	transcribeOutputBrowse.EnableWindow( enabled );
+
 	return 0;
 }
 
@@ -133,8 +141,11 @@ void TranscribeDlg::onBrowseMedia()
 
 	CString path;
 	sourceMediaPath.GetWindowText( path );
-	if( getOpenFileName( m_hWnd, title, filters, path ) )
-		sourceMediaPath.SetWindowText( path );
+	if( !getOpenFileName( m_hWnd, title, filters, path ) )
+		return;
+	sourceMediaPath.SetWindowText( path );
+	if( useInputFolder.IsWindowEnabled() && useInputFolder.GetCheck() == BST_CHECKED )
+		setOutputPath( path );
 }
 
 static const LPCTSTR outputFilters = L"Text files (*.txt)\0*.txt\0SubRip subtitles (*.srt)\0*.srt\0WebVTT subtitles (*.vtt)\0*.vtt\0\0";
@@ -142,6 +153,43 @@ static const std::array<LPCTSTR, 3> outputExtensions =
 {
 	L".txt", L".srt", L".vtt"
 };
+
+void TranscribeDlg::setOutputPath( const CString& input )
+{
+	const int format = transcribeOutFormat.GetCurSel() - 1;
+	if( format < 0 || format >= outputExtensions.size() )
+		return;
+	const LPCTSTR ext = outputExtensions[ format ];
+	CString path = input;
+	const bool renamed = PathRenameExtension( path.GetBufferSetLength( path.GetLength() + 4 ), ext );
+	path.ReleaseBuffer();
+	if( !renamed )
+		return;
+	transcribeOutputPath.SetWindowText( path );
+}
+
+void TranscribeDlg::setOutputPath()
+{
+	CString path;
+	if( !sourceMediaPath.GetWindowText( path ) )
+		return;
+	if( path.GetLength() <= 0 )
+		return;
+	setOutputPath( path );
+}
+
+void TranscribeDlg::onInputFolderCheck()
+{
+	const bool checked = isChecked( useInputFolder );
+
+	BOOL enableOutput = checked ? FALSE : TRUE;
+	transcribeOutputPath.EnableWindow( enableOutput );
+	transcribeOutputBrowse.EnableWindow( enableOutput );
+
+	if( !checked )
+		return;
+	setOutputPath();
+}
 
 void TranscribeDlg::onBrowseOutput()
 {

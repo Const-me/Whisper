@@ -28,6 +28,7 @@ public:
 		ON_BUTTON_CLICK( IDC_CONSOLE, cbConsole.click )
 		ON_BUTTON_CLICK( IDCANCEL, onClose )
 		ON_BUTTON_CLICK( IDC_BACK, onBack )
+		ON_BUTTON_CLICK( IDC_USE_INPUT_FOLDER, onInputFolderCheck )
 		ON_BUTTON_CLICK( IDC_BROWSE_MEDIA, onBrowseMedia )
 		ON_BUTTON_CLICK( IDC_BROWSE_RESULT, onBrowseOutput )
 		ON_BUTTON_CLICK( IDC_TRANSCRIBE, onTranscribe )
@@ -41,6 +42,7 @@ public:
 		DDX_CONTROL_HANDLE( IDC_MODEL_DESC, modelDesc )
 		DDX_CONTROL_HANDLE( IDC_PATH_MEDIA, sourceMediaPath )
 		DDX_CONTROL_HANDLE( IDC_OUTPUT_FORMAT, transcribeOutFormat )
+		DDX_CONTROL_HANDLE( IDC_USE_INPUT_FOLDER, useInputFolder )
 		DDX_CONTROL_HANDLE( IDC_PATH_RESULT, transcribeOutputPath )
 		DDX_CONTROL_HANDLE( IDC_BROWSE_RESULT, transcribeOutputBrowse );
 		DDX_CONTROL_HANDLE( IDC_TRANSCRIBE_PROGRESS, progressBar );
@@ -70,6 +72,7 @@ private:
 	TranslateCheckbox cbTranslate;
 
 	CEdit sourceMediaPath;
+	CButton useInputFolder;
 	CEdit transcribeOutputPath;
 	CButton transcribeOutputBrowse;
 	CComboBox transcribeOutFormat;
@@ -77,6 +80,7 @@ private:
 	void populateOutputFormats();
 
 	LRESULT OnOutFormatChange( UINT, INT, HWND, BOOL& bHandled );
+	void onInputFolderCheck();
 	void onBrowseMedia();
 	void onBrowseOutput();
 	void onTranscribe();
@@ -121,4 +125,6 @@ private:
 	HRESULT progressCallback( double p ) noexcept;
 
 	void onWmClose();
+	void setOutputPath();
+	void setOutputPath( const CString& input );
 };

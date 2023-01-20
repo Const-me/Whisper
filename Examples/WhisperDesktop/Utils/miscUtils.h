@@ -70,3 +70,8 @@ inline uint32_t flipRgb( uint32_t val )
 }
 
 bool isInvalidTranslate( HWND owner, uint32_t lang, bool translate );
+
+inline bool isChecked( CButton& btn )
+{
+	return btn.GetCheck() == BST_CHECKED;
+}
