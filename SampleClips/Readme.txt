@@ -9,6 +9,8 @@ The rest of the text files in this folder are the outputs of the in-app performa
 
 The “1080ti” files are from my desktop, which has nVidia GeForce 1080Ti GPU.
 
+The “vega8” files are from the same desktop, when using the GPU integrated into AMD Ryzen 7 5700G processor.
+
 The “vega7” files are from my laptop, the GPU is integrated into AMD Ryzen 5 5600U processor.
 The laptop model is HP ProBook 445 G8. While running the tests, the laptop was on battery power.
 
@@ -18,6 +20,8 @@ The file names with “medium” in the middle were made with “ggml-medium.bin
 
 In theory, 1080ti delivers 10.6 TFlops FP32 and 484.4 GB/second VRAM bandwidth.
 
+The AMD APU in that desktop delivers 2.0 TFlops FP32, and 53.3 GB/second memory bandwidth.
+
 That variant of 1650 delivers 2.6 TFlops FP32, and 128.1 GB/second VRAM bandwidth.
 
-The AMD APU in that laptop delivers 1.6 TFlops FP32, and 51.2 GB/second memory bandwidth.
+The AMD APU in the laptop delivers 1.6 TFlops FP32, and 51.2 GB/second memory bandwidth.
