@@ -8,7 +8,7 @@ void TranslateCheckbox::initialize( HWND owner, int idc, AppState& state )
 	m_hWnd = GetDlgItem( owner, idc );
 	assert( nullptr != m_hWnd );
 
-	if( state.dwordLoad( regValTranslate, 0 ) != 0 )
+	if( state.boolLoad( regValTranslate ) )
 		::SendMessage( m_hWnd, BM_SETCHECK, BST_CHECKED, 0L );
 }
 
@@ -21,5 +21,5 @@ bool TranslateCheckbox::checked()
 
 void TranslateCheckbox::saveSelection( AppState& state )
 {
-	state.dwordStore( regValTranslate, checked() ? TRUE : FALSE );
+	state.boolStore( regValTranslate, checked() );
 }
