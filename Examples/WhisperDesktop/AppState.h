@@ -37,6 +37,8 @@ public:
 	void stringStore( LPCTSTR name, LPCTSTR value );
 	uint32_t dwordLoad( LPCTSTR name, uint32_t fallback );
 	void dwordStore( LPCTSTR name, uint32_t value );
+	bool boolLoad( LPCTSTR name );
+	void boolStore( LPCTSTR name, bool val );
 
 	bool automaticallyLoadModel = true;
 

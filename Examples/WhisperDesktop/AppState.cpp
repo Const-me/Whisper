@@ -204,3 +204,16 @@ void AppState::gpuFlagsStore( uint32_t flags )
 	else
 		dwordStore( regValGpuFlags, flags );
 }
+
+bool AppState::boolLoad( LPCTSTR name )
+{
+	return dwordLoad( name, 0 ) != 0;
+}
+
+void AppState::boolStore( LPCTSTR name, bool val )
+{
+	if( val )
+		dwordStore( name, 1 );
+	else
+		registryKey.DeleteValue( name );
+}

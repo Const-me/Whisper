@@ -32,8 +32,9 @@ public:
 		ON_BUTTON_CLICK( IDC_BROWSE_MEDIA, onBrowseMedia )
 		ON_BUTTON_CLICK( IDC_BROWSE_RESULT, onBrowseOutput )
 		ON_BUTTON_CLICK( IDC_TRANSCRIBE, onTranscribe )
-		ON_BUTTON_CLICK( IDC_CAPTURE, onCapture );
-		COMMAND_HANDLER( IDC_OUTPUT_FORMAT, CBN_SELCHANGE, OnOutFormatChange )
+		ON_BUTTON_CLICK( IDC_CAPTURE, onCapture )
+		COMMAND_HANDLER( IDC_OUTPUT_FORMAT, CBN_SELCHANGE, onOutFormatChange )
+		COMMAND_HANDLER( IDC_PATH_MEDIA, EN_CHANGE, onInputChange )
 		MESSAGE_HANDLER( WM_CALLBACK_STATUS, onCallbackStatus )
 		MSG_WM_CLOSE( onWmClose )
 	END_MSG_MAP()
@@ -79,7 +80,8 @@ private:
 	CProgressBarCtrl progressBar;
 	void populateOutputFormats();
 
-	LRESULT OnOutFormatChange( UINT, INT, HWND, BOOL& bHandled );
+	LRESULT onOutFormatChange( UINT, INT, HWND, BOOL& bHandled );
+	LRESULT onInputChange( UINT, INT, HWND, BOOL& );
 	void onInputFolderCheck();
 	void onBrowseMedia();
 	void onBrowseOutput();
@@ -125,6 +127,8 @@ private:
 	HRESULT progressCallback( double p ) noexcept;
 
 	void onWmClose();
-	void setOutputPath();
+	// Populate output path based on the provided input media path
 	void setOutputPath( const CString& input );
+	// Populate output path based on the input media path in the edit box
+	void setOutputPath();
 };

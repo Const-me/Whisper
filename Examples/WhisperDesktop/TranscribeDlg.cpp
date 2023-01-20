@@ -22,6 +22,7 @@ constexpr int progressMaxInteger = 1024 * 8;
 static const LPCTSTR regValInput = L"sourceMedia";
 static const LPCTSTR regValOutFormat = L"resultFormat";
 static const LPCTSTR regValOutPath = L"resultPath";
+static const LPCTSTR regValUseInputFolder = L"useInputFolder";
 
 LRESULT TranscribeDlg::OnInitDialog( UINT nMessage, WPARAM wParam, LPARAM lParam, BOOL& bHandled )
 {
@@ -61,8 +62,10 @@ LRESULT TranscribeDlg::OnInitDialog( UINT nMessage, WPARAM wParam, LPARAM lParam
 	sourceMediaPath.SetWindowText( appState.stringLoad( regValInput ) );
 	transcribeOutFormat.SetCurSel( (int)appState.dwordLoad( regValOutFormat, 0 ) );
 	transcribeOutputPath.SetWindowText( appState.stringLoad( regValOutPath ) );
+	if( appState.boolLoad( regValUseInputFolder ) )
+		useInputFolder.SetCheck( BST_CHECKED );
 	BOOL unused;
-	OnOutFormatChange( 0, 0, nullptr, unused );
+	onOutFormatChange( 0, 0, nullptr, unused );
 
 	appState.lastScreenSave( SCREEN_TRANSCRIBE );
 	appState.setupIcon( this );
@@ -118,7 +121,8 @@ enum struct TranscribeDlg::eOutputFormat : uint8_t
 	WebVTT = 3
 };
 
-LRESULT TranscribeDlg::OnOutFormatChange( UINT, INT, HWND, BOOL& bHandled )
+// CBN_SELCHANGE notification for IDC_OUTPUT_FORMAT combobox
+LRESULT TranscribeDlg::onOutFormatChange( UINT, INT, HWND, BOOL& bHandled )
 {
 	BOOL enabled = transcribeOutFormat.GetCurSel() != 0;
 	useInputFolder.EnableWindow( enabled );
@@ -131,6 +135,17 @@ LRESULT TranscribeDlg::OnOutFormatChange( UINT, INT, HWND, BOOL& bHandled )
 	transcribeOutputPath.EnableWindow( enabled );
 	transcribeOutputBrowse.EnableWindow( enabled );
 
+	return 0;
+}
+
+// EN_CHANGE notification for IDC_PATH_MEDIA edit box
+LRESULT TranscribeDlg::onInputChange( UINT, INT, HWND, BOOL& )
+{
+	if( !useInputFolder.IsWindowEnabled() )
+		return 0;
+	if( !isChecked( useInputFolder ) )
+		return 0;
+	setOutputPath();
 	return 0;
 }
 
@@ -255,12 +270,19 @@ void TranscribeDlg::onTranscribe()
 			transcribeError( L"Please select an output text file" );
 			return;
 		}
+		if( PathFileExists( transcribeArgs.pathOutput ) )
+		{
+			const int resp = MessageBox( L"The output file is already there.\nOverwrite the file?", L"Confirm Overwrite", MB_ICONQUESTION | MB_YESNO );
+			if( resp != IDYES )
+				return;
+		}
 		appState.stringStore( regValOutPath, transcribeArgs.pathOutput );
 	}
 	else
 		cbConsole.ensureChecked();
 
 	appState.dwordStore( regValOutFormat, (uint32_t)(int)transcribeArgs.format );
+	appState.boolStore( regValUseInputFolder, isChecked( useInputFolder ) );
 	languageSelector.saveSelection( appState );
 	cbTranslate.saveSelection( appState );
 	appState.stringStore( regValInput, transcribeArgs.pathMedia );
