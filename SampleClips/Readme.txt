@@ -25,3 +25,6 @@ The AMD APU in that desktop delivers 2.0 TFlops FP32, and 53.3 GB/second memory 
 That variant of 1650 delivers 2.6 TFlops FP32, and 128.1 GB/second VRAM bandwidth.
 
 The AMD APU in the laptop delivers 1.6 TFlops FP32, and 51.2 GB/second memory bandwidth.
+
+The loading times in these logs make little sense because they depend heavily on the disk cache implemented in the OS kernel.
+Ideally, I needed to reboot Windows before every test, but I didn’t do that.
