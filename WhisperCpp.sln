@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfSummary", "Tools\PerfSummary\PerfSummary.csproj", "{8AC301F0-FEC9-4F26-83DD-DB32969CD510}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -91,6 +93,10 @@ Global
 		{CD9E49F0-75A3-4F91-AC71-336109EE39C6}.Debug|x64.Build.0 = Debug|x64
 		{CD9E49F0-75A3-4F91-AC71-336109EE39C6}.Release|x64.ActiveCfg = Release|x64
 		{CD9E49F0-75A3-4F91-AC71-336109EE39C6}.Release|x64.Build.0 = Release|x64
+		{8AC301F0-FEC9-4F26-83DD-DB32969CD510}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8AC301F0-FEC9-4F26-83DD-DB32969CD510}.Debug|x64.Build.0 = Debug|Any CPU
+		{8AC301F0-FEC9-4F26-83DD-DB32969CD510}.Release|x64.ActiveCfg = Release|Any CPU
+		{8AC301F0-FEC9-4F26-83DD-DB32969CD510}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{A49305C0-7022-45A6-89B4-4BD33138C98A} = {B988C132-115D-4157-99FE-0D891CE45A82}
 		{8478A77C-D851-4C63-9511-1770CC82D33E} = {90D16EBB-08A4-4C9B-9991-B1B2E036838C}
 		{CD9E49F0-75A3-4F91-AC71-336109EE39C6} = {B988C132-115D-4157-99FE-0D891CE45A82}
+		{8AC301F0-FEC9-4F26-83DD-DB32969CD510} = {90D16EBB-08A4-4C9B-9991-B1B2E036838C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {07D5F1CF-1FAD-4F40-806A-B148CD609961}

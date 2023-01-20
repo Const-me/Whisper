@@ -15,3 +15,5 @@ Examples/TranscribeCS/obj/
 *.user
 Examples/MicrophoneCS/obj/
 Examples/MicrophoneCS/bin/
+Tools/PerfSummary/bin/
+Tools/PerfSummary/obj/
