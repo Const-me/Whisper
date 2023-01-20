@@ -176,6 +176,7 @@ void TranscribeDlg::setOutputPath( const CString& input )
 		return;
 	const LPCTSTR ext = outputExtensions[ format ];
 	CString path = input;
+	path.Trim();
 	const bool renamed = PathRenameExtension( path.GetBufferSetLength( path.GetLength() + 4 ), ext );
 	path.ReleaseBuffer();
 	if( !renamed )
