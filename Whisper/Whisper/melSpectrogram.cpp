@@ -280,9 +280,10 @@ float* SpectrogramContext::fftRecursion( float* temp, const float* const rsi, co
 		out[ 2 * ( k + N / 2 ) + 0 ] = evenFft[ 2 * k + 0 ] - re * re_odd + im * im_odd;
 		out[ 2 * ( k + N / 2 ) + 1 ] = evenFft[ 2 * k + 1 ] - re * im_odd - im * re_odd;
 		*/
-
-		const __m128 re = _mm_set_ss( std::cosf( theta ) );
-		const __m128 im = _mm_set_ss( std::sinf( theta ) );
+		float sine, cosine;
+		DirectX::XMScalarSinCos( &sine, &cosine, theta );
+		const __m128 re = _mm_set_ss( cosine );
+		const __m128 im = _mm_set_ss( sine );
 		__m128 reIm = _mm_shuffle_ps( re, im, _MM_SHUFFLE( 0, 0, 0, 0 ) );
 		// [ re, re, im, im ]
 		reIm = _mm_xor_ps( reIm, maskNegateHigh );
