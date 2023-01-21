@@ -5,7 +5,7 @@
 #include "TranscribeDlg.h"
 #include "CaptureDlg.h"
 
-HRESULT dialogLoadModel( AppState& appState )
+static HRESULT dialogLoadModel( AppState& appState )
 {
 	LoadModelDlg loadDialog{ appState };
 	HRESULT hr = loadDialog.show();
@@ -18,13 +18,13 @@ HRESULT dialogLoadModel( AppState& appState )
 	return hr;
 }
 
-HRESULT dialogTranscribe( AppState& appState )
+static HRESULT dialogTranscribe( AppState& appState )
 {
 	TranscribeDlg dialog{ appState };
 	return dialog.show();
 }
 
-HRESULT dialogCapture( AppState& appState )
+static HRESULT dialogCapture( AppState& appState )
 {
 	CaptureDlg dialog{ appState };
 	return dialog.show();
