@@ -83,7 +83,8 @@ That stuff is disabled by preprocessor macros or `constexpr` flags, I hope it’
 ## Performance Notes
 
 I have a limited selection of GPUs in this house.<br/>
-Specifically, I have optimized for nVidia 1080Ti, Radeon Vega 8 inside Ryzen 7 5700G, and Radeon Vega 7 inside Ryzen 5 5600U.
+Specifically, I have optimized for nVidia 1080Ti, Radeon Vega 8 inside Ryzen 7 5700G, and Radeon Vega 7 inside Ryzen 5 5600U.<br/>
+[Here’s the summary](https://github.com/Const-me/Whisper/blob/master/SampleClips/summary.tsv).
 
 The nVidia delivers relative speed 5.8 for the large model, 10.6 for the medium model.<br/>
 The AMD Ryzen 5 5600U APU delivers relative speed about 2.2 for the medium model. Not great, but still, much faster than realtime.
@@ -95,6 +96,14 @@ That’s much slower than realtime, but I was happy to find my software works ev
 I’m not sure the performance is ideal on discrete AMD GPUs, or integrated Intel GPUs, have not specifically optimized for them.<br/>
 Ideally, they might need slightly different builds of a couple of the most expensive compute shaders, `mulMatTiled.hlsl` and `mulMatByRowTiled.hlsl`<br/>
 And maybe other adjustments, like the `useReshapedMatMul()` value in `Whisper/D3D/device.h` header file.
+
+I don’t know how to measure that, but I have a feeling the bottleneck is memory, not compute.<br/>
+Someone on Hacker News [has tested](https://news.ycombinator.com/item?id=34408429) on [3060Ti](https://en.wikipedia.org/wiki/GeForce_30_series#Desktop),
+the version with GDDR6 memory.
+Compared to 1080Ti, that GPU has 1.3x FP32 FLOPS, but 0.92x VRAM bandwidth.
+The app was about 10% slower on the 3060Ti.<br/>
+Would be interesting to test on AMD [RDNA2](https://en.wikipedia.org/wiki/Radeon_RX_6000_series#Desktop)
+or [RDNA3](https://en.wikipedia.org/wiki/Radeon_RX_7000_series#Desktop) GPUs, with their large 80 MB+ level 3 cashes.
 
 ## Further Optimisations
 
