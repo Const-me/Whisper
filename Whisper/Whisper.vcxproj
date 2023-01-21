@@ -110,6 +110,7 @@
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ClCompile Include="CPU\HybridLoader.cpp" />
+    <ClCompile Include="Utils\DelayExecution.cpp" />
     <ClCompile Include="Hybrid\HybridContext.cpp" />
     <ClCompile Include="CPU\ParallelForRunner.cpp">
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
@@ -235,6 +236,7 @@
     <ClInclude Include="CPU\Tensor.h" />
     <ClInclude Include="CPU\DecoderTensors.h" />
     <ClInclude Include="CPU\HybridLoader.h" />
+    <ClInclude Include="Utils\DelayExecution.h" />
     <ClInclude Include="Hybrid\HybridContext.h" />
     <ClInclude Include="CPU\ParallelForRunner.h" />
     <ClInclude Include="CPU\LargeBuffer.h" />

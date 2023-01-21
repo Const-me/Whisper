@@ -1,6 +1,7 @@
 #pragma once
 #include "../D3D/device.h"
 #include "ProfileCollection.h"
+#include "DelayExecution.h"
 
 namespace DirectCompute
 {
@@ -19,6 +20,7 @@ namespace DirectCompute
 
 	class GpuProfiler
 	{
+		DelayExecution delay;
 		CComPtr<ID3D11Query> disjoint;
 
 		enum struct eEvent

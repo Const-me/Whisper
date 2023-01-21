@@ -45,7 +45,7 @@ HRESULT GpuProfiler::Queue::create()
 
 namespace
 {
-	static uint64_t getTimestamp( ID3D11Query* query )
+	static uint64_t getTimestamp( ID3D11Query* query, const DelayExecution& delay )
 	{
 		ID3D11DeviceContext* const ctx = context();
 
@@ -56,12 +56,7 @@ namespace
 			check( hr );
 			if( S_OK == hr )
 				return res;
-#if 0
-			Sleep( 1 );
-#else
-			for( size_t i = 0; i < 1024; i++ )
-				_mm_pause();
-#endif
+			delay.delay();
 		}
 	}
 
@@ -86,7 +81,7 @@ void GpuProfiler::Queue::Entry::join( GpuProfiler& owner )
 {
 	assert( nullptr != block );
 
-	uint64_t res = getTimestamp( query );
+	uint64_t res = getTimestamp( query, owner.delay );
 #if PROFILER_COLLECT_TAGS
 	block->haveTimestamp( event, shader, tag, res, owner );
 #else
@@ -350,8 +345,8 @@ HRESULT GpuProfilerSimple::time( uint64_t& rdi ) const
 	try
 	{
 		const D3D11_QUERY_DATA_TIMESTAMP_DISJOINT dtsd = waitForDisjointData( disjoint );
-		const uint64_t t1 = getTimestamp( begin );
-		const uint64_t t2 = getTimestamp( end );
+		const uint64_t t2 = getTimestamp( end, delay );
+		const uint64_t t1 = getTimestamp( begin, delay );
 
 		if( !dtsd.Disjoint )
 		{
