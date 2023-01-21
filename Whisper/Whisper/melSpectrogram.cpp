@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include <cmath>
 #include "melSpectrogram.h"
+#define _XM_SSE4_INTRINSICS_
+#include <DirectXMath.h>
 
 namespace Whisper
 {
@@ -39,16 +41,116 @@ namespace
 	// const uint32_t tempBufferSize = FFT_SIZE + tempVectorSizeRecursion( FFT_SIZE );
 	constexpr uint32_t tempBufferSize = 6000;
 
+	// [ a, b, c, d ], [ e, f, g, h ] => [ a+b+c+d, e+f+g+h ]
+	inline  __m128 hadd2( __m128 low, __m128 high )
+	{
+		// [ a, e, b, f ]
+		__m128 a = _mm_unpacklo_ps( low, high );
+		// [ c, g, d, h ]
+		__m128 b = _mm_unpackhi_ps( low, high );
+		// [ a+c, e+g, b+d, f+h ]
+		__m128 r = _mm_add_ps( a, b );
+		// [ b+d, f+h, b+d, f+h ]
+		__m128 tmp = _mm_movehl_ps( r, r );
+		// [ a+c+b+d, e+g+f+h ]
+		return _mm_add_ps( r, tmp );
+	}
+
+	inline __m128 load2( const float* rsi )
+	{
+		return _mm_castpd_ps( _mm_load_sd( (const double*)rsi ) );
+	}
+	inline void store2( float* rdi, __m128 vec )
+	{
+		_mm_store_sd( (double*)rdi, _mm_castps_pd( vec ) );
+	}
+	inline __m128 loadFloat3( const float* rsi )
+	{
+		__m128 f = load2( rsi );
+		f = _mm_insert_ps( f, _mm_load_ss( rsi + 2 ), 0x20 );
+		return f;
+	}
+	inline __m128 loadPartial( const float* rsi, size_t rem )
+	{
+		assert( rem > 0 && rem < 4 );
+		switch( rem )
+		{
+		case 1:
+			return _mm_load_ss( rsi );
+		case 2:
+			return load2( rsi );
+		case 3:
+			return loadFloat3( rsi );
+		}
+		return _mm_setzero_ps();
+	}
+
 	// naive Discrete Fourier Transform
 	// input is real-valued
 	// output is complex-valued
 	inline void dft( const float* rsi, size_t len, float* rdi )
 	{
+		const size_t lenAligned = len & ( ~(size_t)3 );
+		const size_t remainder = len % 4;
+
+		const double mulScalarBase = ( 2.0 * M_PI ) / (double)(int)len;
+
+		const __m128 nvInitial = _mm_setr_ps( 0, 1, 2, 3 );
+		const __m128 nvInc = _mm_set1_ps( 4 );
+
 		for( size_t k = 0; k < len; k++ )
 		{
+#if 1
+			const __m128 mul = _mm_set1_ps( (float)( mulScalarBase * (int)k ) );
+
+			__m128 nv = nvInitial;
+			__m128 cosine = _mm_setzero_ps();
+			__m128 sine = _mm_setzero_ps();
+			for( size_t n = 0; n < lenAligned; n += 4 )
+			{
+				const __m128 angles = _mm_mul_ps( nv, mul );
+				nv = _mm_add_ps( nv, nvInc );
+				__m128 s, c;
+				// That library function from Windows SDK is way faster than std::sinf/cosf
+				// Especially because we use the version which computes 4 angles at once
+				// Source codes there: https://github.com/microsoft/DirectXMath/blob/dec2022/Inc/DirectXMathVector.inl#L4456-L4512
+				DirectX::XMVectorSinCos( &s, &c, angles );
+
+				// Multiply sin/cos by 4 source values
+				const __m128 source = _mm_loadu_ps( &rsi[ n ] );
+				c = _mm_mul_ps( c, source );
+				s = _mm_mul_ps( s, source );
+
+				// Accumulate in 2 vectors
+				cosine = _mm_add_ps( cosine, c );
+				sine = _mm_sub_ps( sine, s );
+			}
+
+			// Handle the remainder; debugger shows it's always 1, BTW
+			if( 0 != remainder )
+			{
+				const __m128 angles = _mm_mul_ps( nv, mul );
+				__m128 s, c;
+				DirectX::XMVectorSinCos( &s, &c, angles );
+				// loadPartial sets unused lanes to 0..
+				const __m128 source = loadPartial( &rsi[ lenAligned ], remainder );
+				// x * 0.0 == 0.0 ..
+				c = _mm_mul_ps( c, source );
+				s = _mm_mul_ps( s, source );
+				// .. that's why it's fine to accumulate the complete vectors.
+				// Adding or subtracting zero doesn't change the accumulator
+				cosine = _mm_add_ps( cosine, c );
+				sine = _mm_sub_ps( sine, s );
+			}
+
+			// Reduce 2*4 accumulators -> 2 scalars in a single vector
+			const __m128 res = hadd2( cosine, sine );
+			// Store 2 floats, with 1 instruction
+			store2( &rdi[ k * 2 ], res );
+#else
+			// Original scalar version here
 			float re = 0;
 			float im = 0;
-
 			for( int n = 0; n < len; n++ )
 			{
 				float angle = (float)( 2 * M_PI * (int)k * n / len );
@@ -58,6 +160,7 @@ namespace
 
 			rdi[ k * 2 + 0 ] = re;
 			rdi[ k * 2 + 1 ] = im;
+#endif
 		}
 	}
 
@@ -95,14 +198,6 @@ namespace
 	{
 		__m128 v = _mm_set_ss( f );
 		return _mm_moveldup_ps( v );
-	}
-	inline __m128 load2( const float* rsi )
-	{
-		return _mm_castpd_ps( _mm_load_sd( (const double*)rsi ) );
-	}
-	inline void store2( float* rdi, __m128 vec )
-	{
-		_mm_store_sd( (double*)rdi, _mm_castps_pd( vec ) );
 	}
 	// [ x, y ] => [ x, y, x, y ]
 	inline __m128 dup2( __m128 x )
