@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include <cmath>
 #include "melSpectrogram.h"
-#define _XM_SSE4_INTRINSICS_
-#include <DirectXMath.h>
 
 namespace Whisper
 {

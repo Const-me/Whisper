@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "voiceActivityDetection.h"
-#include <DirectXMath.h>
 using namespace Whisper;
 
 // Initially ported (poorly) from there https://github.com/panmasuo/voice-activity-detection MIT license
@@ -56,6 +55,13 @@ void VAD::fft() const
 
 constexpr float mulInt16FromFloat = 32768.0;
 
+inline float squareRoot( float x )
+{
+	__m128 v = _mm_set_ss( x );
+	v = _mm_sqrt_ss( v );
+	return _mm_cvtss_f32( v );
+}
+
 float VAD::computeEnergy( const float* rsi )
 {
 	// calculate_energy
@@ -67,7 +73,7 @@ float VAD::computeEnergy( const float* rsi )
 		f *= f;
 		sum += f;
 	}
-	return std::sqrtf( (float)( sum * ( 1.0 / FFT_POINTS ) ) );
+	return squareRoot( (float)( sum * ( 1.0 / FFT_POINTS ) ) );
 }
 
 float VAD::computeDominant( const cplx* spectrum )

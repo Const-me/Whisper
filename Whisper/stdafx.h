@@ -17,7 +17,11 @@
 #include <sdkddkver.h>
 
 #include <windows.h>
+
+#define _XM_SSE4_INTRINSICS_
 #include <d3d11.h>
+#include <DirectXMath.h>
+
 #include <atlcomcli.h>
 #include "Utils/Logger.h"
 #include "Utils/miscUtils.h"
