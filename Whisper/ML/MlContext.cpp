@@ -734,6 +734,21 @@ Tensor MlContext::mulMatByRowTiledEx( const Tensor& a, const Tensor& b )
 	return res;
 }
 
+void MlContext::addRepeatEx( Tensor& dest, const Tensor& pattern, const Tensor& finalAdd )
+{
+	if( !isSameShape( dest, finalAdd ) )
+		throw E_INVALIDARG;
+	assert( dest.getType() == eDataType::FP32 );
+
+	check( cb.update( dest, pattern, finalAdd ) );
+	bindShader( eComputeShader::addRepeatEx );
+	cb.bind();
+
+	Binder bind;
+	bind.bind( pattern, finalAdd, dest );
+	context()->Dispatch( dest.ne[ 1 ], dest.ne[ 2 ], dest.ne[ 3 ] );
+}
+
 __m128i MlContext::getMemoryUse() const
 {
 	__m128i v = cb.getMemoryUse();

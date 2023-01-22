@@ -244,10 +244,9 @@ Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t
 		profiler.setNextTag( "enc.layer.4" );
 		cur = mulMat( layer.attnLn1.w, cur );
 	}
-	addRepeat( cur, layer.attnLn1.b );
 
 	// add the input
-	addInPlace( cur, source );
+	addRepeatEx( cur, layer.attnLn1.b, source );
 
 	// feed-forward network
 	Tensor inpFF = cur;
@@ -284,10 +283,8 @@ Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t
 		cur = mulMat( layer.mlp1.w, cur );
 	}
 
-	addRepeat( cur, layer.mlp1.b );
-
 	// output from this layer
-	addInPlace( cur, inpFF );
+	addRepeatEx( cur, layer.mlp1.b, inpFF );
 	return cur;
 }
 
@@ -523,10 +520,9 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 	{
 		profiler.setNextTag( "dec.layer.10" );
 		cur = mulMat( layer.crossAttnLn1.w, cur );
-		addRepeat( cur, layer.crossAttnLn1.b );
 	}
 	// add the input
-	addInPlace( cur, inpCA );
+	addRepeatEx( cur, layer.crossAttnLn1.b, inpCA );
 	Tensor inpFF = cur;
 
 	// feed-forward network
@@ -573,11 +569,9 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 			profiler.setNextTag( "dec.layer.12" );
 			cur = mulMat( layer.mlp1.w, cur );
 		}
-		addRepeat( cur, layer.mlp1.b );
 	}
-
 	// output from this layer
-	addInPlace( cur, inpFF );
+	addRepeatEx( cur, layer.mlp1.b, inpFF );
 	return cur;
 }
 

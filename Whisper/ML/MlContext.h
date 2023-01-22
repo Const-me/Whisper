@@ -106,6 +106,9 @@ namespace DirectCompute
 		Tensor mulMatTiledEx( const Tensor& a, const Tensor& b );
 		Tensor mulMatByRowTiledEx( const Tensor& a, const Tensor& b );
 
+		// An equivalent of addRepeat( dest, pattern ) followed by addInPlace( dest, finalAdd )
+		void addRepeatEx( Tensor& dest, const Tensor& pattern, const Tensor& finalAdd );
+
 		__m128i getMemoryUse() const;
 	};
 }

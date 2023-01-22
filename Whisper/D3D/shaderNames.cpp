@@ -2,11 +2,12 @@
 #include "stdafx.h"
 #include "shaderNames.h"
 
-static const std::array<const char*, 38> s_shaderNames = 
+static const std::array<const char*, 39> s_shaderNames = 
 {
 	"add",
 	"addInPlace",
 	"addRepeat",
+	"addRepeatEx",
 	"addRepeatGelu",
 	"addRepeatScale",
 	"addRows",

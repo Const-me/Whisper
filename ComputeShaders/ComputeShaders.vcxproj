@@ -160,6 +160,7 @@
     <FxCompile Include="addInPlace.hlsl" />
     <FxCompile Include="addRepeat.hlsl" />
     <FxCompile Include="addRepeat64.hlsl" />
+    <FxCompile Include="addRepeatEx.hlsl" />
     <FxCompile Include="addRepeatGelu.hlsl" />
     <FxCompile Include="addRepeatGelu64.hlsl" />
     <FxCompile Include="addRepeatScale.hlsl" />
