@@ -478,11 +478,10 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 	{
 		profiler.setNextTag( "dec.layer.6" );
 		cur = mulMat( layer.attnLn1.w, cur );
-		addRepeat( cur, layer.attnLn1.b );
 	}
-
 	// add the input
-	Tensor inpCA = add( cur, inpL );
+	addRepeatEx( cur, layer.attnLn1.b, inpL );
+	Tensor inpCA = cur;
 
 	// norm
 	{
