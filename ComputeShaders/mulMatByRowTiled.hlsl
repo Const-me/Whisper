@@ -39,7 +39,8 @@ void main( uint3 group: SV_GroupID, uint3 thread : SV_GroupThreadID, uint thread
 	// Zero out the shared buffer
 	for( i = thread.y; i < TILE_Y; i += THREADS_Y )
 		resTemp[ i ][ thread.x ] = 0.0;
-	GroupMemoryBarrierWithGroupSync();
+	// Before the reduction at the end of this shader, each thread only loads/stores the [ thread.y + THREADS_Y * N ][ thread.x ] elements of the shared buffer,
+	// where N is an integer. That's why until the end, we don't need these thread sync instructions.
 
 	// Count of rows to compute in this thread group
 	const uint height = min( TILE_Y, arg0Size.y - group.x * TILE_Y );
@@ -70,7 +71,6 @@ void main( uint3 group: SV_GroupID, uint3 thread : SV_GroupThreadID, uint thread
 			acc = mad( v0, v1, acc );
 			resTemp[ i ][ thread.x ] = acc;
 		}
-		GroupMemoryBarrierWithGroupSync();
 	}
 
 	const uint rem = arg0Size.x % THREADS_X;
@@ -92,10 +92,11 @@ void main( uint3 group: SV_GroupID, uint3 thread : SV_GroupThreadID, uint thread
 			acc = mad( v0, v1, acc );
 			resTemp[ i ][ thread.x ] = acc;
 		}
-		GroupMemoryBarrierWithGroupSync();
 	}
 
-	// Now we need horizontal sums of these shared accumulators, i.e. reduce [height][THREADS_X] shared array into [height][1] column
+	// Now we need horizontal sum of these shared accumulators, reducing [height][THREADS_X] shared array into [height][1] column
+	GroupMemoryBarrierWithGroupSync();
+
 	for( i = THREADS_X / 2; i > 0; i /= 2 )
 	{
 		if( thread.x < i )
