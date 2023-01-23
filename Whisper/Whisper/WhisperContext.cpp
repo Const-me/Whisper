@@ -318,7 +318,6 @@ Tensor WhisperContext::encode( Whisper::iSpectrogram& spectrogram, const sEncode
 	check( melInput.create( spectrogram, encParams ) );
 	Tracing::tensor( "enc.input", melInput );
 
-	arenas.outer.clear();
 	ArenaRaii arenaRaii{ *this, arenas.outer };
 
 	// Initial few steps
