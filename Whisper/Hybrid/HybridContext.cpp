@@ -176,7 +176,7 @@ HRESULT HybridContext::decode( const int* tokens, const int n_tokens, const int 
 		{
 			Tensor Qcur = ml.mulMat( layer.attnQuery.w, cur );
 			if( 0 == il ) Tracing::tensor( "dec-Qcur-0", Qcur );
-			const float scaling = (float)pow( float( (int)n_state ) / (int)n_head, -0.25 );
+			const float scaling = computeScaling( (int)n_state, (int)n_head );
 			ml.addRepeatScale( Qcur, layer.attnQuery.b, scaling );
 			if( 0 == il ) Tracing::tensor( "dec-Qcur-1", Qcur );
 
@@ -241,7 +241,7 @@ HRESULT HybridContext::decode( const int* tokens, const int n_tokens, const int 
 		// cross-attention
 		{
 			Tensor Qcur = ml.mulMat( layer.crossAttnQuery.w, cur );
-			ml.addRepeatScale( Qcur, layer.crossAttnQuery.b, (float)pow( float( (int)n_state ) / (int)n_head, -0.25 ) );
+			ml.addRepeatScale( Qcur, layer.crossAttnQuery.b, computeScaling( (int)n_state, (int)n_head ) );
 
 			// Kcross is already scaled
 			const uint32_t len = M * n_state;

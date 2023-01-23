@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "miscUtils.h"
+#include <cmath>
 
 void setCurrentThreadName( const char* threadName )
 {
@@ -30,4 +31,27 @@ void setCurrentThreadName( const char* threadName )
 	__except( EXCEPTION_EXECUTE_HANDLER )
 	{
 	}
+}
+
+float computeScaling( int mul, int div )
+{
+#ifdef _DEBUG
+	const float ref = (float)std::pow( (double)mul / (double)div, -0.25 );
+#endif
+	// Make int32 vector with both numbers
+	__m128i iv = _mm_cvtsi32_si128( mul );
+	iv = _mm_insert_epi32( iv, div, 1 );
+	// Convert both numbers to FP64
+	__m128d v = _mm_cvtepi32_pd( iv );
+	// Compute mul / div
+	v = _mm_div_sd( v, _mm_unpackhi_pd( v, v ) );
+	// Square root
+	v = _mm_sqrt_sd( v, v );
+	// 4-th root
+	v = _mm_sqrt_sd( v, v );
+	// Invert the value
+	v = _mm_div_sd( _mm_set_sd( 1.0 ), v );
+	// Downcast to FP32, and return the result
+	__m128 f32 = _mm_cvtsd_ss( _mm_setzero_ps(), v );
+	return _mm_cvtss_f32( f32 );
 }

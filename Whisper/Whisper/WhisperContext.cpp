@@ -358,7 +358,7 @@ Tensor WhisperContext::encode( Whisper::iSpectrogram& spectrogram, const sEncode
 
 		const size_t layersCount = encParams.n_text_layer;
 		const uint32_t stride = encParams.n_state * encParams.n_ctx;
-		const float finalScaling = (float)pow( float( encParams.n_state ) / encParams.n_head, -0.25 );
+		const float finalScaling = computeScaling( (int)encParams.n_state, (int)encParams.n_head );
 		for( size_t i = 0; i < layersCount; i++ )
 		{
 			const LayerDecoder& layer = gpuModel.dec.layers[ i ];
@@ -422,7 +422,7 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 		profiler.setNextTag( "dec.layer.1" );
 		Tensor Qcur = mulMat( layer.attnQuery.w, cur );
 		if( 0 == il ) Tracing::tensor( "dec-Qcur-0", Qcur );
-		const float scaling = (float)pow( float( (int)ldp.n_state ) / (int)ldp.n_head, -0.25 );
+		const float scaling = computeScaling( (int)ldp.n_state, (int)ldp.n_head );
 		addRepeatScale( Qcur, layer.attnQuery.b, scaling );
 		if( 0 == il ) Tracing::tensor( "dec-Qcur-1", Qcur );
 
@@ -494,7 +494,7 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 	{
 		profiler.setNextTag( "dec.layer.7" );
 		Tensor Qcur = mulMat( layer.crossAttnQuery.w, cur );
-		addRepeatScale( Qcur, layer.crossAttnQuery.b, (float)pow( float( (int)ldp.n_state ) / (int)ldp.n_head, -0.25 ) );
+		addRepeatScale( Qcur, layer.crossAttnQuery.b, computeScaling( (int)ldp.n_state, (int)ldp.n_head ) );
 
 		// Kcross is already scaled
 		const uint32_t len = ldp.M * ldp.n_state;

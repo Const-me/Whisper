@@ -79,3 +79,6 @@ inline size_t vectorMemoryUse( const std::vector<E>& vec )
 {
 	return sizeof( E ) * vec.capacity();
 }
+
+// The formula is pow( mul / div, -0.25 )
+float computeScaling( int mul, int div );
