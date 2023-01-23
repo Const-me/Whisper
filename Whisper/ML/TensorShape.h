@@ -28,11 +28,11 @@ namespace DirectCompute
 		HRESULT create( const ggml_tensor& ggml );
 		TensorShape( const ggml_tensor& ggml );
 
-		__m128i sizeVec() const
+		__m128i __vectorcall sizeVec() const
 		{
 			return load( ne );
 		}
-		__m128i stridesVec() const
+		__m128i __vectorcall stridesVec() const
 		{
 			return load( nb );
 		}

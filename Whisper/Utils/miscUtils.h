@@ -10,48 +10,48 @@ inline void check( HRESULT hr )
 	throw hr;
 }
 
-inline __m128i load16( const int* rsi )
+inline __m128i __vectorcall load16( const int* rsi )
 {
 	return _mm_loadu_si128( ( const __m128i* )rsi );
 }
-inline __m128i load16( const uint32_t* rsi )
+inline __m128i __vectorcall load16( const uint32_t* rsi )
 {
 	return _mm_loadu_si128( ( const __m128i* )rsi );
 }
-inline __m128i load( const std::array<uint32_t, 4>& arr )
+inline __m128i __vectorcall load( const std::array<uint32_t, 4>& arr )
 {
 	return load16( arr.data() );
 }
-inline void store16( void* rdi, __m128i v )
+inline void __vectorcall store16( void* rdi, __m128i v )
 {
 	_mm_storeu_si128( ( __m128i* )rdi, v );
 }
-inline void store12( void* rdi, __m128i v )
+inline void __vectorcall store12( void* rdi, __m128i v )
 {
 	_mm_storel_epi64( ( __m128i* )rdi, v );
 	( (int*)rdi )[ 2 ] = _mm_extract_epi32( v, 2 );
 }
-inline void store( std::array<uint32_t, 4>& arr, __m128i v )
+inline void __vectorcall store( std::array<uint32_t, 4>& arr, __m128i v )
 {
 	store16( arr.data(), v );
 }
-inline bool vectorEqual( __m128i a, __m128i b )
+inline bool __vectorcall vectorEqual( __m128i a, __m128i b )
 {
 	__m128i xx = _mm_xor_si128( a, b );
 	return (bool)_mm_testz_si128( xx, xx );
 }
 
-inline __m128i setLow_size( size_t low )
+inline __m128i __vectorcall setLow_size( size_t low )
 {
 	return _mm_cvtsi64_si128( (int64_t)low );
 }
-inline __m128i setr_size( size_t low, size_t high )
+inline __m128i __vectorcall setr_size( size_t low, size_t high )
 {
 	__m128i v = setLow_size( low );
 	v = _mm_insert_epi64( v, (int64_t)high, 1 );
 	return v;
 }
-inline __m128i setHigh_size( size_t high )
+inline __m128i __vectorcall setHigh_size( size_t high )
 {
 	__m128i v = _mm_setzero_si128();
 	v = _mm_insert_epi64( v, (int64_t)high, 1 );

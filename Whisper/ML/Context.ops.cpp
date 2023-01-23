@@ -84,9 +84,20 @@ Tensor __declspec( noinline ) MlContext::view2d( const Tensor& a, uint32_t ne0, 
 
 Tensor MlContext::transpose( const Tensor& a )
 {
-	Tensor result = a;
-	std::swap( result.ne[ 0 ], result.ne[ 1 ] );
-	std::swap( result.nb[ 0 ], result.nb[ 1 ] );
+	Tensor result;
+
+	// A magic number for _mm_shuffle_epi32 SSE2 instruction to swap two lower int32 lanes in a vector
+	constexpr int swapXy = _MM_SHUFFLE( 3, 2, 0, 1 );
+
+	__m128i v = a.sizeVec();
+	v = _mm_shuffle_epi32( v, swapXy );
+	store( result.ne, v );
+
+	v = a.stridesVec();
+	v = _mm_shuffle_epi32( v, swapXy );
+	store( result.nb, v );
+
+	result.setGpuViews( a, a );
 	return result;
 }
 
