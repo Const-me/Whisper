@@ -457,6 +457,7 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 		if( 0 == il ) Tracing::tensor( "dec-KQ-0", KQ );
 		diagMaskInf( KQ, ldp.n_past );
 		if( 0 == il ) Tracing::tensor( "dec-KQ-1", KQ );
+		profiler.setNextTag( "decLayer.1" );
 		softMax( KQ );
 		if( 0 == il ) Tracing::tensor( "dec-KQ-2", KQ );
 
@@ -506,6 +507,7 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 		Tensor K = permute( Kcross, 0, 2, 1, 3 );
 		profiler.setNextTag( "dec.layer.8" );
 		Tensor KQ = mulMat( K, Q );
+		profiler.setNextTag( "decLayer.2" );
 		softMax( KQ );
 		Tensor V_trans = permute( Vcross, 1, 2, 0, 3 );
 		profiler.setNextTag( "dec.layer.9" );
@@ -628,6 +630,7 @@ void WhisperContext::decode( const int* tokens, const int n_tokens, const sDecod
 	cur = mulMat( gpuModel.dec.tokenEmbedding, cur );
 
 	// logits -> probs
+	profiler.setNextTag( "dec.probs" );
 	softMax( cur );
 
 	decoderOutput.copyFromVram( cur );

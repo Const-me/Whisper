@@ -192,6 +192,7 @@ Tensor MlContext::flashAttention( const Tensor& q, const Tensor& k, const Tensor
 			profiler.setNextTag( "flashAttn.1" );
 			Tensor tmp = mulMat( k, q );
 
+			profiler.setNextTag( "flashAttention" );
 			const float tempScale = (float)( 1.0 / sqrt( (double)(int)q.ne[ 0 ] ) );
 			softMax( tmp, tempScale );
 
