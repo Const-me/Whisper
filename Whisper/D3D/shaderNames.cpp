@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "shaderNames.h"
 
-static const std::array<const char*, 39> s_shaderNames = 
+static const std::array<const char*, 40> s_shaderNames = 
 {
 	"add",
 	"addInPlace",
@@ -42,6 +42,7 @@ static const std::array<const char*, 39> s_shaderNames =
 	"softMax",
 	"softMaxCompat",
 	"softMaxFixed",
+	"softMaxLong",
 	"zeroMemory",
 };
 

@@ -556,7 +556,15 @@ void MlContext::softMax( Tensor& a, float inputScale )
 		printSizes.print( a );
 #endif
 		constexpr uint32_t FIXED_ROW_SIZE = 1500;
-		eComputeShader cs = ( a.ne[ 0 ] == FIXED_ROW_SIZE ) ? eComputeShader::softMaxFixed : eComputeShader::softMax;
+
+		eComputeShader cs;
+		if( a.ne[ 0 ] == FIXED_ROW_SIZE )
+			cs = eComputeShader::softMaxFixed;
+		else if( a.ne[ 0 ] >= ( 1024 * 4 ) )
+			cs = eComputeShader::softMaxLong;
+		else
+			cs = eComputeShader::softMax;
+
 		bindShader( cs );
 		const uint32_t nr = a.countRows();
 		TensorShape dummyShape;

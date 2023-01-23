@@ -202,6 +202,7 @@
     <FxCompile Include="softMax64.hlsl" />
     <FxCompile Include="softMaxCompat.hlsl" />
     <FxCompile Include="softMaxFixed.hlsl" />
+    <FxCompile Include="softMaxLong.hlsl" />
     <FxCompile Include="zeroMemory.hlsl" />
   </ItemGroup>
   <ItemGroup>

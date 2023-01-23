@@ -51,6 +51,7 @@
     <FxCompile Include="matReshapePanels.hlsl" />
     <FxCompile Include="mulMatByRowTiledEx.hlsl" />
     <FxCompile Include="addRepeatEx.hlsl" />
+    <FxCompile Include="softMaxLong.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="componentwiseBinaryOp.hlsli" />

@@ -44,7 +44,8 @@ namespace DirectCompute
 		softMax = 35,
 		softMaxCompat = 36,
 		softMaxFixed = 37,
-		zeroMemory = 38,
+		softMaxLong = 38,
+		zeroMemory = 39,
 	};
 
 	const char* computeShaderName( eComputeShader cs );
