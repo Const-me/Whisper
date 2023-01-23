@@ -22,11 +22,8 @@ namespace DirectCompute
 	{
 		struct Arenas
 		{
-			TensorsArena enc;
-			TensorsArena encLayer;
-			TensorsArena dec;
-			TensorsArena decLayer;
-
+			TensorsArena outer;
+			TensorsArena layer;
 			Arenas();
 			__m128i getMemoryUse() const;
 		};

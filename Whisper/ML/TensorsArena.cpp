@@ -1,23 +1,41 @@
 #include "stdafx.h"
 #include "TensorsArena.h"
 #include "../D3D/createBuffer.h"
-#include <bit>
+
+static inline uint32_t roundUpPower2( uint32_t x )
+{
+	// std::bit_ceil from C++/20 standard library implements runtime dispatch, uses LZCNT when AVX2 is available, otherwise BSR
+	// That's not what we want.
+	// BSR is only slightly slower than LZCNT: same speed on Intel, on AMD it's 3 versus 1 cycles.
+	// defaultNewCapacity function is only called occasionally, that branch is therefore unpredictable.
+	assert( x > 1 );
+	unsigned long idx;
+	_BitScanReverse( &idx, x - 1 );
+	return 2u << idx;
+}
 
 uint32_t DirectCompute::defaultNewCapacity( uint32_t current, uint32_t requested )
 {
-	if( 0 == current )
+	// Implement some reasonable tactics to compute capacity of these buffers
+
+	constexpr uint32_t minAlloc = 1024;	// 1k elements = 4kb of VRAM for FP32 tensors
+	constexpr uint32_t allocGranularity = 1u << 14;	// 16k elements = 64kb of VRAM for FP32 tensors
+
+	if( requested > minAlloc )
 	{
-		// When the current capacity is 0 this means it's the first resize for the pooled tensor
-		// Create tensor of the exact requested size, as most tensors on these pools are never actually resized.
-		return requested;
-	}
-	else
-	{
-		// Implement some reasonable tactics to grow an old tensor
-		const uint32_t res = std::max( 1024u, std::bit_ceil( requested ) );
+		const uint32_t roundedUpPowerOf2 = roundUpPower2( requested );
+
+		constexpr uint32_t lowMask = allocGranularity - 1;
+		constexpr uint32_t highMask = ~lowMask;
+		const uint32_t roundedUpGranularity = ( requested + lowMask ) & highMask;
+
+		const uint32_t res = std::min( roundedUpPowerOf2, roundedUpGranularity );
+
 		assert( res >= requested );
 		return res;
 	}
+
+	return minAlloc;
 }
 
 using namespace DirectCompute;

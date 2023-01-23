@@ -25,7 +25,7 @@ namespace
 }
 
 WhisperContext::Arenas::Arenas() :
-	enc( defaultArenaConfigs() ), encLayer( defaultArenaConfigs() ), dec( defaultArenaConfigs() ), decLayer( defaultArenaConfigs() )
+	outer( defaultArenaConfigs() ), layer( defaultArenaConfigs() )
 { }
 
 Tensor WhisperContext::DecoderLayerPool::tensor( eDataType type, const std::array<uint32_t, 4>& ne )
@@ -158,7 +158,7 @@ Tensor WhisperContext::convolutionAndGelu( const Tensor& mel, uint32_t n_ctx )
 Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t n_state, uint32_t n_head, uint32_t n_ctx )
 {
 	auto prof = profiler.block( eProfilerBlock::EncodeLayer );
-	ArenaRaii arenaRaii{ *this, arenas.encLayer };
+	ArenaRaii arenaRaii{ *this, arenas.layer };
 
 	const LayerEncoder& layer = gpuModel.enc.layers[ index ];
 	// norm
@@ -318,8 +318,8 @@ Tensor WhisperContext::encode( Whisper::iSpectrogram& spectrogram, const sEncode
 	check( melInput.create( spectrogram, encParams ) );
 	Tracing::tensor( "enc.input", melInput );
 
-	arenas.enc.clear();
-	ArenaRaii arenaRaii{ *this, arenas.enc };
+	arenas.outer.clear();
+	ArenaRaii arenaRaii{ *this, arenas.outer };
 
 	// Initial few steps
 	Tensor cur = convolutionAndGelu( melInput, encParams.n_ctx );
@@ -409,7 +409,7 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 {
 	auto prof = profiler.block( eProfilerBlock::DecodeLayer );
 	const auto& layer = gpuModel.dec.layers[ il ];
-	std::optional<ArenaRaii> arenaRaii{ std::in_place, *this, arenas.decLayer };
+	std::optional<ArenaRaii> arenaRaii{ std::in_place, *this, arenas.layer };
 	if( 0 == il ) Tracing::tensor( "dec-inpL", inpL );
 
 	// norm
@@ -594,7 +594,7 @@ void WhisperContext::decode( const int* tokens, const int n_tokens, const sDecod
 	auto prof = profiler.block( eProfilerBlock::DecodeStep );
 	CaptureRaii renderdocCapture;
 	profiler.profileShaders = profileDecodeShaders;
-	ArenaRaii arenaRaii{ *this, arenas.dec };
+	ArenaRaii arenaRaii{ *this, arenas.outer };
 
 	assert( n_tokens > 0 );
 	const uint32_t N = (uint32_t)n_tokens;
@@ -641,10 +641,8 @@ void WhisperContext::decode( const int* tokens, const int n_tokens, const sDecod
 
 __m128i WhisperContext::Arenas::getMemoryUse() const
 {
-	__m128i res = enc.getMemoryUse();
-	res = _mm_add_epi64( res, encLayer.getMemoryUse() );
-	res = _mm_add_epi64( res, dec.getMemoryUse() );
-	res = _mm_add_epi64( res, decLayer.getMemoryUse() );
+	__m128i res = outer.getMemoryUse();
+	res = _mm_add_epi64( res, layer.getMemoryUse() );
 	return res;
 }
 
