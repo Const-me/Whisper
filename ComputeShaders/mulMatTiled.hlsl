@@ -4,13 +4,10 @@
 #ifndef TILE_SIZE
 static const uint TILE_SIZE = 32;
 #endif
-
 #ifndef THREADS_Y
-// Performance measures on Ryzen 7 5700G iGPU, the time is just for this shader:
-// 1 (32 threads per group) - 17.1 seconds, 2 - 9.02424 seconds, 4 - 6.95762 seconds, 6 - 6.79011 seconds, 8 - 6.67279 seconds, 10 - 6.9456 seconds, 16 - 7.20502 seconds
-// On nVidia, 8 is also the fastest option.
 static const uint THREADS_Y = 8;
 #endif
+// The above values have a following constraint: TILE_SIZE = THREADS_Y * N * 4 where N is an integer
 
 #ifndef STREAM_SECOND_MATRIX
 // Funfact: enabling this on 1080Ti ruins the performance, by a factor of 3.5
