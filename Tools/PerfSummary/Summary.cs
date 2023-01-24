@@ -54,7 +54,7 @@ namespace PerfSummary
 			}
 
 			double rel = duration / log.runComplete;
-			return rel.print();
+			return rel.ToString( "F4", CultureInfo.InvariantCulture );
 		}
 
 		static string clip( this LogData log )
