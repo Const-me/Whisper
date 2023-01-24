@@ -40,7 +40,7 @@ static const uint heightVectors = ( heightScalars + 3 ) / 4;
 groupshared float4 reductionBuffer[ heightVectors ][ THREADS_Y ][ THREADS_X ];
 
 [numthreads( THREADS_X, THREADS_Y, 1 )]
-void main( uint3 group: SV_GroupID, uint3 thread : SV_GroupThreadID, uint threadFlattenned : SV_GroupIndex )
+void main( uint3 group: SV_GroupID, uint3 thread : SV_GroupThreadID )
 {
 	uint i;
 	// Despite inside GPU cores, the shared memory is still much slower than registers
