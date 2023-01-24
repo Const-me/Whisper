@@ -9,8 +9,9 @@ static const uint TILE_SIZE = 32;
 static const uint TILE_HEIGHT = 32;
 #endif
 #ifndef THREADS_Y
-static const uint THREADS_Y = 16;
+static const uint THREADS_Y = 8;
 #endif
+// The above values have a following constraint: TILE_SIZE = THREADS_Y * N * 4 where N is an integer
 
 #ifndef STREAM_SECOND_MATRIX
 #define STREAM_SECOND_MATRIX 1
@@ -37,9 +38,6 @@ cbuffer Constants: register( b0 )
 	uint4 resultStrides: packoffset( c5 );
 }
 
-// Accumulator for the output tile
-// That last `+1` helps a bit, I'm not sure why exactly but probebly because memory bank conflicts.
-groupshared float tileOutput[ TILE_SIZE ][ TILE_SIZE + 1 ];
 // A smaller tile loaded from the first source matrix
 groupshared float tile0[ TILE_HEIGHT ][ TILE_SIZE ];
 #if !STREAM_SECOND_MATRIX
@@ -47,62 +45,91 @@ groupshared float tile0[ TILE_HEIGHT ][ TILE_SIZE ];
 groupshared float tile1[ TILE_HEIGHT ][ TILE_SIZE ];
 #endif
 
+// Count of FP32 accumulators we need in every thread of the shader
+static const uint heightScalars = TILE_SIZE / THREADS_Y;
+// The local accumulators are float4 vectors, compute count of these vectors
+static const uint heightVectors = ( heightScalars + 3 ) / 4;
+
 #if STREAM_SECOND_MATRIX
-void multiplyTiles( const uint3 thread, uint rsi, const uint h )
+void multiplyTiles( const uint3 thread, uint rsi, const uint h, inout float4 acc[ heightVectors ] )
 {
-	uint2 i = uint2( thread.y, rsi );
-	const uint2 iInc = uint2( THREADS_Y, THREADS_Y );
-	for( ; i.x < TILE_SIZE; i += iInc )
+	uint4 rsi4 = rsi + uint4( 0, THREADS_Y, THREADS_Y * 2, THREADS_Y * 3 );
+	[unroll]
+	for( uint iv = 0; iv < heightVectors; iv++, rsi4 += THREADS_Y * 4 )
 	{
-		float r = 0.0;
-		uint2 j = uint2( 0, i.y );
-		const uint2 jInc = uint2( 1, TILE_SIZE );
-		for( ; j.x < h; j += jInc )
+		float4 r = 0.0;
+		uint4 rsiRow = rsi4;
+		for( uint j = 0; j < h; j++, rsiRow += TILE_SIZE )
 		{
-			float a = tile0[ j.x ][ thread.x ];
-			float b = arg1[ j.y ];
+			const float a = tile0[ j ][ thread.x ];
+			float4 b = 0.0;
+			[unroll]
+			for( uint k = 0; k < 4; k++ )
+			{
+				b[ k ] = arg1[ rsiRow[ k ] ];
+			}
 			r = mad( a, b, r );
 		}
-		tileOutput[ i.x ][ thread.x ] += r;
+		acc[ iv ] += r;
 	}
 }
 #else
-void multiplyTiles( const uint3 thread )
+void multiplyTiles( const uint3 thread, inout float4 acc[ heightVectors ] )
 {
-	for( uint row = thread.y; row < TILE_SIZE; row += THREADS_Y )
+	[unroll]
+	for( uint i = 0; i < heightVectors; i++ )
 	{
-		float r = 0.0;
+		float4 r = 0.0;
 		for( uint j = 0; j < TILE_HEIGHT; j++ )
 		{
-			float a = tile0[ j ][ thread.x ];
-			float b = tile1[ j ][ row ];
+			const float a = tile0[ j ][ thread.x ];
+			float4 b;
+			[unroll]
+			for( uint k = 0; k < 4; k++ )
+			{
+				const uint row = ( i * 4 + k ) * THREADS_Y + thread.y;
+				b[ k ] = tile1[ j ][ row ];
+			}
 			r = mad( a, b, r );
 		}
-		tileOutput[ row ][ thread.x ] += r;
+		acc[ i ] += r;
 	}
 }
 #endif
 
-void storeTile( const uint3 thread, const uint4 pos, const uint2 size )
+void storeTile( const uint3 thread, const uint4 pos, const uint2 size, in float4 acc[ heightVectors ] )
 {
 	if( thread.x >= size.x )
 		return;
+
 	const uint4 prod4 = pos * resultStrides;
 	const uint2 prod2 = prod4.xy + prod4.zw;
 	uint rdi = prod2.x + prod2.y;
 	rdi += resultStrides.y * thread.y;
-	rdi += thread.x;
-	for( uint i = thread.y; i < size.y; i += THREADS_Y, rdi += resultStrides.y * THREADS_Y )
-		result[ rdi ] = tileOutput[ i ][ thread.x ];
+	rdi += resultStrides.x * thread.x;
+
+	const uint4 offsets = THREADS_Y * uint4( 0, 1, 2, 3 );	//< a compile-time constant vector
+	uint4 rdi4 = resultStrides.y * offsets + rdi;
+
+	[unroll]
+	for( uint iv = 0; iv < heightVectors; iv++, rdi4 += resultStrides.y * THREADS_Y * 4 )
+	{
+		const float4 source = acc[ iv ];
+		[unroll]
+		for( uint k = 0; k < 4; k++ )
+		{
+			const uint i = ( iv * 4 + k ) * THREADS_Y + thread.y;
+			if( i < size.y )
+				result[ rdi4[ k ] ] = source[ k ];
+		}
+	}
 }
 
 [numthreads( TILE_SIZE, THREADS_Y, 1 )]
 void main( const uint3 group: SV_GroupID, const uint3 thread : SV_GroupThreadID )
 {
 	uint i;
-	// Zero all 3 shared buffers
-	for( i = thread.y; i < TILE_SIZE; i += THREADS_Y )
-		tileOutput[ i ][ thread.x ] = 0.0;
+	// Zero all shared buffers
 	for( i = thread.y; i < TILE_HEIGHT; i += THREADS_Y )
 	{
 		tile0[ i ][ thread.x ] = 0.0;
@@ -110,6 +137,13 @@ void main( const uint3 group: SV_GroupID, const uint3 thread : SV_GroupThreadID 
 		tile1[ i ][ thread.x ] = 0.0;
 #endif
 	}
+	// Despite inside GPU cores, the shared memory is still much slower than registers
+	// For this reason, this shader accumulates numbers in local variables. Only uses groupshared memory for tiles of the argument matrices.
+	float4 acc[ heightVectors ];
+	// Zero out the accumulators
+	[unroll]
+	for( i = 0; i < heightVectors; i++ )
+		acc[ i ] = 0.0;
 
 	const uint2 layer = uint2( group.z % resultSize.z, group.z / resultSize.z );
 
@@ -142,11 +176,11 @@ void main( const uint3 group: SV_GroupID, const uint3 thread : SV_GroupThreadID 
 		GroupMemoryBarrierWithGroupSync();
 
 #if STREAM_SECOND_MATRIX
-		multiplyTiles( thread, rsi1, TILE_HEIGHT );
+		multiplyTiles( thread, rsi1, TILE_HEIGHT, acc );
 		rsi1 += TILE_HEIGHT * TILE_SIZE;
 #else
 		// Multiply + accumulate the elements collected in the groupshared buffers
-		multiplyTiles( thread );
+		multiplyTiles( thread, acc );
 #endif
 		GroupMemoryBarrierWithGroupSync();
 	}
@@ -181,14 +215,14 @@ void main( const uint3 group: SV_GroupID, const uint3 thread : SV_GroupThreadID 
 
 		// Multiply + accumulate the elements collected in the groupshared buffers
 #if STREAM_SECOND_MATRIX
-		multiplyTiles( thread, rsi1, rem );
+		multiplyTiles( thread, rsi1, rem, acc );
 #else
-		multiplyTiles( thread );
+		multiplyTiles( thread, acc );
 #endif
 		GroupMemoryBarrierWithGroupSync();
 	}
 
 	const uint2 resultPos = group.xy * TILE_SIZE;
 	const uint2 outputSize = min( TILE_SIZE, resultSize.xy - resultPos );
-	storeTile( thread, uint4( resultPos, layer ), outputSize );
+	storeTile( thread, uint4( resultPos, layer ), outputSize, acc );
 }
