@@ -117,17 +117,8 @@ void MlContext::mulMatTiled( const Tensor& a, const Tensor& b, Tensor& res )
 			else
 			{
 				bindShader( eComputeShader::mulMatByRowTiled );
-				uint32_t groupsX;
-				if( gpuInfo.wave64() )
-				{
-					constexpr uint32_t TILE_Y = 128;
-					groupsX = ( a.ne[ 1 ] + TILE_Y - 1 ) / TILE_Y;
-				}
-				else
-				{
-					constexpr uint32_t TILE_Y = 64;
-					groupsX = ( a.ne[ 1 ] + TILE_Y - 1 ) / TILE_Y;
-				}
+				constexpr uint32_t TILE_Y = 64;
+				const uint32_t groupsX = ( a.ne[ 1 ] + TILE_Y - 1 ) / TILE_Y;
 				context()->Dispatch( groupsX, a.ne[ 2 ], a.ne[ 3 ] );
 			}
 		}
@@ -146,20 +137,10 @@ void MlContext::mulMatTiled( const Tensor& a, const Tensor& b, Tensor& res )
 		// Dispatching one thread group for each tile of the output matrix.
 		bindShader( eComputeShader::mulMatTiled );
 
-		uint32_t x, y;
-		// These compute shaders correctly handle partial tiles on the right and bottom edges of the output matrix, that's why rounding up.
-		if( gpuInfo.wave64() )
-		{
-			constexpr uint32_t TILE_SIZE = 64;
-			x = ( res.ne[ 0 ] + TILE_SIZE - 1 ) / TILE_SIZE;
-			y = ( res.ne[ 1 ] + TILE_SIZE - 1 ) / TILE_SIZE;
-		}
-		else
-		{
-			constexpr uint32_t TILE_SIZE = 32;
-			x = ( res.ne[ 0 ] + TILE_SIZE - 1 ) / TILE_SIZE;
-			y = ( res.ne[ 1 ] + TILE_SIZE - 1 ) / TILE_SIZE;
-		}
+		// These compute shaders correctly handle partial tiles on the right and bottom edges of the output matrix, that's why rounding up
+		constexpr uint32_t TILE_SIZE = 32;
+		const uint32_t x = ( res.ne[ 0 ] + TILE_SIZE - 1 ) / TILE_SIZE;
+		const uint32_t y = ( res.ne[ 1 ] + TILE_SIZE - 1 ) / TILE_SIZE;
 
 		const uint32_t z = res.ne[ 2 ] * res.ne[ 3 ];
 		context()->Dispatch( x, y, z );

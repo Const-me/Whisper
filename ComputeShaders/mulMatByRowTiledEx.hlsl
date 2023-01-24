@@ -3,7 +3,7 @@
 static const uint TILE_SIZE = 32;
 #endif
 #ifndef THREADS_Y
-static const uint THREADS_Y = 16;
+static const uint THREADS_Y = 8;
 #endif
 
 // First tensor, reshaped into dense column major horizontal panels of size [ width, TILE_SIZE ]

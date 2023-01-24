@@ -6,7 +6,7 @@
 static const uint TILE_SIZE = 32;
 #endif
 #ifndef TILE_HEIGHT
-static const uint TILE_HEIGHT = 32;
+static const uint TILE_HEIGHT = 64;
 #endif
 #ifndef THREADS_Y
 static const uint THREADS_Y = 8;

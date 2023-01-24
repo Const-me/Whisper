@@ -184,14 +184,12 @@
     <FxCompile Include="mulMatByRow.hlsl" />
     <FxCompile Include="mulMatByRow64.hlsl" />
     <FxCompile Include="mulMatByRowTiled.hlsl" />
-    <FxCompile Include="mulMatByRowTiled64.hlsl" />
     <FxCompile Include="mulMatByRowTiledEx.hlsl" />
     <FxCompile Include="mulMatByScalar.hlsl" />
     <FxCompile Include="mulMatDotMain.hlsl" />
     <FxCompile Include="mulMatDotReshape.hlsl" />
     <FxCompile Include="mulMatMadMain.hlsl" />
     <FxCompile Include="mulMatTiled.hlsl" />
-    <FxCompile Include="mulMatTiled64.hlsl" />
     <FxCompile Include="mulMatTiledEx.hlsl" />
     <FxCompile Include="norm.hlsl" />
     <FxCompile Include="normCompat.hlsl" />

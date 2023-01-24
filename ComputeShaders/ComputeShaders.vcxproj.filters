@@ -43,9 +43,7 @@
     <FxCompile Include="normFixed64.hlsl" />
     <FxCompile Include="mulMatByRowTiled.hlsl" />
     <FxCompile Include="convolutionMain2Fixed.hlsl" />
-    <FxCompile Include="mulMatByRowTiled64.hlsl" />
     <FxCompile Include="addRows.hlsl" />
-    <FxCompile Include="mulMatTiled64.hlsl" />
     <FxCompile Include="zeroMemory.hlsl" />
     <FxCompile Include="mulMatTiledEx.hlsl" />
     <FxCompile Include="matReshapePanels.hlsl" />
