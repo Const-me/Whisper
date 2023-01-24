@@ -1,4 +1,6 @@
-// This compute shader implements matrix*matrix product, using tiling and other tricks to improve the performance
+// This compute shader implements matrix*matrix product, using tiling and many other tricks to improve the performance
+// This one here is _the_ most expensive shader in the model. Optimized heavily, as a result the readability ain't great.
+
 #ifndef TILE_SIZE
 static const uint TILE_SIZE = 32;
 #endif
@@ -11,6 +13,7 @@ static const uint THREADS_Y = 8;
 #endif
 
 #ifndef STREAM_SECOND_MATRIX
+// Funfact: enabling this on 1080Ti ruins the performance, by a factor of 3.5
 #define STREAM_SECOND_MATRIX 0
 #endif
 
@@ -43,49 +46,66 @@ groupshared float tile0[ TILE_SIZE ][ TILE_SIZE ];
 #if !STREAM_SECOND_MATRIX
 groupshared float tile1[ TILE_SIZE ][ TILE_SIZE ];
 #endif
-groupshared float resTemp[ TILE_SIZE ][ TILE_SIZE ];
+
+// Count of FP32 accumulators we need in every thread of the shader
+static const uint heightScalars = TILE_SIZE / THREADS_Y;
+// The local accumulators are float4 vectors, compute count of these vectors
+static const uint heightVectors = ( heightScalars + 3 ) / 4;
 
 #if STREAM_SECOND_MATRIX
-void multiplyTiles( uint rsi, const uint3 thread, const uint w, const uint h )
+void multiplyTiles( uint rsi, const uint3 thread, const uint w, const uint h, inout float4 acc[ heightVectors ] )
 {
-	for( uint i = thread.y; i < h; i += THREADS_Y, rsi += THREADS_Y * arg1Strides.y )
+	uint4 rsi4 = ( THREADS_Y * arg1Strides.y ) * uint4( 0, 1, 2, 3 ) + rsi;
+	[unroll]
+	for( uint iv = 0; iv < heightVectors; iv++, rsi4 += THREADS_Y * 4 * arg1Strides.y )
 	{
-		float r = 0;
-		uint rsiRow = rsi;
+		float4 r = 0;
+		uint4 rsiRow = rsi4;
 		for( uint j = 0; j < w; j++, rsiRow += arg1Strides.x )
 		{
 			// One TILE_SIZE * 4 bytes coalesced load, broadcasted into THREADS_Y copies
 			const float s0 = tile0[ j ][ thread.x ];
-			// THREADS_Y broadcasts from global memory, each one is 4 bytes broadcasted into TILE_SIZE copies
-			const float s1 = arg1[ rsiRow ];
+			float4 s1 = 0.0;
+			[unroll]
+			for( uint k = 0; k < 4; k++ )
+			{
+				const uint i = ( iv * 4 + k ) * THREADS_Y + thread.y;
+				if( i < h )
+					s1[ k ] = arg1[ rsiRow[ k ] ];
+			}
 			// Multiply and accumulate
 			r = mad( s0, s1, r );
 		}
 		// Accumulate into the output tile
-		// THREADS_Y * 128 bytes coalesced loads and stores
-		resTemp[ i ][ thread.x ] += r;
+		acc[ iv ] += r;
 	}
 }
 #else
 // Compute resTemp += tile0 * tile1, for TILE_SIZE^2 square matrices
 // The group size is TILE_SIZE*THREADS_Y threads in this shader
-void multiplyTiles( const uint3 thread )
+void multiplyTiles( const uint3 thread, inout float4 acc[ heightVectors ] )
 {
-	for( uint i = thread.y; i < TILE_SIZE; i += THREADS_Y )
+	[unroll]
+	for( uint iv = 0; iv < heightVectors; iv++ )
 	{
-		float r = 0;
+		float4 r = 0;
 		for( uint j = 0; j < TILE_SIZE; j++ )
 		{
 			// One TILE_SIZE * 4 bytes coalesced load, broadcasted into THREADS_Y copies
 			const float s0 = tile0[ j ][ thread.x ];
-			// THREADS_Y broadcasts, each one is 4 bytes broadcasted into TILE_SIZE copies
-			const float s1 = tile1[ i ][ j ];
+			float4 s1;
+			[unroll]
+			for( uint k = 0; k < 4; k++ )
+			{
+				const uint i = ( iv * 4 + k ) * THREADS_Y + thread.y;
+				// THREADS_Y broadcasts, each one is 4 bytes broadcasted into TILE_SIZE copies
+				s1[ k ] = tile1[ i ][ j ];
+			}
 			// Multiply and accumulate
 			r = mad( s0, s1, r );
 		}
 		// Accumulate into the output tile
-		// THREADS_Y * 128 bytes coalesced loads and stores
-		resTemp[ i ][ thread.x ] += r;
+		acc[ iv ] += r;
 	}
 }
 #endif
@@ -155,16 +175,32 @@ void loadTile1( uint rsi, const uint3 thread, const uint w, const uint h, const 
 }
 #endif
 
-void storeTile( const uint3 thread, const uint4 pos, const uint2 size )
+void storeTile( const uint3 thread, const uint4 pos, const uint2 size, in float4 acc[ heightVectors ] )
 {
 	if( thread.x >= size.x )
 		return;
+
 	const uint4 prod4 = pos * resultStrides;
 	const uint2 prod2 = prod4.xy + prod4.zw;
 	uint rdi = prod2.x + prod2.y;
 	rdi += resultStrides.y * thread.y;
-	for( uint i = thread.y; i < size.y; i += THREADS_Y, rdi += resultStrides.y * THREADS_Y )
-		result[ rdi + thread.x * resultStrides.x ] = resTemp[ i ][ thread.x ];
+	rdi += resultStrides.x * thread.x;
+
+	const uint4 offsets = THREADS_Y * uint4( 0, 1, 2, 3 );	//< a compile-time constant vector
+	uint4 rdi4 = resultStrides.y * offsets + rdi;
+
+	[unroll]
+	for( uint iv = 0; iv < heightVectors; iv++, rdi4 += resultStrides.y * THREADS_Y * 4 )
+	{
+		const float4 source = acc[ iv ];
+		[unroll]
+		for( uint k = 0; k < 4; k++ )
+		{
+			const uint i = ( iv * 4 + k ) * THREADS_Y + thread.y;
+			if( i < size.y )
+				result[ rdi4[ k ] ] = source[ k ];
+		}
+	}
 }
 
 [ numthreads( TILE_SIZE, THREADS_Y, 1 ) ]
@@ -177,8 +213,14 @@ void main( uint3 group: SV_GroupID, uint3 thread : SV_GroupThreadID )
 #if !STREAM_SECOND_MATRIX
 		tile1[ i + thread.y ][ thread.x ] = 0.0;
 #endif
-		resTemp[ i + thread.y ][ thread.x ] = 0.0;
 	}
+	// Despite inside GPU cores, the shared memory is still much slower than registers
+	// For this reason, this shader accumulates numbers in local variables. Only uses groupshared memory for tiles of the argument matrices.
+	float4 acc[ heightVectors ];
+	// Zero out the accumulators
+	[unroll]
+	for( i = 0; i < heightVectors; i++ )
+		acc[ i ] = 0.0;
 
 	const uint2 resultPos = group.xy * TILE_SIZE;
 	const uint2 layer = uint2( group.z % resultSize.z, group.z / resultSize.z );
@@ -204,11 +246,11 @@ void main( uint3 group: SV_GroupID, uint3 thread : SV_GroupThreadID )
 		loadTile0( rsi0, thread, TILE_SIZE, outputSize.x, loadOrder.x );
 #if STREAM_SECOND_MATRIX
 		GroupMemoryBarrierWithGroupSync();
-		multiplyTiles( rsi1, thread, TILE_SIZE, outputSize.y );
+		multiplyTiles( rsi1, thread, TILE_SIZE, outputSize.y, acc );
 #else
 		loadTile1( rsi1, thread, TILE_SIZE, outputSize.y, loadOrder.y );
 		GroupMemoryBarrierWithGroupSync();
-		multiplyTiles( thread );
+		multiplyTiles( thread, acc );
 #endif
 		// Need one moar barrier here.
 		// Otherwise, some threads of the group are loading the next tile into tile0/tile1 groupshared buffers on the next iteration of the loop,
@@ -223,14 +265,13 @@ void main( uint3 group: SV_GroupID, uint3 thread : SV_GroupThreadID )
 		loadTile0( rsi0, thread, rem, outputSize.x, loadOrder.x );
 #if STREAM_SECOND_MATRIX
 		GroupMemoryBarrierWithGroupSync();
-		multiplyTiles( rsi1, thread, rem, outputSize.y );
+		multiplyTiles( rsi1, thread, rem, outputSize.y, acc );
 #else
 		loadTile1( rsi1, thread, rem, outputSize.y, loadOrder.y );
 		GroupMemoryBarrierWithGroupSync();
-		multiplyTiles( thread );
+		multiplyTiles( thread, acc );
 #endif
 	}
 
-	GroupMemoryBarrierWithGroupSync();
-	storeTile( thread, uint4( resultPos, layer ), outputSize );
+	storeTile( thread, uint4( resultPos, layer ), outputSize, acc );
 }
