@@ -98,7 +98,7 @@ namespace
 				memmove( rdi.mono.data(), rdi.mono.data() + amount, block * 4 );
 				rdi.mono.resize( block );
 				memmove( rdi.stereo.data(), rdi.stereo.data() + amount * 2, block * 8 );
-				rdi.mono.resize( block * 2 );
+				rdi.stereo.resize( block * 2 );
 			}
 			else
 			{
