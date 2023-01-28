@@ -402,3 +402,8 @@ HRESULT COMLIGHTCALL ContextImpl::runStreamed( const sFullParams& params, const 
 		return hr;
 	}
 }
+
+HRESULT COMLIGHTCALL ContextImpl::detectSpeaker( const sTimeInterval& time, eSpeakerChannel& result ) const noexcept
+{
+	return E_NOTIMPL;
+}

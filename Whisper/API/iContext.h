@@ -28,6 +28,8 @@ namespace Whisper
 		HRESULT __stdcall runCapture( const sFullParams& params, const sCaptureCallbacks& callbacks, const iAudioCapture* reader );
 
 		HRESULT __stdcall getResults( eResultFlags flags, iTranscribeResult** pp ) const;
+		// Try to detect speaker by comparing channels of the stereo PCM data
+		HRESULT __stdcall detectSpeaker( const sTimeInterval& time, eSpeakerChannel& result ) const;
 
 		HRESULT __stdcall getModel( iModel** pp );
 

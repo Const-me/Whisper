@@ -124,4 +124,13 @@ namespace Whisper
 	{
 		return 0 != ( (uint32_t)a & (uint32_t)b );
 	}
+
+	// Output value for iContext.detectSpeaker method
+	enum struct eSpeakerChannel : uint8_t
+	{
+		Unsure = 0,
+		Left = 1,
+		Right = 2,
+		NoStereoData = 0xFF,
+	};
 }

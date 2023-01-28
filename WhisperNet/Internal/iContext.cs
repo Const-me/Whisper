@@ -21,6 +21,10 @@ namespace Whisper.Internal
 		[RetValIndex( 1 )]
 		iTranscribeResult getResults( eResultFlags flags );
 
+		/// <summary>Try to detect speaker by comparing channels of the stereo PCM data</summary>
+		[RetValIndex( 1 )]
+		eSpeakerChannel detectSpeaker( [In] ref sTimeInterval interval );
+
 		/// <summary>Get the model which was used to create this context</summary>
 		[RetValIndex]
 		iModel getModel();

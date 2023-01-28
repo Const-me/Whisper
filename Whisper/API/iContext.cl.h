@@ -31,6 +31,8 @@ namespace Whisper
 		virtual HRESULT COMLIGHTCALL runCapture( const sFullParams& params, const sCaptureCallbacks& callbacks, const iAudioCapture* reader ) = 0;
 
 		virtual HRESULT COMLIGHTCALL getResults( eResultFlags flags, iTranscribeResult** pp ) const = 0;
+		// Try to detect speaker by comparing channels of the stereo PCM data
+		virtual HRESULT COMLIGHTCALL detectSpeaker( const sTimeInterval& time, eSpeakerChannel& result ) const = 0;
 
 		virtual HRESULT COMLIGHTCALL getModel( iModel** pp ) = 0;
 
