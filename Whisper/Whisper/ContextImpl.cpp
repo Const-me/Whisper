@@ -189,6 +189,21 @@ static std::string to_timestamp( int64_t t, bool comma = false )
 	return std::string( buf );
 }
 
+class ContextImpl::CurrentSpectrogramRaii
+{
+	ContextImpl* ctx;
+public:
+	CurrentSpectrogramRaii( ContextImpl* c, iSpectrogram& mel )
+	{
+		ctx = c;
+		c->currentSpectrogram = &mel;
+	}
+	~CurrentSpectrogramRaii()
+	{
+		ctx->currentSpectrogram = nullptr;
+	}
+};
+
 HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const sProgressSink& progress, iSpectrogram& mel )
 {
 	// Ported from whisper_full() function
@@ -199,6 +214,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 		return E_NOTIMPL;
 	}
 
+	CurrentSpectrogramRaii _cs( this, mel );
 	const int seek_start = params.offset_ms / 10;
 	const int seek_end = seek_start + ( params.duration_ms == 0 ? (int)mel.getLength() : params.duration_ms / 10 );
 

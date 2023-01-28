@@ -491,3 +491,44 @@ MelStreamerThread::~MelStreamerThread()
 		return;
 	// TODO: log a warning
 }
+
+HRESULT MelStreamer::copyStereoPcm( size_t offset, size_t length, std::vector<StereoSample>& buffer ) const
+{
+	if( queuePcmStereo.empty() )
+		return OLE_E_BLANK;
+
+	if( offset < streamStartOffset )
+	{
+		logError( u8"MelStreamer doesn't support backwards seek" );
+		return E_UNEXPECTED;
+	}
+
+	// Offset relative to the first chunk on the queue
+	const size_t off = offset - streamStartOffset;
+	if( off >= queuePcmStereo.size() )
+		return E_BOUNDS;
+
+	// Resize the output buffer
+	try
+	{
+		buffer.resize( length * FFT_STEP );
+	}
+	catch( const std::bad_alloc& )
+	{
+		return E_OUTOFMEMORY;
+	}
+	StereoSample* rdi = buffer.data();
+
+	// Copy PCM chunks from the queue
+	const size_t lengthToCopy = std::min( length, queuePcmStereo.size() - off );
+	for( size_t i = 0; i < lengthToCopy; i++, rdi += FFT_STEP )
+	{
+		const float* rsi = queuePcmStereo[ i + off ].stereo.data();
+		memcpy( rdi, rsi, 8 * FFT_STEP );
+	}
+	// If needed, write zeros to the tail
+	if( lengthToCopy == length )
+		return S_OK;
+	memset( rdi, 0, ( length - lengthToCopy ) * FFT_STEP );
+	return S_OK;
+}

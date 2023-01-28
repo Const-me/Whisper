@@ -3,6 +3,11 @@
 
 namespace Whisper
 {
+	struct alignas( 8 ) StereoSample
+	{
+		float left, right;
+	};
+
 	__interface iSpectrogram
 	{
 		// Make a buffer with length * N_MEL floats, starting at the specified offset
@@ -11,6 +16,9 @@ namespace Whisper
 
 		// Apparently, the length unit is 160 input samples = 10 milliseconds of audio
 		size_t getLength() const;
+
+		// If the source data is stereo, copy the specified slice of the data into the provided vector
+		HRESULT copyStereoPcm( size_t offset, size_t length, std::vector<StereoSample>& buffer ) const;
 	};
 
 	// RAII class to deal with iSpectrogram's makeBuffer method.

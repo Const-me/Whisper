@@ -84,6 +84,7 @@
     <ClCompile Include="CPU\mulMatImpl.panel.cpp" />
     <ClCompile Include="ML\Reshaper.cpp" />
     <ClCompile Include="Utils\DelayExecution.cpp" />
+    <ClCompile Include="Whisper\ContextImpl.diarize.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ggml.h" />

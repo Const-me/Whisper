@@ -15,6 +15,8 @@ namespace Whisper
 		DirectCompute::WhisperContext context;
 		Spectrogram spectrogram;
 		int64_t mediaTimeOffset = 0;
+		iSpectrogram* currentSpectrogram = nullptr;
+		class CurrentSpectrogramRaii;
 		ProfileCollection profiler;
 
 		HRESULT COMLIGHTCALL getModel( iModel** pp ) override final;
@@ -68,6 +70,7 @@ namespace Whisper
 		int defaultThreadsCount() const;
 
 		__m128i getMemoryUse() const;
+		mutable std::vector<StereoSample> diarizeBuffer;
 
 	public:
 

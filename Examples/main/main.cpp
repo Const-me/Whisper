@@ -65,7 +65,6 @@ namespace
 		CHECK( results->getSize( length ) );
 
 		const whisper_params& params = *( (sPrintUserData*)user_data )->params;
-		// const std::vector<std::vector<float>>& pcmf32s = *( (sPrintUserData*)user_data )->pcmf32s;
 
 		// print the last n_new segments
 		const uint32_t s0 = length.countSegments - n_new;
@@ -98,32 +97,28 @@ namespace
 			}
 
 			std::string speaker = "";
-#if 0
-			if( params.diarize && pcmf32s.size() == 2 )
+
+			if( params.diarize )
 			{
-				const size_t n_samples = pcmf32s[ 0 ].size();
-				const int64_t is0 = SourceAudio::sampleFromTimestamp( seg.time.begin, n_samples );
-				const int64_t is1 = SourceAudio::sampleFromTimestamp( seg.time.end, n_samples );
-
-				double energy0 = 0.0f;
-				double energy1 = 0.0f;
-
-				for( int64_t j = is0; j < is1; j++ )
+				eSpeakerChannel channel;
+				HRESULT hr = context->detectSpeaker( seg.time, channel );
+				if( SUCCEEDED( hr ) && channel != eSpeakerChannel::NoStereoData )
 				{
-					energy0 += fabs( pcmf32s[ 0 ][ j ] );
-					energy1 += fabs( pcmf32s[ 1 ][ j ] );
+					using namespace std::string_literals;
+					switch( channel )
+					{
+					case eSpeakerChannel::Unsure:
+						speaker = "(speaker ?)"s;
+						break;
+					case eSpeakerChannel::Left:
+						speaker = "(speaker 0)"s;
+						break;
+					case eSpeakerChannel::Right:
+						speaker = "(speaker 1)";
+						break;
+					}
 				}
-
-				if( energy0 > 1.1 * energy1 )
-					speaker = "(speaker 0)";
-				else if( energy1 > 1.1 * energy0 )
-					speaker = "(speaker 1)";
-				else
-					speaker = "(speaker ?)";
-
-				//printf("is0 = %lld, is1 = %lld, energy0 = %f, energy1 = %f, %s\n", is0, is1, energy0, energy1, speaker.c_str());
 			}
-#endif
 
 			if( params.print_colors )
 			{

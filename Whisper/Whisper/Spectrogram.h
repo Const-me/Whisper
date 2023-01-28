@@ -24,6 +24,8 @@ namespace Whisper
 
 		class MelContext;
 
+		HRESULT copyStereoPcm( size_t offset, size_t length, std::vector<StereoSample>& buffer ) const override final;
+
 	public:
 		size_t getLength() const noexcept override final
 		{

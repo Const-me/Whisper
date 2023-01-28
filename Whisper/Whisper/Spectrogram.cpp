@@ -122,3 +122,8 @@ void Whisper::computeSignalEnergy( std::vector<float>& result, const iAudioBuffe
 		result[ i ] = sum / ( 2 * hw + 1 );
 	}
 }
+
+HRESULT Spectrogram::copyStereoPcm( size_t offset, size_t length, std::vector<StereoSample>& buffer ) const
+{
+	return E_NOTIMPL;
+}
