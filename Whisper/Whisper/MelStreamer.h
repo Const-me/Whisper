@@ -11,6 +11,7 @@
 namespace Whisper
 {
 	// Base class for both single- and multi-threaded MEL streamers
+	// Used by iContext.runStreamed method
 	class MelStreamer : public iSpectrogram
 	{
 	protected:
@@ -51,6 +52,7 @@ namespace Whisper
 	};
 
 	// Single-threaded MEL streamer: runs these FFTs on-demand, from within makeBuffer() method
+	// Used by iContext.runStreamed method when cpuThreads parameter is less than 2
 	class MelStreamerSimple : public MelStreamer
 	{
 		HRESULT makeBuffer( size_t offset, size_t length, const float** buffer, size_t& stride ) noexcept override final;
@@ -63,6 +65,7 @@ namespace Whisper
 	// Multi threaded MEL streamers: runs FFT on a background thread ahead of time
 	// The background thread tries to keep the queueMel full, this way the makeBuffer() method has very little to do
 	// makeBuffer() only transposes the data, and does clamping + normalization, both steps are pretty fast
+	// Used by iContext.runStreamed method when cpuThreads parameter is 2 or more
 	class MelStreamerThread : public MelStreamer,
 		ThreadPoolWork
 	{

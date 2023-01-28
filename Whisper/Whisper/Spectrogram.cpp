@@ -102,6 +102,22 @@ HRESULT Spectrogram::pcmToMel( const iAudioBuffer* buffer, const Filters& filter
 		f = (float)( ( f + 4.0 ) / 4.0 );
 	}
 	// DirectCompute::dbgWriteBinaryFile( LR"(C:\Temp\2remove\ML\mel-my.bin)", data.data(), data.size() * 4 );
+	const float* const pcmStereo = buffer->getPcmStereo();
+	if( nullptr != pcmStereo )
+	{
+		try
+		{
+			stereo.resize( countSamples );
+		}
+		catch( const std::bad_alloc& )
+		{
+			return E_OUTOFMEMORY;
+		}
+		memcpy( stereo.data(), pcmStereo, countSamples * 8 );
+	}
+	else
+		stereo.clear();
+
 	return S_OK;
 }
 
@@ -125,5 +141,28 @@ void Whisper::computeSignalEnergy( std::vector<float>& result, const iAudioBuffe
 
 HRESULT Spectrogram::copyStereoPcm( size_t offset, size_t length, std::vector<StereoSample>& buffer ) const
 {
-	return E_NOTIMPL;
+	if( stereo.empty() )
+		return OLE_E_BLANK;
+
+	length *= FFT_STEP;
+	offset *= FFT_STEP;
+	if( offset >= stereo.size() )
+		return E_BOUNDS;
+
+	try
+	{
+		buffer.resize( length );
+	}
+	catch( const std::bad_alloc& )
+	{
+		return E_OUTOFMEMORY;
+	}
+
+	const size_t lengthToCopy = std::min( length, stereo.size() - offset );
+	memcpy( buffer.data(), &stereo[ offset ], lengthToCopy * 8 );
+	if( lengthToCopy == length )
+		return S_OK;
+
+	memset( &buffer[ lengthToCopy ], 0, ( buffer.size() - lengthToCopy ) * 8 );
+	return S_OK;
 }

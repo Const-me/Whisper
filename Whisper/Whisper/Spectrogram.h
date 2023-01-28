@@ -7,11 +7,14 @@ namespace Whisper
 {
 	struct iAudioBuffer;
 
+	// This implementation of iSpectrogram interface converts complete audio into MEL spectrogram
+	// Used for unbuffered audio, and capture: iContext.runFull and runCapture methods.
 	class Spectrogram: public iSpectrogram
 	{
 		uint32_t length = 0;
 		static constexpr uint32_t mel = N_MEL;
 		std::vector<float> data;
+		std::vector<StereoSample> stereo;
 
 		HRESULT makeBuffer( size_t off, size_t len, const float** buffer, size_t& stride ) noexcept override final
 		{
