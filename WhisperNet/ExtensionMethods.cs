@@ -60,7 +60,7 @@ namespace Whisper
 		}
 
 		/// <summary>Open audio capture device</summary>
-		public static iAudioCapture openCaptureDevice( this iMediaFoundation mf, in CaptureDeviceId id, sCaptureParams? cp = null )
+		public static iAudioCapture openCaptureDevice( this iMediaFoundation mf, in CaptureDeviceId id, in sCaptureParams? cp = null )
 		{
 			sCaptureParams captureParams = cp ?? new sCaptureParams();
 			return mf.openCaptureDevice( id.endpoint, ref captureParams );

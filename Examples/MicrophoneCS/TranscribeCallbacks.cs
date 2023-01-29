@@ -69,45 +69,30 @@ namespace MicrophoneCS
 				}
 
 				string speaker = "";
-#if false
-				if( args.diarize && pcmf32s.size() == 2 )
+				if( args.diarize )
 				{
-					const size_t n_samples = pcmf32s[ 0 ].size();
-					const int64_t is0 = SourceAudio::sampleFromTimestamp( seg.time.begin, n_samples );
-					const int64_t is1 = SourceAudio::sampleFromTimestamp( seg.time.end, n_samples );
-
-					double energy0 = 0.0f;
-					double energy1 = 0.0f;
-
-					for( int64_t j = is0; j < is1; j++ )
+					speaker = sender.detectSpeaker( seg.time ) switch
 					{
-						energy0 += fabs( pcmf32s[ 0 ][ j ] );
-						energy1 += fabs( pcmf32s[ 1 ][ j ] );
-					}
-
-					if( energy0 > 1.1 * energy1 )
-						speaker = "(speaker 0)";
-					else if( energy1 > 1.1 * energy0 )
-						speaker = "(speaker 1)";
-					else
-						speaker = "(speaker ?)";
-
-					//printf("is0 = %lld, is1 = %lld, energy0 = %f, energy1 = %f, %s\n", is0, is1, energy0, energy1, speaker.c_str());
+						eSpeakerChannel.Unsure => "(speaker ?)",
+						eSpeakerChannel.Left => "(speaker 0)",
+						eSpeakerChannel.Right => "(speaker 1)",
+						_ => ""
+					};
 				}
-#endif
-				if( args.print_colors && AnsiCodes.enabled  )
+
+				if( args.print_colors && AnsiCodes.enabled )
 				{
-					Console.Write( "[{0} --> {1}]  ", printTime( seg.time.begin ), printTime( seg.time.end ) );
+					Console.Write( "[{0} --> {1}] {2} ", printTime( seg.time.begin ), printTime( seg.time.end ), speaker );
 					foreach( sToken tok in res.getTokens( seg ) )
 					{
 						if( !args.print_special && tok.hasFlag( eTokenFlags.Special ) )
 							continue;
-						Console.Write( "{0}{1}{2}{3}", speaker, k_colors[ colorIndex( tok ) ], tok.text, "\x1B[0m" );
+						Console.Write( "{0}{1}{2}", k_colors[ colorIndex( tok ) ], tok.text, "\x1B[0m" );
 					}
 					Console.WriteLine();
 				}
 				else
-					Console.WriteLine( "[{0} --> {1}]  {2}{3}", printTime( seg.time.begin ), printTime( seg.time.end ), speaker, seg.text );
+					Console.WriteLine( "[{0} --> {1}] {2} {3}", printTime( seg.time.begin ), printTime( seg.time.end ), speaker, seg.text );
 			}
 		}
 	}

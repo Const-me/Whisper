@@ -33,7 +33,10 @@ namespace MicrophoneCS
 				if( cla.captureDeviceIndex < 0 || cla.captureDeviceIndex >= devices.Length )
 					throw new ApplicationException( $"Capture device index is out of range; the valid range is [ 0 .. {devices.Length - 1} ]" );
 
-				using iAudioCapture captureDev = mf.openCaptureDevice( devices[ cla.captureDeviceIndex ] );
+				sCaptureParams cp = new sCaptureParams();
+				if( cla.diarize )
+					cp.flags |= eCaptureFlags.Stereo;
+				using iAudioCapture captureDev = mf.openCaptureDevice( devices[ cla.captureDeviceIndex ], cp );
 
 				using iModel model = Library.loadModel( cla.model );
 				using Context context = model.createContext();
