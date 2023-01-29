@@ -199,6 +199,12 @@ namespace Whisper
 		}
 
 		/// <summary>Try to detect speaker by comparing channels of the stereo PCM data</summary>
+		/// <remarks>
+		/// <para>The feature requires stereo PCM data.<br/>Pass <c>stereo=true</c> to <see cref="iMediaFoundation.loadAudioFile" /> or <see cref="iMediaFoundation.openAudioFile"/> methods,<br/>
+		/// or <see cref="eCaptureFlags.Stereo" /> to <see cref="iMediaFoundation.openCaptureDevice" /> method.</para>
+		/// <para>It seems to work fine with <a href="https://www.bluemic.com/en-us/products/yeti/">Blue Yeti</a> microphone,
+		/// after switched the microphone to Stereo pattern.<br/> With recorded sounds however, the performance varies depending on the recording.</para>
+		/// </remarks>
 		public eSpeakerChannel detectSpeaker( sTimeInterval interval ) =>
 			context.detectSpeaker( ref interval );
 	}
