@@ -197,5 +197,9 @@ namespace Whisper
 				fullParams.prompt_n_tokens = 0;
 			}
 		}
+
+		/// <summary>Try to detect speaker by comparing channels of the stereo PCM data</summary>
+		public eSpeakerChannel detectSpeaker( sTimeInterval interval ) =>
+			context.detectSpeaker( ref interval );
 	}
 }

@@ -32,12 +32,12 @@ namespace TranscribeCS
 				{
 					if( streamAudio )
 					{
-						using iAudioReader reader = mf.openAudioFile( audioFile );
+						using iAudioReader reader = mf.openAudioFile( audioFile, cla.diarize );
 						context.runFull( reader, transcribe, null, cla.prompt );
 					}
 					else
 					{
-						using iAudioBuffer buffer = mf.loadAudioFile( audioFile );
+						using iAudioBuffer buffer = mf.loadAudioFile( audioFile, cla.diarize );
 						context.runFull( buffer, transcribe, cla.prompt );
 					}
 					// When asked to, produce these text files
