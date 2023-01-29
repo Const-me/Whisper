@@ -122,14 +122,17 @@ namespace
 
 			if( params.print_colors )
 			{
-				printf( "[%s --> %s]  ", to_timestamp( seg.time.begin ).c_str(), to_timestamp( seg.time.end ).c_str() );
+				printf( "[%s --> %s] %s ",
+					to_timestamp( seg.time.begin ).c_str(),
+					to_timestamp( seg.time.end ).c_str(),
+					speaker.c_str() );
 
 				for( uint32_t j = 0; j < seg.countTokens; j++ )
 				{
 					const sToken& tok = tokens[ seg.firstToken + j ];
 					if( !params.print_special && ( tok.flags & eTokenFlags::Special ) )
 						continue;
-					wprintf( L"%S%S%s%S", speaker.c_str(), k_colors[ colorIndex( tok ) ], utf16( tok.text ).c_str(), "\033[0m" );
+					wprintf( L"%S%s%S", k_colors[ colorIndex( tok ) ], utf16( tok.text ).c_str(), "\033[0m" );
 				}
 				printf( "\n" );
 			}
