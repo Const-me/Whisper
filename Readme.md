@@ -132,9 +132,6 @@ and [explicit FP16](https://github.com/microsoft/DirectXShaderCompiler/wiki/16-B
 
 Automatic language detection is not implemented.
 
-The original version implements “diarize” feature, they analyze stereo PCM to detect speaker based on the difference between left/right channels.<br/>
-Despite my version preserves stereo PCM data over the pipeline, it doesn’t expose that data.
-
 In the current version there’s high latency for realtime audio capture.<br/>
 Specifically, depending on voice detection the figure is about 5-10 seconds.<br/>
 At least in my tests, the model wasn’t happy when I supplied too short pieces of the audio.<br/>
