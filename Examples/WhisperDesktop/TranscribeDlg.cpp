@@ -108,7 +108,8 @@ void TranscribeDlg::printModelDescription()
 void TranscribeDlg::populateOutputFormats()
 {
 	transcribeOutFormat.AddString( L"None" );
-	transcribeOutFormat.AddString( L"Text File" );
+	transcribeOutFormat.AddString( L"Text file" );
+	transcribeOutFormat.AddString( L"Text with timestamps" );
 	transcribeOutFormat.AddString( L"SubRip subtitles" );
 	transcribeOutFormat.AddString( L"WebVTT subtitles" );
 }
@@ -117,8 +118,9 @@ enum struct TranscribeDlg::eOutputFormat : uint8_t
 {
 	None = 0,
 	Text = 1,
-	SubRip = 2,
-	WebVTT = 3
+	TextTimestamps = 2,
+	SubRip = 3,
+	WebVTT = 4,
 };
 
 // CBN_SELCHANGE notification for IDC_OUTPUT_FORMAT combobox
@@ -163,10 +165,10 @@ void TranscribeDlg::onBrowseMedia()
 		setOutputPath( path );
 }
 
-static const LPCTSTR outputFilters = L"Text files (*.txt)\0*.txt\0SubRip subtitles (*.srt)\0*.srt\0WebVTT subtitles (*.vtt)\0*.vtt\0\0";
-static const std::array<LPCTSTR, 3> outputExtensions =
+static const LPCTSTR outputFilters = L"Text files (*.txt)\0*.txt\0Text with timestamps (*.txt)\0*.txt\0SubRip subtitles (*.srt)\0*.srt\0WebVTT subtitles (*.vtt)\0*.vtt\0\0";
+static const std::array<LPCTSTR, 4> outputExtensions =
 {
-	L".txt", L".srt", L".vtt"
+	L".txt", L".txt", L".srt", L".vtt"
 };
 
 void TranscribeDlg::setOutputPath( const CString& input )
@@ -414,7 +416,9 @@ HRESULT TranscribeDlg::transcribe()
 	switch( format )
 	{
 	case eOutputFormat::Text:
-		return writeTextFile( segments, len.countSegments, outputFile );
+		return writeTextFile( segments, len.countSegments, outputFile, false );
+	case eOutputFormat::TextTimestamps:
+		return writeTextFile( segments, len.countSegments, outputFile, true );
 	case eOutputFormat::SubRip:
 		return writeSubRip( segments, len.countSegments, outputFile );
 	case eOutputFormat::WebVTT:
@@ -479,14 +483,27 @@ namespace
 using Whisper::sSegment;
 
 
-HRESULT TranscribeDlg::writeTextFile( const sSegment* const segments, const size_t length, CAtlFile& file )
+HRESULT TranscribeDlg::writeTextFile( const sSegment* const segments, const size_t length, CAtlFile& file, bool timestamps )
 {
 	using namespace Whisper;
 	CHECK( writeUtf8Bom( file ) );
 	CStringA line;
 	for( size_t i = 0; i < length; i++ )
 	{
-		line = skipBlank( segments[ i ].text );
+		const sSegment& seg = segments[ i ];
+
+		if( timestamps )
+		{
+			line = "[";
+			printTimeStamp( line, seg.time.begin );
+			line += " --> ";
+			printTimeStamp( line, seg.time.end );
+			line += "]  ";
+		}
+		else
+			line = "";
+
+		line += skipBlank( seg.text );
 		line += "\r\n";
 		CHECK( write( file, line ) );
 	}

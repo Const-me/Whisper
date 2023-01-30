@@ -116,7 +116,7 @@ private:
 	HRESULT transcribe();
 	void getThreadError();
 	
-	static HRESULT writeTextFile( const Whisper::sSegment* const segments, const size_t length, CAtlFile& file );
+	static HRESULT writeTextFile( const Whisper::sSegment* const segments, const size_t length, CAtlFile& file, bool timestamps );
 	static HRESULT writeSubRip( const Whisper::sSegment* const segments, const size_t length, CAtlFile& file );
 	static HRESULT writeWebVTT( const Whisper::sSegment* const segments, const size_t length, CAtlFile& file );
 
