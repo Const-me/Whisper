@@ -4,6 +4,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="params.cpp" />
     <ClCompile Include="miscUtils.cpp" />
+    <ClCompile Include="..\WhisperDesktop\useDiscreteGpu.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="params.h" />

@@ -74,6 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\WhisperDesktop\useDiscreteGpu.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="miscUtils.cpp" />
     <ClCompile Include="params.cpp" />

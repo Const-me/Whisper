@@ -131,6 +131,9 @@
     <ClCompile Include="ModelAdvancedDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="useDiscreteGpu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WhisperDesktop.rc">
