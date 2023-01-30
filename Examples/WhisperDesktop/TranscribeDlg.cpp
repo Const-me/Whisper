@@ -152,7 +152,7 @@ LRESULT TranscribeDlg::onInputChange( UINT, INT, HWND, BOOL& )
 void TranscribeDlg::onBrowseMedia()
 {
 	LPCTSTR title = L"Input audio file to transcribe";
-	LPCTSTR filters = L"Multimedia Files\0*.wav;*.wave;*.mp3;*.wma;*.mp4;*.mpeg4;*.mkv\0\0";
+	LPCTSTR filters = L"Multimedia Files\0*.wav;*.wave;*.mp3;*.wma;*.mp4;*.mpeg4;*.mkv;*.m4a\0\0";
 
 	CString path;
 	sourceMediaPath.GetWindowText( path );
