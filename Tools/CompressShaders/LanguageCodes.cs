@@ -71,6 +71,8 @@ namespace CompressShaders
 namespace Whisper
 {
 	/// <summary>Supported languages</summary>
+	/// <remarks>The values of this enum are zero-padded ASCII strings.<br/>
+	/// It seems OpenAI tried to implement ISO 639-1, but they used the version of the standard from 1988.</remarks>
 	public enum eLanguage: uint
 	{" );
 
@@ -79,7 +81,7 @@ namespace Whisper
 				string tc = row.name.titleCase();
 				stm.WriteLine( "		/// <summary>{0}</summary>", tc );
 				tc = Regex.Replace( tc, @"\s+", string.Empty );
-				stm.WriteLine( "		{0} = 0x{1:X},", tc, row.keyValue );
+				stm.WriteLine( "		{0} = 0x{1:X},  // \"{2}\"", tc, row.keyValue, row.keySource );
 			}
 			stm.Write( @"	}
 }" );
