@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Whisper.Internal;
 
 namespace Whisper
@@ -33,7 +34,7 @@ namespace Whisper
 		/// <summary>List capture devices</summary>
 		public static CaptureDeviceId[]? listCaptureDevices( this iMediaFoundation mf )
 		{
-			List<CaptureDeviceId>? list = null;
+			CaptureDeviceId[]? result = null;
 
 			pfnFoundCaptureDevices pfn = delegate ( int len, sCaptureDevice[]? arr, IntPtr pv )
 			{
@@ -41,10 +42,11 @@ namespace Whisper
 				{
 					if( len == 0 || arr == null )
 						return 1;
+					Debug.Assert( len == arr.Length );
 
-					list = new List<CaptureDeviceId>( len );
-					foreach( var i in arr )
-						list.Add( new CaptureDeviceId( i ) );
+					result = new CaptureDeviceId[ len ];
+					for( int i = 0; i < len; i++ )
+						result[ i ] = new CaptureDeviceId( arr[ i ] );
 					return 0;
 				}
 				catch( Exception ex )
@@ -56,7 +58,7 @@ namespace Whisper
 
 			mf.listCaptureDevices( pfn, IntPtr.Zero );
 
-			return list?.ToArray();
+			return result;
 		}
 
 		/// <summary>Open audio capture device</summary>

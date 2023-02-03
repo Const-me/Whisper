@@ -22,6 +22,7 @@ namespace Whisper
 
 		/// <summary>Try to resolve integer token ID into string.</summary>
 		/// <remarks>Don't call this method, use <see cref="ExtensionMethods.stringFromToken(iModel, int)" /> instead.</remarks>
+		[EditorBrowsable( EditorBrowsableState.Never )]
 		IntPtr stringFromTokenInternal( int id );
 	}
 }
