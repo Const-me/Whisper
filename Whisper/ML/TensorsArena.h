@@ -14,6 +14,12 @@ namespace DirectCompute
 	public:
 		Tensor tensor( eDataType type, const std::array<uint32_t, 4>& ne, pfnNewCapacity pfnNewCap );
 		size_t getCapacity() const { return capacity; }
+		void clear()
+		{
+			views.clear();
+			capacity = 0;
+		}
+		HRESULT zeroMemory( CComPtr<ID3D11Buffer>& cb );
 	};
 
 	__interface iTensorArena
@@ -43,6 +49,7 @@ namespace DirectCompute
 
 		void clear();
 		__m128i getMemoryUse() const;
+		HRESULT zeroMemory( CComPtr<ID3D11Buffer>& cb );
 
 	private:
 
@@ -63,6 +70,7 @@ namespace DirectCompute
 
 			Tensor tensor( const std::array<uint32_t, 4>& ne );
 			__m128i getMemoryUse() const;
+			HRESULT zeroMemory( CComPtr<ID3D11Buffer>& cb );
 
 		private:
 

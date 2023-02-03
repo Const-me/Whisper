@@ -43,6 +43,8 @@ namespace DirectCompute
 
 		GpuProfiler profiler;
 
+		CComPtr<ID3D11Buffer>& getSmallConstantBuffer() { return temp.smallCb; }
+
 	public:
 		MlContext( Whisper::ProfileCollection& profileColl );
 		MlContext( const MlContext& ) = delete;

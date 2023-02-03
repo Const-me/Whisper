@@ -664,3 +664,22 @@ __m128i WhisperContext::getMemoryUse() const
 	res = _mm_add_epi64( res, decoderOutput.getMemoryUse() );
 	return res;
 }
+
+HRESULT WhisperContext::clearState()
+{
+	CComPtr<ID3D11Buffer>& cb = getSmallConstantBuffer();
+
+	// CHECK( kv.zeroMemory( cb ) );
+	// CHECK( kvCross.zeroMemory( cb ) );
+	// The above code doesn't work for some reason.
+	// Ideally need to debug, but destroying and re-creating these two buffers is not a huge deal. Unlike the buffers in the pools, only a few megabytes of VRAM.
+	kv.clear();
+	kvCross.clear();
+
+	CHECK( arenas.outer.zeroMemory( cb ) );
+	CHECK( arenas.layer.zeroMemory( cb ) );
+	CHECK( decPool.zeroMemory( cb ) );
+	CHECK( decoderInput.zeroMemory() );
+	decoderOutput.clear();
+	return S_OK;
+}

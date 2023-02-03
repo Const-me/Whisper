@@ -274,6 +274,12 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 	// Start measuring "Run" profiler value, both CPU and GPU times
 	auto prof = context.completeProfiler();
 	bool stoppedPrematurely = false;
+
+	if( params.flag( eFullParamsFlags::NoContext ) )
+	{
+		CHECK( context.clearState() );
+	}
+
 	while( true )
 	{
 		if( nullptr != progress.pfn )

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TensorsArena.h"
 #include "../D3D/createBuffer.h"
+#include "TempBuffers.h"
 
 static inline uint32_t roundUpPower2( uint32_t x )
 {
@@ -132,4 +133,33 @@ __m128i TensorsArena::getMemoryUse() const
 	for( const auto& a : arenas )
 		res = _mm_add_epi64( res, a.getMemoryUse() );
 	return res;
+}
+
+HRESULT PooledTensor::zeroMemory( CComPtr<ID3D11Buffer>& cb )
+{
+	if( 0 == capacity )
+		return S_FALSE;
+	try
+	{
+		TempBuffers::zeroMemory( views, capacity, cb );
+		return S_OK;
+	}
+	catch( HRESULT hr )
+	{
+		return hr;
+	}
+}
+
+HRESULT TensorsArena::ArenaImpl::zeroMemory( CComPtr<ID3D11Buffer>& cb )
+{
+	for( PooledTensor& e : pool )
+		CHECK( e.zeroMemory( cb ) );
+	return S_OK;
+}
+
+HRESULT TensorsArena::zeroMemory( CComPtr<ID3D11Buffer>& cb )
+{
+	for( ArenaImpl& e : arenas )
+		CHECK( e.zeroMemory( cb ) );
+	return S_OK;
 }

@@ -39,6 +39,14 @@ namespace DirectCompute
 			Tensor tensor( eDataType type, const std::array<uint32_t, 4>& ne ) override final;
 			void reset() override final { }
 			__m128i getMemoryUse() const;
+			void clear()
+			{
+				result.clear();
+			}
+			HRESULT zeroMemory( CComPtr<ID3D11Buffer>& cb )
+			{
+				return result.zeroMemory( cb );
+			}
 		};
 
 		DecoderLayerPool decPool;
@@ -119,5 +127,7 @@ namespace DirectCompute
 		}
 
 		__m128i getMemoryUse() const;
+
+		HRESULT clearState();
 	};
 }

@@ -25,6 +25,8 @@ namespace TranscribeCS
 				using iModel model = Library.loadModel( cla.model );
 				using Context context = model.createContext();
 				cla.apply( ref context.parameters );
+				// When there're multiple input files, assuming they're independent clips
+				context.parameters.setFlag( eFullParamsFlags.NoContext, true );
 				using iMediaFoundation mf = Library.initMediaFoundation();
 				Transcribe transcribe = new Transcribe( cla );
 

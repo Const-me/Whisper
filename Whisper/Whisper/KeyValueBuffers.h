@@ -25,6 +25,8 @@ namespace DirectCompute
 		ID3D11Buffer* getBuffer() const { return buffer; }
 
 		uint32_t getSize() const { return m_size; }
+
+		HRESULT zeroMemory( CComPtr<ID3D11Buffer>& cb ) const;
 	};
 
 	struct KeyValueBuffers
@@ -46,5 +48,7 @@ namespace DirectCompute
 			i *= sizeof( uint16_t );
 			return setHigh_size( (int64_t)i );	// They both are in VRAM
 		}
+
+		HRESULT zeroMemory( CComPtr<ID3D11Buffer>& cb ) const;
 	};
 }

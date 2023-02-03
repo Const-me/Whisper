@@ -64,3 +64,14 @@ void DecoderInputBuffers::clear()
 	m_size = 0;
 	m_capacity = 0;
 }
+
+HRESULT DecoderInputBuffers::zeroMemory() const
+{
+	if( nullptr == embd || m_size == 0 )
+		return S_FALSE;
+
+	MappedResource mapped;
+	CHECK( mapped.map( embd, false ) );
+	__stosd( (DWORD*)mapped.data(), 0, m_capacity );
+	return S_OK;
+}

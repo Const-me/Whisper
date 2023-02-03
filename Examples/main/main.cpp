@@ -246,6 +246,8 @@ int wmain( int argc, wchar_t* argv[] )
 		wparams.setFlag( eFullParamsFlags::PrintTimestamps, !params.no_timestamps );
 		wparams.setFlag( eFullParamsFlags::PrintSpecial, params.print_special );
 		wparams.setFlag( eFullParamsFlags::Translate, params.translate );
+		// When there're multiple input files, assuming they're independent clips
+		wparams.setFlag( eFullParamsFlags::NoContext );
 		wparams.language = Whisper::makeLanguageKey( params.language.c_str() );
 		wparams.cpuThreads = params.n_threads;
 		if( params.max_context != UINT_MAX )

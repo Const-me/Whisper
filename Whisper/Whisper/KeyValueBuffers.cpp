@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "KeyValueBuffers.h"
 #include "../D3D/createBuffer.h"
+#include "../ML/TempBuffers.h"
 using namespace DirectCompute;
 
 void AttentionBuffer::resize( uint32_t size )
@@ -39,4 +40,31 @@ void KeyValueBuffers::resize( uint32_t size )
 {
 	keys.resize( size );
 	values.resize( size );
+}
+
+HRESULT AttentionBuffer::zeroMemory( CComPtr<ID3D11Buffer>& cb ) const
+{
+	if( 0 == m_size )
+		return S_FALSE;
+
+	CComPtr<ID3D11UnorderedAccessView> uav;
+	CD3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc{ D3D11_UAV_DIMENSION_BUFFER, DXGI_FORMAT_R16_FLOAT, 0, m_size };
+	check( device()->CreateUnorderedAccessView( buffer, &uavDesc, &uav ) );
+
+	try
+	{
+		TempBuffers::zeroMemory( uav, m_size, cb );
+		return S_OK;
+	}
+	catch( HRESULT hr )
+	{
+		return hr;
+	}
+}
+
+HRESULT KeyValueBuffers::zeroMemory( CComPtr<ID3D11Buffer>& cb ) const
+{
+	CHECK( keys.zeroMemory( cb ) );
+	CHECK( values.zeroMemory( cb ) );
+	return S_OK;
 }

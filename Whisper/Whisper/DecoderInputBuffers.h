@@ -3,7 +3,7 @@
 
 namespace DirectCompute
 {
-	// Two dynamic buffers
+	// A dynamic buffer
 	class DecoderInputBuffers
 	{
 		CComPtr<ID3D11Buffer> embd;
@@ -25,5 +25,7 @@ namespace DirectCompute
 			i *= sizeof( uint32_t );
 			return _mm_set_epi64x( (int64_t)i, 0 );
 		}
+
+		HRESULT zeroMemory() const;
 	};
 }
