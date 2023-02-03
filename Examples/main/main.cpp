@@ -20,12 +20,6 @@ static HRESULT loadWhisperModel( const wchar_t* path, iModel** pp )
 
 namespace
 {
-	struct sPrintUserData
-	{
-		const whisper_params* params;
-		// const std::vector<std::vector<float>>* pcmf32s;
-	};
-
 	// Terminal color map. 10 colors grouped in ranges [0.0, 0.1, ..., 0.9]
 	// Lowest is red, middle is yellow, highest is green.
 	static const std::array<const char*, 10> k_colors =
@@ -64,7 +58,7 @@ namespace
 		sTranscribeLength length;
 		CHECK( results->getSize( length ) );
 
-		const whisper_params& params = *( (sPrintUserData*)user_data )->params;
+		const whisper_params& params = *( (const whisper_params*)user_data );
 
 		// print the last n_new segments
 		const uint32_t s0 = length.countSegments - n_new;
@@ -241,15 +235,6 @@ int wmain( int argc, wchar_t* argv[] )
 					fprintf( stderr, "%s: WARNING: model is not multilingual, ignoring language and translation options\n", __func__ );
 				}
 			}
-
-			/*
-			fwprintf( stderr, L"%S: processing '%s' (%zu samples, %.1f sec), %d threads, %d processors, lang = %S, task = %S, timestamps = %d ...\n",
-				__func__, fname.c_str(), audio.pcmf32.size(), audio.seconds(),
-				params.n_threads, params.n_processors,
-				params.language.c_str(),
-				params.translate ? "translate" : "transcribe",
-				params.no_timestamps ? 0 : 1 );
-			*/
 		}
 
 		// run the inference
@@ -272,14 +257,12 @@ int wmain( int argc, wchar_t* argv[] )
 		wparams.max_len = params.output_wts && params.max_len == 0 ? 60 : params.max_len;
 
 		wparams.setFlag( eFullParamsFlags::SpeedupAudio, params.speed_up );
-		// sPrintUserData user_data = { &params, &audio.pcmf32s };
-		sPrintUserData user_data = { &params };
 
-		// this callback is called on each new segment
+		// This callback is called on each new segment
 		if( !wparams.flag( eFullParamsFlags::PrintRealtime ) )
 		{
 			wparams.new_segment_callback = &newSegmentCallback;
-			wparams.new_segment_callback_user_data = &user_data;
+			wparams.new_segment_callback_user_data = &params;
 		}
 
 		// example for abort mechanism
