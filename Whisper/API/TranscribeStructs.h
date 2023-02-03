@@ -6,11 +6,19 @@ namespace Whisper
 {
 	enum struct eModelImplementation : uint32_t
 	{
+		// GPGPU implementation based on Direct3D 11.0 compute shaders
 		GPU = 1,
+
+		// A hybrid implementation which uses DirectCompute for encode, and decodes on CPU
+		// Not implemented in the published builds of the DLL. To enable, change BUILD_HYBRID_VERSION macro to 1
 		Hybrid = 2,
+
+		// A reference implementation which uses the original GGML CPU-running code
+		// Not implemented in the published builds of the DLL. To enable, change BUILD_BOTH_VERSIONS macro to 1
 		Reference = 3,
 	};
 
+	// Timespan structure decomposed into fields
 	struct sTimeSpanFields
 	{
 		uint32_t days;
@@ -31,8 +39,10 @@ namespace Whisper
 		}
 	};
 
+	// C++ equivalent of System.Timespan C# structure
 	struct sTimeSpan
 	{
+		// The value is expressed in 100-nanoseconds ticks: compatible with System.Timespan, FILETIME, and many other things
 		uint64_t ticks;
 
 		operator sTimeSpanFields() const
@@ -63,6 +73,7 @@ namespace Whisper
 		const char* text;
 		// Start and end times of the segment
 		sTimeInterval time;
+		// These two integers define the slice of the tokens in this segment, in the array returned by iTranscribeResult.getTokens method
 		uint32_t firstToken, countTokens;
 	};
 
@@ -79,7 +90,9 @@ namespace Whisper
 	// Token data
 	struct sToken
 	{
-		// Token text, null-terminated, and probably UTF-8 encoded
+		// Token text, null-terminated, and usually UTF-8 encoded.
+		// I think for Chinese language the models sometimes outputs invalid UTF8 strings here, Unicode code points can be split between adjacent tokens in the same segment
+		// More info: https://github.com/ggerganov/whisper.cpp/issues/399
 		const char* text;
 		// Start and end times of the token
 		sTimeInterval time;
