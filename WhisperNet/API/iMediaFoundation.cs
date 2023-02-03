@@ -12,7 +12,7 @@ namespace Whisper
 	{
 		/// <summary>Decode complete audio file into a new memory buffer.</summary>
 		/// <returns>
-		/// Under the hood, the method asks MF to resample and convert audio into the suitable type for the Whisper model.<br/>
+		/// The method asks MF to resample and convert audio into the suitable type for the Whisper model.<br/>
 		/// If the path is a video file, the method will decode the first audio track.
 		/// </returns>
 		[RetValIndex( 2 )]
@@ -20,8 +20,9 @@ namespace Whisper
 
 		/// <summary>Create a reader to stream the audio file from disk</summary>
 		/// <returns>
-		/// Under the hood, the method asks MF to resample and convert audio into the suitable type for the Whisper model.<br/>
-		/// If the path is a video file, the method will decode the first audio track.
+		/// The method returns an object which can be used to decode the audio file incrementally.<br/>
+		/// For long audio files, this saves both memory (no need for large uncompressed PCM buffer), and time (decode and transcribe run concurrently on different CPU threads).<br/>
+		/// If the path is a video file, the implementation will use the first audio track.
 		/// </returns>
 		[RetValIndex( 2 )]
 		iAudioReader openAudioFile( [MarshalAs( UnmanagedType.LPWStr )] string path, [MarshalAs( UnmanagedType.U1 )] bool stereo = false );
