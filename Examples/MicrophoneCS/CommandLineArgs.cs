@@ -98,6 +98,8 @@ namespace MicrophoneCS
 				else
 					throw new ArgumentException( $"Unknown argument: \"{arg}\"" );
 			}
+			if( listDevices )
+				return;
 			if( string.IsNullOrWhiteSpace( model ) )
 				throw new ArgumentException( "The model file is not provided in the arguments" );
 			if( !File.Exists( model ) )
