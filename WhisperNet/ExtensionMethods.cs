@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Whisper.Internal;
 
@@ -15,6 +16,7 @@ namespace Whisper
 		}
 
 		/// <summary>Convert language into a short ID string, like <c>"en"</c></summary>
+		[SkipLocalsInit]
 		public static string getCode( this eLanguage lang )
 		{
 			unsafe
