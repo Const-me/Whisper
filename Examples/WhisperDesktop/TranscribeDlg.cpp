@@ -105,6 +105,7 @@ void TranscribeDlg::printModelDescription()
 	modelDesc.SetWindowText( text );
 }
 
+// Populate the "Output Format" combobox
 void TranscribeDlg::populateOutputFormats()
 {
 	transcribeOutFormat.AddString( L"None" );
@@ -114,6 +115,7 @@ void TranscribeDlg::populateOutputFormats()
 	transcribeOutFormat.AddString( L"WebVTT subtitles" );
 }
 
+// The enum values should match 0-based indices of the combobox items
 enum struct TranscribeDlg::eOutputFormat : uint8_t
 {
 	None = 0,
