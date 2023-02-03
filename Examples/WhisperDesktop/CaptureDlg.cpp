@@ -486,9 +486,9 @@ HRESULT CaptureDlg::appendTextFile( Whisper::iTranscribeResult* results, uint32_
 		if( 0 != ( (uint32_t)threadState.flags & (uint32_t)eTextFlags::Timestamps ) )
 		{
 			str = "[";
-			printTimeStamp( str, seg.time.begin );
+			printTime( str, seg.time.begin );
 			str += " --> ";
-			printTimeStamp( str, seg.time.end );
+			printTime( str, seg.time.end );
 			str += "]  ";
 		}
 		else

@@ -54,26 +54,17 @@ namespace
 		return file.Write( bom.data(), 3 );
 	}
 
-	void printTime( CStringA& rdi, Whisper::sTimeSpan time, bool comma )
+	void printTime( CStringA& rdi, Whisper::sTimeSpan time, bool comma = false )
 	{
 		Whisper::sTimeSpanFields fields = time;
+		const uint32_t hours = fields.days * 24 + fields.hours;
 		const char separator = comma ? ',' : '.';
 		rdi.AppendFormat( "%02d:%02d:%02d%c%03d",
-			(int)fields.hours,
+			(int)hours,
 			(int)fields.minutes,
 			(int)fields.seconds,
 			separator,
 			fields.ticks / 10'000 );
-	}
-
-	void printTimeStamp( CStringA& rdi, Whisper::sTimeSpan ts )
-	{
-		Whisper::sTimeSpanFields fields = ts;
-		uint32_t msec = fields.ticks / 10'000;
-		uint32_t hr = fields.days * 24 + fields.hours;
-		uint32_t min = fields.minutes;
-		uint32_t sec = fields.seconds;
-		rdi.AppendFormat( "%02d:%02d:%02d.%03d", hr, min, sec, msec );
 	}
 
 	const char* skipBlank( const char* rsi )
@@ -117,9 +108,9 @@ namespace
 				if( timestamps )
 				{
 					line = "[";
-					printTimeStamp( line, seg.time.begin );
+					printTime( line, seg.time.begin );
 					line += " --> ";
-					printTimeStamp( line, seg.time.end );
+					printTime( line, seg.time.end );
 					line += "]  ";
 				}
 				else
@@ -178,9 +169,9 @@ namespace
 				const sSegment& seg = segments[ i ];
 				line = "";
 
-				printTime( line, seg.time.begin, false );
+				printTime( line, seg.time.begin );
 				line += " --> ";
-				printTime( line, seg.time.end, false );
+				printTime( line, seg.time.end );
 				line += "\r\n";
 				line += skipBlank( seg.text );
 				line += "\r\n\r\n";

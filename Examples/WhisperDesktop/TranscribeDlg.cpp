@@ -455,18 +455,6 @@ namespace
 		return S_OK;
 	}
 
-	void printTime( CStringA& rdi, Whisper::sTimeSpan time, bool comma )
-	{
-		Whisper::sTimeSpanFields fields = time;
-		const char separator = comma ? ',' : '.';
-		rdi.AppendFormat( "%02d:%02d:%02d%c%03d",
-			(int)fields.hours,
-			(int)fields.minutes,
-			(int)fields.seconds,
-			separator,
-			fields.ticks / 10'000 );
-	}
-
 	const char* skipBlank( const char* rsi )
 	{
 		while( true )
@@ -497,9 +485,9 @@ HRESULT TranscribeDlg::writeTextFile( const sSegment* const segments, const size
 		if( timestamps )
 		{
 			line = "[";
-			printTimeStamp( line, seg.time.begin );
+			printTime( line, seg.time.begin );
 			line += " --> ";
-			printTimeStamp( line, seg.time.end );
+			printTime( line, seg.time.end );
 			line += "]  ";
 		}
 		else
