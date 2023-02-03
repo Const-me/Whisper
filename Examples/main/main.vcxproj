@@ -78,10 +78,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="miscUtils.cpp" />
     <ClCompile Include="params.cpp" />
+    <ClCompile Include="textWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="miscUtils.h" />
     <ClInclude Include="params.h" />
+    <ClInclude Include="textWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Whisper\Whisper.vcxproj">

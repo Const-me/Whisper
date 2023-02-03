@@ -5,10 +5,12 @@
     <ClCompile Include="params.cpp" />
     <ClCompile Include="miscUtils.cpp" />
     <ClCompile Include="..\WhisperDesktop\useDiscreteGpu.c" />
+    <ClCompile Include="textWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="params.h" />
     <ClInclude Include="miscUtils.h" />
+    <ClInclude Include="textWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Readme.txt" />

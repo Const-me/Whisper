@@ -5,6 +5,7 @@
 #include "miscUtils.h"
 #include <array>
 #include <atomic>
+#include "textWriter.h"
 using namespace Whisper;
 
 #define STREAM_AUDIO 1
@@ -286,8 +287,30 @@ int wmain( int argc, wchar_t* argv[] )
 #endif
 		if( FAILED( hr ) )
 		{
-			fwprintf( stderr, L"%s: failed to process audio\n", argv[ 0 ] );
+			printError( "Unable to process audio", hr );
 			return 10;
+		}
+
+		if( params.output_txt )
+		{
+			bool timestamps = !params.no_timestamps;
+			hr = writeText( context, fname.c_str(), timestamps );
+			if( FAILED( hr ) )
+				printError( "Unable to produce the text file", hr );
+		}
+
+		if( params.output_srt )
+		{
+			hr = writeSubRip( context, fname.c_str() );
+			if( FAILED( hr ) )
+				printError( "Unable to produce the text file", hr );
+		}
+
+		if( params.output_vtt )
+		{
+			hr = writeWebVTT( context, fname.c_str() );
+			if( FAILED( hr ) )
+				printError( "Unable to produce the text file", hr );
 		}
 	}
 
