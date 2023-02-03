@@ -70,7 +70,13 @@ void main( uint3 group: SV_GroupID, uint thread : SV_GroupIndex )
 		rsi3.z = pat + thread * patternStrides.x;
 
 		const uint3 rsiInc = uint3( stridesX, patternStrides.x ) * THREADS;
-		for( ; rsi3.x < rsiEnd; rsi3 += rsiInc )
+		while( rsi3.x < rsiEnd )
+		{
 			add2( rsi3.xy, pattern[ rsi3.z ] );
+
+			rsi3 += rsiInc;
+			if( rsi3.z >= patternSize.x )
+				rsi3.z -= patternSize.x;
+		}
 	}
 }
