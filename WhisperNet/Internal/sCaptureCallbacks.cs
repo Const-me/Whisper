@@ -3,7 +3,7 @@
 namespace Whisper.Internal
 {
 	/// <summary>Unmanaged code calls this to check for cancellation</summary>
-	/// <remarks>Return 0 to proceed, or 1 to stop the process and return from Context.runFull method</remarks>
+	/// <remarks>Return 0 to proceed, or 1 to stop the process and return from Context.runCapture method</remarks>
 	[UnmanagedFunctionPointer( CallingConvention.StdCall )]
 	public delegate int pfnShouldCancel( IntPtr pv );
 
@@ -18,7 +18,7 @@ namespace Whisper.Internal
 		public pfnShouldCancel shouldCancel;
 		/// <summary>Capture status function pointer</summary>
 		public pfnCaptureStatus captureStatus;
-		/// <summary>COntext pointer, only needed for C++ compatibility</summary>
+		/// <summary>Context pointer, only needed for C++ compatibility</summary>
 		public IntPtr pv;
 	}
 }
