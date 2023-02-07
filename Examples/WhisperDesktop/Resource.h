@@ -4,7 +4,6 @@
 //
 #define IDC_MYICON                      2
 #define IDD_WHISPERDESKTOP_DIALOG       102
-#define IDD_ABOUTBOX                    103
 #define IDM_ABOUT                       104
 #define IDI_WHISPERDESKTOP              107
 #define IDI_SMALL                       108
