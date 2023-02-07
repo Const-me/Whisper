@@ -17,3 +17,8 @@ copy ..\x64\Release\Whisper.lib ..\..\Release\Next\Library\Linker\
 
 rem debug symbols
 copy ..\x64\Release\Whisper.pdb ..\..\Release\Next\
+
+rem C++ CLI example
+mkdir ..\..\Release\Next\cli
+copy ..\x64\Release\Whisper.dll ..\..\Release\Next\cli\
+copy ..\x64\Release\main.exe ..\..\Release\Next\cli\
