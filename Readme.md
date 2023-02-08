@@ -101,9 +101,7 @@ I don’t know how to measure that, but I have a feeling the bottleneck is memor
 Someone on Hacker News [has tested](https://news.ycombinator.com/item?id=34408429) on [3060Ti](https://en.wikipedia.org/wiki/GeForce_30_series#Desktop),
 the version with GDDR6 memory.
 Compared to 1080Ti, that GPU has 1.3x FP32 FLOPS, but 0.92x VRAM bandwidth.
-The app was about 10% slower on the 3060Ti.<br/>
-Would be interesting to test on AMD [RDNA2](https://en.wikipedia.org/wiki/Radeon_RX_6000_series#Desktop)
-or [RDNA3](https://en.wikipedia.org/wiki/Radeon_RX_7000_series#Desktop) GPUs, with their large 80 MB+ level 3 cashes.
+The app was about 10% slower on the 3060Ti.
 
 ## Further Optimisations
 
