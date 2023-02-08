@@ -5,7 +5,8 @@ namespace Whisper
 {
 	/// <summary>A buffer with a chunk of audio.</summary>
 	/// <remarks>Note the interface supports both marshaling directions.<br/>
-	/// I have not tested, but you should be able to implement this interface in C#, to supply PCM audio data to the native code.</remarks>
+	/// You can implement this interface in C#, to supply PCM audio data to the native code.</remarks>
+	/// <seealso href="https://gist.github.com/Const-me/082c8d96eb10b76058c5dd9c68b5bfe1" />
 	[ComInterface( "013583aa-c9eb-42bc-83db-633c2c317051", eMarshalDirection.BothWays )]
 	public interface iAudioBuffer: IDisposable
 	{
