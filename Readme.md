@@ -62,6 +62,9 @@ The most recent GPU without D3D 11.0 support was Intel [Sandy Bridge](https://en
 3. Switch to `Release` configuration
 
 4. Build and run `CompressShaders` C# project, in the `Tools` subfolder of the solution.
+To run that project, right click in visual studio, “Set as startup project”, then in the main menu of VS “Debug / Start Without Debugging”.
+When completed successfully, you should see a console window with a line like that:<br/>
+`Compressed 46 compute shaders, 123.5 kb -> 18.0 kb`
 
 5. Build `Whisper` project to get the native DLL, or `WhisperNet` for the C# wrapper and nuget package, or the examples.
 
