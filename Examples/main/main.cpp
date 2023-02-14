@@ -277,16 +277,22 @@ int wmain( int argc, wchar_t* argv[] )
 			wparams.encoder_begin_callback_user_data = &is_aborted;
 		}
 
-#if STREAM_AUDIO
-		ComLight::CComPtr<iAudioReader> reader;
-		CHECK( mf->openAudioFile( fname.c_str(), params.diarize, &reader ) );
-		sProgressSink progressSink{ nullptr, nullptr };
-		hr = context->runStreamed( wparams, progressSink, reader );
-#else
-		ComLight::CComPtr<iAudioBuffer> buffer;
-		CHECK( mf->loadAudioFile( fname.c_str(), params.diarize, &buffer ) );
-		hr = context->runFull( wparams, buffer );
-#endif
+		if( STREAM_AUDIO && !wparams.flag( eFullParamsFlags::TokenTimestamps ) )
+		{
+			ComLight::CComPtr<iAudioReader> reader;
+			CHECK( mf->openAudioFile( fname.c_str(), params.diarize, &reader ) );
+			sProgressSink progressSink{ nullptr, nullptr };
+			hr = context->runStreamed( wparams, progressSink, reader );
+		}
+		else
+		{
+			// Token-level timestamps feature is not currently implemented when streaming the audio
+			// When these timestamps are requested, fall back to buffered mode.
+			ComLight::CComPtr<iAudioBuffer> buffer;
+			CHECK( mf->loadAudioFile( fname.c_str(), params.diarize, &buffer ) );
+			hr = context->runFull( wparams, buffer );
+		}
+
 		if( FAILED( hr ) )
 		{
 			printError( "Unable to process audio", hr );
