@@ -70,7 +70,8 @@ When completed successfully, you should see a console window with a line like th
 
 ## Other Notes
 
-If you gonna consume the library in a software built with Visual C++, you probably redistribute Visual C++ runtime DLLs in the form of the `.msm` merge module.<br/>
+If you gonna consume the library in a software built with Visual C++ 2022 or newer, you probably redistribute Visual C++ runtime DLLs in the form of the `.msm` merge module,
+or [vc_redist.x64.exe](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) binary.<br/>
 If you do that, right click on the `Whisper` project, Properties, C/C++, Code Generation,
 switch “Runtime Library” setting from `Multi-threaded (/MT)` to `Multi-threaded DLL (/MD)`,
 and rebuild: the binary will become smaller.
