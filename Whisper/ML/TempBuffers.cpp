@@ -2,7 +2,6 @@
 #include "TempBuffers.h"
 #include "../D3D/createBuffer.h"
 #include "../D3D/MappedResource.h"
-#include "../D3D/shaders.h"
 #include "mlUtils.h"
 using namespace DirectCompute;
 
@@ -13,7 +12,7 @@ HRESULT TempBuffers::Buffer::resize( DXGI_FORMAT format, size_t elements, size_t
 	if( elements <= capacity )
 	{
 		if( zeroMemory )
-			TempBuffers::zeroMemory( *this, (uint32_t)elements );
+			DirectCompute::zeroMemory( *this, (uint32_t)elements );
 		return S_OK;
 	}
 	clear();
@@ -24,23 +23,6 @@ HRESULT TempBuffers::Buffer::resize( DXGI_FORMAT format, size_t elements, size_t
 	CHECK( TensorGpuViews::create( buffer, format, elements, true ) );
 	capacity = elements;
 	return S_OK;
-}
-
-void TempBuffers::zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length )
-{
-	const __m128i cbData = _mm_cvtsi32_si128( (int)length );
-	ID3D11Buffer* cb = updateSmallCb( cbData );
-
-	ID3D11DeviceContext* ctx = context();
-	ctx->CSSetUnorderedAccessViews( 0, 1, &uav, nullptr );
-	csSetCB( cb );
-
-	constexpr uint32_t THREADS = 512;
-	constexpr uint32_t ITERATIONS = 128;
-	constexpr uint32_t elementsPerGroup = THREADS * ITERATIONS;
-	const uint32_t countGroups = ( length + elementsPerGroup - 1 ) / elementsPerGroup;
-	bindShader( eComputeShader::zeroMemory );
-	ctx->Dispatch( countGroups, 1, 1 );
 }
 
 const TensorGpuViews& TempBuffers::fp16( size_t countElements, bool zeroMemory )

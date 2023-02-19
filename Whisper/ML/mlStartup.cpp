@@ -4,6 +4,7 @@
 #include "LookupTables.h"
 #include "../D3D/MappedResource.h"
 #include "mlUtils.h"
+#include "../D3D/shaders.h"
 
 namespace
 {
@@ -43,5 +44,23 @@ namespace DirectCompute
 			store16( mapped.data(), cbData );
 		}
 		throw OLE_E_BLANK;
+	}
+
+	void zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length, bool fillWithNaN )
+	{
+		__m128i cbData = _mm_cvtsi32_si128( (int)length );
+		cbData = _mm_insert_epi32( cbData, fillWithNaN ? 1 : 0, 1 );
+		ID3D11Buffer* cb = updateSmallCb( cbData );
+
+		ID3D11DeviceContext* ctx = context();
+		ctx->CSSetUnorderedAccessViews( 0, 1, &uav, nullptr );
+		csSetCB( cb );
+
+		constexpr uint32_t THREADS = 512;
+		constexpr uint32_t ITERATIONS = 128;
+		constexpr uint32_t elementsPerGroup = THREADS * ITERATIONS;
+		const uint32_t countGroups = ( length + elementsPerGroup - 1 ) / elementsPerGroup;
+		bindShader( eComputeShader::zeroMemory );
+		ctx->Dispatch( countGroups, 1, 1 );
 	}
 }

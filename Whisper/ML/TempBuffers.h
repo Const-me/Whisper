@@ -28,8 +28,6 @@ namespace DirectCompute
 
 	public:
 
-		static void zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length );
-
 		const TensorGpuViews& fp16( size_t countElements, bool zeroMemory = false );
 		const TensorGpuViews& fp16_2( size_t countElements, bool zeroMemory = false );
 		const TensorGpuViews& fp32( size_t countElements, bool zeroMemory = false );

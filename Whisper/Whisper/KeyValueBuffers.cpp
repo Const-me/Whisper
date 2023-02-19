@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "KeyValueBuffers.h"
 #include "../D3D/createBuffer.h"
-#include "../ML/TempBuffers.h"
+#include "../ML/mlUtils.h"
 using namespace DirectCompute;
 
 void AttentionBuffer::resize( uint32_t size )
@@ -53,7 +53,7 @@ HRESULT AttentionBuffer::zeroMemory() const
 
 	try
 	{
-		TempBuffers::zeroMemory( uav, m_size );
+		DirectCompute::zeroMemory( uav, m_size );
 		return S_OK;
 	}
 	catch( HRESULT hr )

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "TensorsArena.h"
 #include "../D3D/createBuffer.h"
-#include "TempBuffers.h"
+#include "mlUtils.h"
 
 static inline uint32_t roundUpPower2( uint32_t x )
 {
@@ -141,7 +141,7 @@ HRESULT PooledTensor::zeroMemory()
 		return S_FALSE;
 	try
 	{
-		TempBuffers::zeroMemory( views, capacity );
+		DirectCompute::zeroMemory( views, capacity );
 		return S_OK;
 	}
 	catch( HRESULT hr )
