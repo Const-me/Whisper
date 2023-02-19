@@ -3,6 +3,7 @@ RWBuffer<float> result: register( u0 );
 cbuffer Constants: register( b0 )
 {
 	uint elements: packoffset( c0.x );
+	bool writeNan: packoffset( c0.y );
 }
 
 // Thread group index is 16 bits per coordinate:
@@ -22,6 +23,8 @@ void main( uint3 group: SV_GroupID, uint thread : SV_GroupIndex )
 {
 	uint rdi = group.x * itemsPerGroup;
 	const uint rdiEnd = min( rdi + itemsPerGroup, elements );
+	// https://www.h-schmidt.net/FloatConverter/IEEE754.html
+	const float pattern = writeNan ? asfloat( 0x7FFFFFFFu ) : 0.0;
 	for( rdi += thread; rdi < rdiEnd; rdi += THREADS )
-		result[ rdi ] = 0.0;
+		result[ rdi ] = pattern;
 }

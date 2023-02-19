@@ -50,6 +50,7 @@
     <FxCompile Include="mulMatByRowTiledEx.hlsl" />
     <FxCompile Include="addRepeatEx.hlsl" />
     <FxCompile Include="softMaxLong.hlsl" />
+    <FxCompile Include="dbgFindNaN.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="componentwiseBinaryOp.hlsli" />

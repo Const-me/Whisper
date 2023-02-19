@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "shaderNames.h"
 
-static const std::array<const char*, 40> s_shaderNames = 
+static const std::array<const char*, 41> s_shaderNames = 
 {
 	"add",
 	"addInPlace",
@@ -18,6 +18,7 @@ static const std::array<const char*, 40> s_shaderNames =
 	"convolutionPrep2",
 	"copyConvert",
 	"copyTranspose",
+	"dbgFindNaN",
 	"diagMaskInf",
 	"flashAttention",
 	"flashAttentionCompat1",

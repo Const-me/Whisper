@@ -172,6 +172,7 @@
     <FxCompile Include="convolutionPrep2.hlsl" />
     <FxCompile Include="copyConvert.hlsl" />
     <FxCompile Include="copyTranspose.hlsl" />
+    <FxCompile Include="dbgFindNaN.hlsl" />
     <FxCompile Include="diagMaskInf.hlsl" />
     <FxCompile Include="flashAttention.hlsl" />
     <FxCompile Include="flashAttentionCompat1.hlsl" />
