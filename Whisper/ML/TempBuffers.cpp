@@ -3,16 +3,17 @@
 #include "../D3D/createBuffer.h"
 #include "../D3D/MappedResource.h"
 #include "../D3D/shaders.h"
+#include "mlUtils.h"
 using namespace DirectCompute;
 
 #define CHECK( hr ) { const HRESULT __hr = ( hr ); if( FAILED( __hr ) ) return __hr; }
 
-HRESULT TempBuffers::Buffer::resize( DXGI_FORMAT format, size_t elements, size_t cbElement, bool zeroMemory, CComPtr<ID3D11Buffer>& cb )
+HRESULT TempBuffers::Buffer::resize( DXGI_FORMAT format, size_t elements, size_t cbElement, bool zeroMemory )
 {
 	if( elements <= capacity )
 	{
 		if( zeroMemory )
-			TempBuffers::zeroMemory( *this, (uint32_t)elements, cb );
+			TempBuffers::zeroMemory( *this, (uint32_t)elements );
 		return S_OK;
 	}
 	clear();
@@ -25,23 +26,10 @@ HRESULT TempBuffers::Buffer::resize( DXGI_FORMAT format, size_t elements, size_t
 	return S_OK;
 }
 
-void TempBuffers::zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length, CComPtr<ID3D11Buffer>& cb )
+void TempBuffers::zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length )
 {
 	const __m128i cbData = _mm_cvtsi32_si128( (int)length );
-	if( cb )
-	{
-		MappedResource mapped;
-		check( mapped.map( cb, false ) );
-		store16( mapped.data(), cbData );
-	}
-	else
-	{
-		CD3D11_BUFFER_DESC desc{ 16, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE };
-		std::array<uint32_t, 4> cbBuffer;
-		store( cbBuffer, cbData );
-		D3D11_SUBRESOURCE_DATA srd{ cbBuffer.data(), 0, 0 };
-		check( device()->CreateBuffer( &desc, &srd, &cb ) );
-	}
+	ID3D11Buffer* cb = updateSmallCb( cbData );
 
 	ID3D11DeviceContext* ctx = context();
 	ctx->CSSetUnorderedAccessViews( 0, 1, &uav, nullptr );
@@ -57,7 +45,7 @@ void TempBuffers::zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length, C
 
 const TensorGpuViews& TempBuffers::fp16( size_t countElements, bool zeroMemory )
 {
-	HRESULT hr = m_fp16.resize( DXGI_FORMAT_R16_FLOAT, countElements, 2, zeroMemory, smallCb );
+	HRESULT hr = m_fp16.resize( DXGI_FORMAT_R16_FLOAT, countElements, 2, zeroMemory );
 	if( FAILED( hr ) )
 		throw hr;
 	return m_fp16;
@@ -65,7 +53,7 @@ const TensorGpuViews& TempBuffers::fp16( size_t countElements, bool zeroMemory )
 
 const TensorGpuViews& TempBuffers::fp16_2( size_t countElements, bool zeroMemory )
 {
-	HRESULT hr = m_fp16_2.resize( DXGI_FORMAT_R16_FLOAT, countElements, 2, zeroMemory, smallCb );
+	HRESULT hr = m_fp16_2.resize( DXGI_FORMAT_R16_FLOAT, countElements, 2, zeroMemory );
 	if( FAILED( hr ) )
 		throw hr;
 	return m_fp16_2;
@@ -73,7 +61,7 @@ const TensorGpuViews& TempBuffers::fp16_2( size_t countElements, bool zeroMemory
 
 const TensorGpuViews& TempBuffers::fp32( size_t countElements, bool zeroMemory )
 {
-	HRESULT hr = m_fp32.resize( DXGI_FORMAT_R32_FLOAT, countElements, 4, zeroMemory, smallCb );
+	HRESULT hr = m_fp32.resize( DXGI_FORMAT_R32_FLOAT, countElements, 4, zeroMemory );
 	if( FAILED( hr ) )
 		throw hr;
 	return m_fp32;

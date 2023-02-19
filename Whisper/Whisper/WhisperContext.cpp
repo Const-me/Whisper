@@ -667,8 +667,6 @@ __m128i WhisperContext::getMemoryUse() const
 
 HRESULT WhisperContext::clearState()
 {
-	CComPtr<ID3D11Buffer>& cb = getSmallConstantBuffer();
-
 	// CHECK( kv.zeroMemory( cb ) );
 	// CHECK( kvCross.zeroMemory( cb ) );
 	// The above code doesn't work for some reason.
@@ -676,9 +674,9 @@ HRESULT WhisperContext::clearState()
 	kv.clear();
 	kvCross.clear();
 
-	CHECK( arenas.outer.zeroMemory( cb ) );
-	CHECK( arenas.layer.zeroMemory( cb ) );
-	CHECK( decPool.zeroMemory( cb ) );
+	CHECK( arenas.outer.zeroMemory() );
+	CHECK( arenas.layer.zeroMemory() );
+	CHECK( decPool.zeroMemory() );
 	CHECK( decoderInput.zeroMemory() );
 	decoderOutput.clear();
 	return S_OK;

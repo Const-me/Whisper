@@ -135,13 +135,13 @@ __m128i TensorsArena::getMemoryUse() const
 	return res;
 }
 
-HRESULT PooledTensor::zeroMemory( CComPtr<ID3D11Buffer>& cb )
+HRESULT PooledTensor::zeroMemory()
 {
 	if( 0 == capacity )
 		return S_FALSE;
 	try
 	{
-		TempBuffers::zeroMemory( views, capacity, cb );
+		TempBuffers::zeroMemory( views, capacity );
 		return S_OK;
 	}
 	catch( HRESULT hr )
@@ -150,16 +150,16 @@ HRESULT PooledTensor::zeroMemory( CComPtr<ID3D11Buffer>& cb )
 	}
 }
 
-HRESULT TensorsArena::ArenaImpl::zeroMemory( CComPtr<ID3D11Buffer>& cb )
+HRESULT TensorsArena::ArenaImpl::zeroMemory()
 {
 	for( PooledTensor& e : pool )
-		CHECK( e.zeroMemory( cb ) );
+		CHECK( e.zeroMemory() );
 	return S_OK;
 }
 
-HRESULT TensorsArena::zeroMemory( CComPtr<ID3D11Buffer>& cb )
+HRESULT TensorsArena::zeroMemory()
 {
 	for( ArenaImpl& e : arenas )
-		CHECK( e.zeroMemory( cb ) );
+		CHECK( e.zeroMemory() );
 	return S_OK;
 }

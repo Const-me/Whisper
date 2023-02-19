@@ -42,7 +42,7 @@ void KeyValueBuffers::resize( uint32_t size )
 	values.resize( size );
 }
 
-HRESULT AttentionBuffer::zeroMemory( CComPtr<ID3D11Buffer>& cb ) const
+HRESULT AttentionBuffer::zeroMemory() const
 {
 	if( 0 == m_size )
 		return S_FALSE;
@@ -53,7 +53,7 @@ HRESULT AttentionBuffer::zeroMemory( CComPtr<ID3D11Buffer>& cb ) const
 
 	try
 	{
-		TempBuffers::zeroMemory( uav, m_size, cb );
+		TempBuffers::zeroMemory( uav, m_size );
 		return S_OK;
 	}
 	catch( HRESULT hr )
@@ -62,9 +62,9 @@ HRESULT AttentionBuffer::zeroMemory( CComPtr<ID3D11Buffer>& cb ) const
 	}
 }
 
-HRESULT KeyValueBuffers::zeroMemory( CComPtr<ID3D11Buffer>& cb ) const
+HRESULT KeyValueBuffers::zeroMemory() const
 {
-	CHECK( keys.zeroMemory( cb ) );
-	CHECK( values.zeroMemory( cb ) );
+	CHECK( keys.zeroMemory() );
+	CHECK( values.zeroMemory() );
 	return S_OK;
 }

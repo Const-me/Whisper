@@ -43,9 +43,9 @@ namespace DirectCompute
 			{
 				result.clear();
 			}
-			HRESULT zeroMemory( CComPtr<ID3D11Buffer>& cb )
+			HRESULT zeroMemory()
 			{
-				return result.zeroMemory( cb );
+				return result.zeroMemory();
 			}
 		};
 

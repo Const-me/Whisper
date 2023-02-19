@@ -17,7 +17,7 @@ namespace DirectCompute
 				capacity = 0;
 			}
 
-			HRESULT resize( DXGI_FORMAT format, size_t elements, size_t cbElement, bool zeroMemory, CComPtr<ID3D11Buffer>& cb );
+			HRESULT resize( DXGI_FORMAT format, size_t elements, size_t cbElement, bool zeroMemory );
 
 			size_t getCapacity() const { return capacity; }
 		};
@@ -28,9 +28,7 @@ namespace DirectCompute
 
 	public:
 
-		CComPtr<ID3D11Buffer> smallCb;
-
-		static void zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length, CComPtr<ID3D11Buffer>& cb );
+		static void zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length );
 
 		const TensorGpuViews& fp16( size_t countElements, bool zeroMemory = false );
 		const TensorGpuViews& fp16_2( size_t countElements, bool zeroMemory = false );

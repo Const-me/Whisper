@@ -191,6 +191,7 @@
     <ClInclude Include="ML\reshapedMultiply.h" />
     <ClInclude Include="API\eGpuModelFlags.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
+    <ClInclude Include="ML\mlUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="whisper.def" />

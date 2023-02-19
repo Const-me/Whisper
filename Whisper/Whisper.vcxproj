@@ -237,6 +237,7 @@
     <ClInclude Include="CPU\Tensor.h" />
     <ClInclude Include="CPU\DecoderTensors.h" />
     <ClInclude Include="CPU\HybridLoader.h" />
+    <ClInclude Include="ML\mlUtils.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
     <ClInclude Include="Hybrid\HybridContext.h" />
     <ClInclude Include="CPU\ParallelForRunner.h" />
