@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "tracing.h"
 #include "../../source/ggml.h"
+#include "../../ML/Tensor.h"
 
-#if SAVE_DEBUG_TRACE
 namespace Tracing
 {
+#if SAVE_DEBUG_TRACE
 	std::unique_ptr<iTraceWriter> s_writer;
 
 	static BOOL __stdcall consoleHandler( DWORD dwCtrlType )
@@ -56,5 +57,14 @@ namespace Tracing
 		delayed.clear();
 		return S_OK;
 	}
-}
+#elif DBG_TEST_NAN
+	HRESULT tensor( const ItemName& name, const DirectCompute::Tensor& tensor )
+	{
+		const bool found = scanTensorForNaN( tensor, tensor.countElements() );
+		if( !found )
+			return S_FALSE;
+		__debugbreak();
+		return S_FALSE;
+	}
 #endif
+}

@@ -72,6 +72,10 @@ Tensor PooledTensor::tensor( eDataType type, const std::array<uint32_t, 4>& ne, 
 	shape.setDenseStrides();
 	Tensor res{ shape, views };
 	res.dbgSetType( type );
+
+#if DBG_TEST_NAN
+	fillTensorWithNaN( res );
+#endif
 	return res;
 }
 

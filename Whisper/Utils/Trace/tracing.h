@@ -1,5 +1,6 @@
 #pragma once
 #include "TraceWriter.h"
+#include "../../ML/mlUtils.h"
 
 namespace Tracing
 {
@@ -55,7 +56,11 @@ namespace Tracing
 #else
 	inline void traceCreate( LPCTSTR path ) { }
 	inline void traceClose() { }
+#if DBG_TEST_NAN
+	HRESULT tensor( const ItemName& name, const DirectCompute::Tensor& tensor );
+#else
 	inline HRESULT tensor( const ItemName& name, const DirectCompute::Tensor& tensor ) { return S_FALSE; }
+#endif
 	inline HRESULT tensor( const ItemName& name, const CpuCompute::Tensor& tensor ) { return S_FALSE; }
 	inline HRESULT tensor( const ItemName& name, const ggml_tensor* tensor ) { return S_FALSE; }
 	inline HRESULT buffer( const ItemName& name, const void* rsi, size_t length, eDataType dt ) { return S_FALSE; }

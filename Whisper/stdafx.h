@@ -38,6 +38,11 @@
 // See Tools / compareTraces project for a command-line app to compare these traces.
 #define SAVE_DEBUG_TRACE 0
 
+// Initialize tensors with NaN numbers, and test for NaN values in the outputs tensors
+// Incompatible with SAVE_DEBUG_TRACE macro
+// When enabled, it stalls GPU pipelining pretty often. This is not great for performance, should be disabled in production.
+#define DBG_TEST_NAN 0
+
 // In addition to collecting total GPU times per compute shader, also collect and print performance data about individual invocations of some of the most expensive shaders
 // The feature is relatively cheap in terms of performance overhead, but pretty much useless in production, and clutters debug console with all these numbers
 #define PROFILER_COLLECT_TAGS 0
