@@ -2,15 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>WhisperNet</id>
-		<version>1.8</version>
+		<version>1.8.1</version>
 		<authors>Konstantin, const.me</authors>
 		<license type="expression">MPL-2.0</license>
 		<projectUrl>https://github.com/Const-me/Whisper</projectUrl>
 		<description>High-performance GPGPU inference of OpenAI's Whisper automatic speech recognition (ASR) model</description>
-		<releaseNotes>
-			Changed API to allow to select the GPU for the inference
-			Documented F16C requirement, and improved error handling accordingly
-		</releaseNotes>
+		<releaseNotes>Fixed a crash during process shutdown </releaseNotes>
 		<copyright>Copyright © const.me, 2022-2023</copyright>
 		<tags>whisper, gpgpu, speech recognition</tags>
 		<repository type="git" url="https://github.com/Const-me/Whisper.git" />
