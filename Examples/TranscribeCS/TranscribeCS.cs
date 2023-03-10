@@ -10,6 +10,8 @@ namespace TranscribeCS
 		{
 			try
 			{
+				// dbgListGPUs();
+
 				CommandLineArgs cla;
 				try
 				{
@@ -99,6 +101,12 @@ namespace TranscribeCS
 				stream.WriteLine( seg.text );
 				stream.WriteLine();
 			}
+		}
+
+		static void dbgListGPUs()
+		{
+			string[] list = Library.listGraphicAdapters();
+			Console.WriteLine( "    Graphics Adapters:\n{0}", string.Join( "\n", list ) );
 		}
 	}
 }

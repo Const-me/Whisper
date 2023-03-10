@@ -1,6 +1,6 @@
 ﻿namespace Whisper
 {
-	/// <summary>Implementation value for the <see cref="Library.loadModel(string, eGpuModelFlags, eModelImplementation)" /> factory function</summary>
+	/// <summary>Implementation value for the <see cref="Library.loadModel(string, eGpuModelFlags, string?, eModelImplementation)" /> factory function</summary>
 	public enum eModelImplementation: uint
 	{
 		/// <summary>GPGPU implementation based on Direct3D 11.0 compute shaders</summary>
