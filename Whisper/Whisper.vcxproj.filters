@@ -85,6 +85,7 @@
     <ClCompile Include="ML\Reshaper.cpp" />
     <ClCompile Include="Utils\DelayExecution.cpp" />
     <ClCompile Include="Whisper\ContextImpl.diarize.cpp" />
+    <ClCompile Include="D3D\listGPUs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ggml.h" />
@@ -192,6 +193,8 @@
     <ClInclude Include="API\eGpuModelFlags.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
     <ClInclude Include="ML\mlUtils.h" />
+    <ClInclude Include="API\sModelSetup.h" />
+    <ClInclude Include="D3D\listGPUs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="whisper.def" />

@@ -110,6 +110,7 @@
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ClCompile Include="CPU\HybridLoader.cpp" />
+    <ClCompile Include="D3D\listGPUs.cpp" />
     <ClCompile Include="Utils\DelayExecution.cpp" />
     <ClCompile Include="Hybrid\HybridContext.cpp" />
     <ClCompile Include="CPU\ParallelForRunner.cpp">
@@ -228,6 +229,7 @@
     <ClInclude Include="API\iTranscribeResult.cl.h" />
     <ClInclude Include="API\sLanguageList.h" />
     <ClInclude Include="API\sLoadModelCallbacks.h" />
+    <ClInclude Include="API\sModelSetup.h" />
     <ClInclude Include="API\SpecialTokens.h" />
     <ClInclude Include="API\sFullParams.h" />
     <ClInclude Include="API\whisperComLight.h" />
@@ -237,6 +239,7 @@
     <ClInclude Include="CPU\Tensor.h" />
     <ClInclude Include="CPU\DecoderTensors.h" />
     <ClInclude Include="CPU\HybridLoader.h" />
+    <ClInclude Include="D3D\listGPUs.h" />
     <ClInclude Include="ML\mlUtils.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
     <ClInclude Include="Hybrid\HybridContext.h" />

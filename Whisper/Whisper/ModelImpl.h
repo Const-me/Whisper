@@ -12,6 +12,7 @@ namespace Whisper
 	{
 		WhisperModel model;
 		const uint32_t gpuFlags;
+		const std::wstring adapter;
 
 		HRESULT COMLIGHTCALL createContext( iContext** pp ) override final;
 
@@ -32,7 +33,10 @@ namespace Whisper
 		}
 
 	public:
-		ModelImpl( uint32_t flags ) : gpuFlags( flags ) { }
+		ModelImpl( const sModelSetup& setup ) :
+			gpuFlags( setup.flags ),
+			adapter( setup.adapter )
+		{ }
 		HRESULT FinalConstruct();
 		void FinalRelease();
 

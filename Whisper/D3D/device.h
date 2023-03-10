@@ -8,7 +8,7 @@ namespace DirectCompute
 	ID3D11DeviceContext* context();
 	D3D_FEATURE_LEVEL featureLevel();
 
-	HRESULT initialize( uint32_t flags );
+	HRESULT initialize( uint32_t flags, const std::wstring& adapter );
 	void terminate();
 
 	// DXGI_ADAPTER_DESC.VendorId magic numbers; they come from that database: https://pcisig.com/membership/member-companies

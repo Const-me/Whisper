@@ -5,6 +5,7 @@
 #pragma comment(lib, "D3D11.lib")
 #include "RenderDoc/renderDoc.h"
 #include "../API/eGpuModelFlags.h"
+#include "listGPUs.h"
 
 namespace DirectCompute
 {
@@ -20,12 +21,16 @@ namespace DirectCompute
 	{
 		g_context = nullptr;
 		g_device = nullptr;
+		destroyDxgiFactory();
 	}
 
-	static HRESULT createDevice()
+	static HRESULT createDevice( const std::wstring& adapterName )
 	{
 		if( g_device )
 			return S_FALSE;
+
+		CComPtr<IDXGIAdapter1> adapter = selectAdapter( adapterName );
+		const D3D_DRIVER_TYPE driverType = adapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE;
 
 		const std::array<D3D_FEATURE_LEVEL, 4> levels = { D3D_FEATURE_LEVEL_12_1 , D3D_FEATURE_LEVEL_12_0 , D3D_FEATURE_LEVEL_11_1 , D3D_FEATURE_LEVEL_11_0 };
 		UINT flags = D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT | D3D11_CREATE_DEVICE_SINGLETHREADED;
@@ -39,7 +44,7 @@ namespace DirectCompute
 		}
 #endif
 		constexpr UINT levelsCount = (UINT)levels.size();
-		HRESULT hr = D3D11CreateDevice( nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags, levels.data(), levelsCount, D3D11_SDK_VERSION, &g_device, &g_featureLevel, &g_context );
+		HRESULT hr = D3D11CreateDevice( adapter, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags, levels.data(), levelsCount, D3D11_SDK_VERSION, &g_device, &g_featureLevel, &g_context );
 		if( SUCCEEDED( hr ) )
 			return S_OK;
 		// D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT: This value is not supported until Direct3D 11.1
@@ -139,10 +144,10 @@ namespace DirectCompute
 		return S_OK;
 	}
 
-	HRESULT initialize( uint32_t flags )
+	HRESULT initialize( uint32_t flags, const std::wstring& adapter )
 	{
 		CHECK( validateFlags( flags ) );
-		HRESULT hr = createDevice();
+		HRESULT hr = createDevice( adapter );
 		if( hr != S_OK )
 			return hr;
 		queryDeviceInfo( flags );

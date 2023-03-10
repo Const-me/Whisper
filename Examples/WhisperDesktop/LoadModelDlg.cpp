@@ -141,8 +141,12 @@ void __stdcall LoadModelDlg::poolCallback() noexcept
 	lmcb.cancel = nullptr;
 	lmcb.progress = &LoadModelDlg::progressCallback;
 	lmcb.pv = this;
-	const uint32_t flags = appState.gpuFlagsLoad();
-	HRESULT hr = Whisper::loadModel( path, impl, flags, &lmcb, &model );
+	Whisper::sModelSetup setup;
+	setup.impl = impl;
+	setup.flags = appState.gpuFlagsLoad();
+	CString adapter = appState.stringLoad( L"gpu" );
+	setup.adapter = adapter;
+	HRESULT hr = Whisper::loadModel( path, setup, &lmcb, &model );
 	if( SUCCEEDED( hr ) )
 		appState.model = model;
 	else

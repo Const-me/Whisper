@@ -69,9 +69,9 @@ namespace DirectCompute
 {
 	const LookupTables& lookupTables = s_tables;
 
-	HRESULT mlStartup( uint32_t flags )
+	HRESULT mlStartup( uint32_t flags, const std::wstring& adapter )
 	{
-		CHECK( d3dStartup( flags ) );
+		CHECK( d3dStartup( flags, adapter ) );
 		CHECK( s_tables.create() );
 		{
 			CD3D11_BUFFER_DESC desc{ 16, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE };
