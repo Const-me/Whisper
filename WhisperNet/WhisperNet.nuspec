@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>WhisperNet</id>
-		<version>1.7</version>
+		<version>1.8</version>
 		<authors>Konstantin, const.me</authors>
 		<license type="expression">MPL-2.0</license>
 		<projectUrl>https://github.com/Const-me/Whisper</projectUrl>
@@ -24,6 +24,7 @@
 		<file src="bin/Release/WhisperNet.xml" target="lib/net6.0/" />
 		<!-- The C++ DLL -->
 		<file src="../x64/Release/Whisper.dll" target="runtimes/win-x64/native/" />
+		<!-- Readme for the nuget package -->
 		<file src="Readme.md" target="docs/" />
 	</files>
 </package>
