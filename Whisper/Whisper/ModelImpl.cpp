@@ -41,11 +41,18 @@ HRESULT ModelImpl::load( iReadStream* stm, bool hybrid, const sLoadModelCallback
 	return model.load( stm, hybrid, callbacks );
 }
 
-inline bool hasSse41()
+inline bool hasSse41AndF16C()
 {
 	int cpu_info[ 4 ];
 	__cpuid( cpu_info, 1 );
-	return ( cpu_info[ 2 ] & ( 1 << 19 ) ) != 0;
+
+	// https://en.wikipedia.org/wiki/CPUID EAX=1: Processor Info and Feature Bits
+	constexpr uint32_t sse41 = ( 1u << 19 );
+	constexpr uint32_t f16c = ( 1u << 29 );
+	constexpr uint32_t requiredBits = sse41 | f16c;
+
+	const uint32_t ecx = (uint32_t)cpu_info[ 2 ];
+	return ( ecx & requiredBits ) == requiredBits;
 }
 
 // True when the current CPU is good enough to run the hybrid model
@@ -94,9 +101,9 @@ HRESULT __stdcall Whisper::loadGpuModel( const wchar_t* path, const sModelSetup&
 		return E_NOTIMPL;
 #endif
 	}
-	else if( !hasSse41() )
+	else if( !hasSse41AndF16C() )
 	{
-		logError( u8"eModelImplementation.GPU model requires a CPU with SSE 4.1 support" );
+		logError( u8"eModelImplementation.GPU model requires a CPU with SSE 4.1 and F16C support" );
 		return ERROR_HV_CPUID_FEATURE_VALIDATION;
 	}
 
