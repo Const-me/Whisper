@@ -7,7 +7,10 @@
 		<license type="expression">MPL-2.0</license>
 		<projectUrl>https://github.com/Const-me/Whisper</projectUrl>
 		<description>High-performance GPGPU inference of OpenAI's Whisper automatic speech recognition (ASR) model</description>
-		<releaseNotes>Bugfixes, API documentation</releaseNotes>
+		<releaseNotes>
+			Changed API to allow to select the GPU for the inference
+			Documented F16C requirement, and improved error handling accordingly
+		</releaseNotes>
 		<copyright>Copyright © const.me, 2022-2023</copyright>
 		<tags>whisper, gpgpu, speech recognition</tags>
 		<repository type="git" url="https://github.com/Const-me/Whisper.git" />
