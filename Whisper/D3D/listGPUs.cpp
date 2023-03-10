@@ -4,21 +4,12 @@
 
 namespace DirectCompute
 {
-	static CComPtr<IDXGIFactory1> g_factory;
-
-	static HRESULT createFactory()
+	static HRESULT createFactory( CComPtr<IDXGIFactory1>& rdi )
 	{
-		if( g_factory )
-			return S_FALSE;
-		HRESULT hr = CreateDXGIFactory1( IID_PPV_ARGS( &g_factory ) );
+		HRESULT hr = CreateDXGIFactory1( IID_PPV_ARGS( &rdi ) );
 		if( SUCCEEDED( hr ) )
 			return S_OK;
 		return hr;
-	}
-
-	void destroyDxgiFactory()
-	{
-		g_factory = nullptr;
 	}
 
 	inline void setName( std::wstring& rdi, const DXGI_ADAPTER_DESC1& desc )
@@ -33,7 +24,8 @@ namespace DirectCompute
 		if( requestedName.empty() )
 			return nullptr;
 
-		HRESULT hr = createFactory();
+		CComPtr<IDXGIFactory1> dxgi;
+		HRESULT hr = createFactory( dxgi );
 		if( FAILED( hr ) )
 		{
 			logWarningHr( hr, u8"CreateDXGIFactory1 failed" );
@@ -44,7 +36,7 @@ namespace DirectCompute
 		for( UINT i = 0; true; i++ )
 		{
 			CComPtr<IDXGIAdapter1> adapter;
-			hr = g_factory->EnumAdapters1( i, &adapter );
+			hr = dxgi->EnumAdapters1( i, &adapter );
 			if( hr == DXGI_ERROR_NOT_FOUND )
 			{
 				logWarning16( L"Requested GPU not found: \"%s\"", requestedName.c_str() );
@@ -70,7 +62,8 @@ HRESULT COMLIGHTCALL Whisper::listGPUs( pfnListAdapters pfn, void* pv )
 {
 	using namespace DirectCompute;
 
-	HRESULT hr = createFactory();
+	CComPtr<IDXGIFactory1> dxgi;
+	HRESULT hr = createFactory( dxgi );
 	if( FAILED( hr ) )
 	{
 		logErrorHr( hr, u8"CreateDXGIFactory1 failed" );
@@ -81,7 +74,7 @@ HRESULT COMLIGHTCALL Whisper::listGPUs( pfnListAdapters pfn, void* pv )
 	for( UINT i = 0; true; i++ )
 	{
 		CComPtr<IDXGIAdapter1> adapter;
-		hr = g_factory->EnumAdapters1( i, &adapter );
+		hr = dxgi->EnumAdapters1( i, &adapter );
 		if( hr == DXGI_ERROR_NOT_FOUND )
 			return S_OK;
 

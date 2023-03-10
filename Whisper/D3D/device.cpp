@@ -21,7 +21,6 @@ namespace DirectCompute
 	{
 		g_context = nullptr;
 		g_device = nullptr;
-		destroyDxgiFactory();
 	}
 
 	static HRESULT createDevice( const std::wstring& adapterName )
