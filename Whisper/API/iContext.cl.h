@@ -5,7 +5,6 @@
 #include "loggerApi.h"
 #include "sLanguageList.h"
 #include "sLoadModelCallbacks.h"
-#include "eGpuModelFlags.h"
 #include "sModelSetup.h"
 
 namespace Whisper

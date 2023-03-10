@@ -4,20 +4,6 @@
 
 namespace Whisper
 {
-	enum struct eModelImplementation : uint32_t
-	{
-		// GPGPU implementation based on Direct3D 11.0 compute shaders
-		GPU = 1,
-
-		// A hybrid implementation which uses DirectCompute for encode, and decodes on CPU
-		// Not implemented in the published builds of the DLL. To enable, change BUILD_HYBRID_VERSION macro to 1
-		Hybrid = 2,
-
-		// A reference implementation which uses the original GGML CPU-running code
-		// Not implemented in the published builds of the DLL. To enable, change BUILD_BOTH_VERSIONS macro to 1
-		Reference = 3,
-	};
-
 	// Timespan structure decomposed into fields
 	struct sTimeSpanFields
 	{

@@ -4,7 +4,7 @@
 #include <ammintrin.h>
 #pragma comment(lib, "D3D11.lib")
 #include "RenderDoc/renderDoc.h"
-#include "../API/eGpuModelFlags.h"
+#include "../API/sModelSetup.h"
 #include "listGPUs.h"
 
 namespace DirectCompute

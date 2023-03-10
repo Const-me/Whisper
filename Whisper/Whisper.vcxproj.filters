@@ -190,7 +190,6 @@
     <ClInclude Include="API\sLoadModelCallbacks.h" />
     <ClInclude Include="ML\Reshaper.h" />
     <ClInclude Include="ML\reshapedMultiply.h" />
-    <ClInclude Include="API\eGpuModelFlags.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
     <ClInclude Include="ML\mlUtils.h" />
     <ClInclude Include="API\sModelSetup.h" />
