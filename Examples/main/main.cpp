@@ -13,10 +13,9 @@ using namespace Whisper;
 static HRESULT loadWhisperModel( const wchar_t* path, iModel** pp )
 {
 	using namespace Whisper;
-	constexpr eModelImplementation impl = eModelImplementation::GPU;
-	// constexpr eModelImplementation impl = eModelImplementation::Reference;
-	constexpr uint32_t flags = 0;
-	return Whisper::loadModel( path, impl, flags, nullptr, pp );
+	sModelSetup setup;
+	setup.impl = eModelImplementation::GPU;
+	return Whisper::loadModel( path, setup, nullptr, pp );
 }
 
 namespace
