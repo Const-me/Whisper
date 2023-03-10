@@ -32,10 +32,18 @@ namespace Whisper
 			return model.vocab.string( token );
 		}
 
+		static inline std::wstring makeString( const wchar_t* p )
+		{
+			if( p == nullptr )
+				return std::wstring{};
+			else
+				return std::wstring{ p };
+		}
+
 	public:
 		ModelImpl( const sModelSetup& setup ) :
 			gpuFlags( setup.flags ),
-			adapter( setup.adapter )
+			adapter( makeString( setup.adapter ) )
 		{ }
 		HRESULT FinalConstruct();
 		void FinalRelease();
