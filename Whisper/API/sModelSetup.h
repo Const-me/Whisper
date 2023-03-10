@@ -12,5 +12,5 @@ namespace Whisper
 		const wchar_t* adapter;
 	};
 
-	using pfnListAdapters = void( * )( const wchar_t* name, void* pv );
+	using pfnListAdapters = void( __stdcall* )( const wchar_t* name, void* pv );
 }

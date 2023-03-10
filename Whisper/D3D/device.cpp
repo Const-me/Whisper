@@ -44,14 +44,14 @@ namespace DirectCompute
 		}
 #endif
 		constexpr UINT levelsCount = (UINT)levels.size();
-		HRESULT hr = D3D11CreateDevice( adapter, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags, levels.data(), levelsCount, D3D11_SDK_VERSION, &g_device, &g_featureLevel, &g_context );
+		HRESULT hr = D3D11CreateDevice( adapter, driverType, nullptr, flags, levels.data(), levelsCount, D3D11_SDK_VERSION, &g_device, &g_featureLevel, &g_context );
 		if( SUCCEEDED( hr ) )
 			return S_OK;
 		// D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT: This value is not supported until Direct3D 11.1
 		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_create_device_flag
 		flags = _andn_u32( D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT, flags );
 
-		hr = D3D11CreateDevice( nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags, levels.data(), levelsCount, D3D11_SDK_VERSION, &g_device, &g_featureLevel, &g_context );
+		hr = D3D11CreateDevice( adapter, driverType, nullptr, flags, levels.data(), levelsCount, D3D11_SDK_VERSION, &g_device, &g_featureLevel, &g_context );
 		if( SUCCEEDED( hr ) )
 			return S_OK;
 		return hr;

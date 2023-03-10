@@ -51,6 +51,8 @@
 #define IDC_RESHAPED_MAT_MUL            1029
 #define IDC_CHECK2                      1029
 #define IDC_USE_INPUT_FOLDER            1029
+#define IDC_RESHAPED_MAT_MUL2           1030
+#define IDC_GPU                         1030
 #define IDC_STATIC                      -1
 
 // Next default values for new objects

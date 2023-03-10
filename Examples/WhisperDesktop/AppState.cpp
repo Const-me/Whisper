@@ -156,8 +156,12 @@ CString AppState::stringLoad( LPCTSTR name )
 }
 void AppState::stringStore( LPCTSTR name, LPCTSTR value )
 {
-	registryKey.SetStringValue( name, value );
+	if( nullptr != value )
+		registryKey.SetStringValue( name, value );
+	else
+		registryKey.DeleteValue( name );
 }
+
 uint32_t AppState::dwordLoad( LPCTSTR name, uint32_t fallback )
 {
 	DWORD dw;
