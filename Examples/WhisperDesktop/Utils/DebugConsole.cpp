@@ -4,6 +4,7 @@
 #include "miscUtils.h"
 #include "../AppState.h"
 #include "logger.h"
+#include <string>
 
 namespace
 {
@@ -35,7 +36,7 @@ namespace
 	using Lock = CComCritSecLock<CComAutoCriticalSection>;
 #define LOCK() Lock __lock{ critSec }
 
-	thread_local CStringA threadError;
+	thread_local std::string threadError;
 }
 
 HRESULT DebugConsole::Entry::print( HANDLE hConsole, CString& tempString ) const
@@ -52,20 +53,20 @@ HRESULT DebugConsole::Entry::print( HANDLE hConsole, CString& tempString ) const
 
 void clearLastError()
 {
-	threadError = "";
+	threadError.clear();
 }
 
 bool getLastError( CString& rdi )
 {
-	if( threadError.GetLength() <= 0 )
+	if( threadError.empty() )
 	{
 		rdi = L"";
 		return false;
 	}
 	else
 	{
-		makeUtf16( rdi, threadError );
-		threadError = "";
+		makeUtf16( rdi, threadError.c_str() );
+		threadError.clear();
 		return true;
 	}
 }
