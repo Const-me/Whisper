@@ -10,11 +10,13 @@ using namespace Whisper;
 
 #define STREAM_AUDIO 1
 
-static HRESULT loadWhisperModel( const wchar_t* path, iModel** pp )
+static HRESULT loadWhisperModel( const wchar_t* path, const std::wstring& gpu, iModel** pp )
 {
 	using namespace Whisper;
 	sModelSetup setup;
 	setup.impl = eModelImplementation::GPU;
+	if( !gpu.empty() )
+		setup.adapter = gpu.c_str();
 	return Whisper::loadModel( path, setup, nullptr, pp );
 }
 
@@ -199,7 +201,7 @@ int wmain( int argc, wchar_t* argv[] )
 	}
 
 	ComLight::CComPtr<iModel> model;
-	HRESULT hr = loadWhisperModel( params.model.c_str(), &model );
+	HRESULT hr = loadWhisperModel( params.model.c_str(), params.gpu, &model );
 	if( FAILED( hr ) )
 	{
 		printError( "failed to load the model", hr );
