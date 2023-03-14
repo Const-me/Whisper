@@ -86,6 +86,7 @@
     <ClCompile Include="Utils\DelayExecution.cpp" />
     <ClCompile Include="Whisper\ContextImpl.diarize.cpp" />
     <ClCompile Include="D3D\listGPUs.cpp" />
+    <ClCompile Include="Utils\LZ4\lz4.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ggml.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="ML\mlUtils.h" />
     <ClInclude Include="API\sModelSetup.h" />
     <ClInclude Include="D3D\listGPUs.h" />
+    <ClInclude Include="Utils\LZ4\lz4.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="whisper.def" />

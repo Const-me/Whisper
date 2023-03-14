@@ -2,8 +2,7 @@
 #include "shaders.h"
 #include "startup.h"
 #include "device.h"
-#include <compressapi.h>
-#pragma comment( lib, "Cabinet.lib" )
+#include "../Utils/LZ4/lz4.h"
 
 namespace
 {
@@ -12,38 +11,6 @@ namespace
 #else
 #include "shaderData-Release.inl"
 #endif
-
-	constexpr DWORD compressionAlgorithm = COMPRESS_ALGORITHM_MSZIP;
-
-	class Decompressor
-	{
-		DECOMPRESSOR_HANDLE handle = nullptr;
-
-	public:
-
-		HRESULT create()
-		{
-			if( CreateDecompressor( compressionAlgorithm, nullptr, &handle ) )
-				return S_OK;
-			return HRESULT_FROM_WIN32( GetLastError() );
-		}
-
-		HRESULT decompress( const uint8_t* src, size_t compressedLength, void* dest, size_t origLength ) const
-		{
-			if( Decompress( handle, src, compressedLength, dest, origLength, nullptr ) )
-				return S_OK;
-			return HRESULT_FROM_WIN32( GetLastError() );
-		}
-
-		~Decompressor()
-		{
-			if( nullptr != handle )
-			{
-				CloseDecompressor( handle );
-				handle = nullptr;
-			}
-		}
-	};
 
 	static std::vector<CComPtr<ID3D11ComputeShader>> s_shaders;
 }
@@ -65,10 +32,12 @@ HRESULT DirectCompute::createComputeShaders()
 		return E_OUTOFMEMORY;
 	}
 
-	Decompressor decomp;
-	CHECK( decomp.create() );
-
-	decomp.decompress( s_compressedShaders.data(), s_compressedShaders.size(), dxbc.data(), cbDecompressedLength );
+	const int lz4Status = LZ4_decompress_safe( (const char*)s_compressedShaders.data(), (char*)dxbc.data(), (int)s_compressedShaders.size(), (int)cbDecompressedLength );
+	if( lz4Status != (int)cbDecompressedLength )
+	{
+		logError( u8"LZ4_decompress_safe failed with status %i", lz4Status );
+		return PLA_E_CABAPI_FAILURE;
+	}
 	ID3D11Device* const dev = device();
 
 	const auto& blobs = gpuInfo.wave64() ? s_shaderBlobs64 : s_shaderBlobs32;

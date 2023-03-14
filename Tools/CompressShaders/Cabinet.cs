@@ -10,6 +10,7 @@ namespace CompressShaders
 	/// <para>If you wonder why not gzip — because the OS doesn’t include an API for that, at least not an API usable from C or C++.<br/>
 	/// .NET standard library includes gzip algorithm, but we don't want Whisper.dll to depend on .NET.</para>
 	/// </remarks>
+	[Obsolete]
 	static class Cabinet
 	{
 		/// <summary>Compression algorithm</summary>

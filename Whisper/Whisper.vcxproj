@@ -139,6 +139,9 @@
     <ClCompile Include="ML\Reshaper.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="MF\AudioCapture.cpp" />
+    <ClCompile Include="Utils\LZ4\lz4.c">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Utils\miscUtils.cpp" />
     <ClCompile Include="Whisper\ContextImpl.diarize.cpp" />
     <ClCompile Include="Whisper\voiceActivityDetection.cpp" />
@@ -255,6 +258,7 @@
     <ClInclude Include="ML\Reshaper.h" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="MF\AudioCapture.h" />
+    <ClInclude Include="Utils\LZ4\lz4.h" />
     <ClInclude Include="Whisper\sModelParams.h" />
     <ClInclude Include="Whisper\voiceActivityDetection.h" />
     <ClInclude Include="Whisper\MelStreamer.h" />

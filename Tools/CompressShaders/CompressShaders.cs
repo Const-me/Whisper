@@ -156,7 +156,7 @@ static const std::array<uint8_t, {0}> {1} = {{", ids.Length, varName );
 		offsets.Add( (int)ms.Length );
 
 		byte[] dxbc = ms.ToArray();
-		byte[] compressed = Cabinet.compressBuffer( dxbc );
+		byte[] compressed = LZ4.compressBuffer( dxbc );
 		cbSource = dxbc.Length;
 		cbCompressed = compressed.Length;
 
