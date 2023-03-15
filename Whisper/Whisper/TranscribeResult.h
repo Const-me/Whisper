@@ -28,6 +28,7 @@ namespace Whisper
 	public:
 		std::vector<sSegment> segments;
 		std::vector<sToken> tokens;
+		std::vector<std::string> segmentsText;
 	};
 
 	class TranscribeResultStatic : public ComLight::Object<TranscribeResult>

@@ -195,13 +195,13 @@ HRESULT COMLIGHTCALL ContextImpl::getResults( eResultFlags flags, iTranscribeRes
 	{
 		ComLight::CComPtr<ComLight::Object<TranscribeResult>> obj;
 		CHECK( ComLight::Object<TranscribeResult>::create( obj ) );
-		CHECK( makeResults( flags, *obj ) );
+		CHECK( makeResults( flags, *obj, true ) );
 		obj.detach( pp );
 		return S_OK;
 	}
 	else
 	{
-		CHECK( makeResults( flags, results ) );
+		CHECK( makeResults( flags, results, false ) );
 		iTranscribeResult* res = &results;
 		res->AddRef();
 		*pp = res;
@@ -214,7 +214,7 @@ inline int64_t scaleTime( int64_t wisperTicks )
 	return MFllMulDiv( wisperTicks, 10'000'000, 100, 0 );
 }
 
-HRESULT COMLIGHTCALL ContextImpl::makeResults( eResultFlags flags, TranscribeResult& res ) const noexcept
+HRESULT COMLIGHTCALL ContextImpl::makeResults( eResultFlags flags, TranscribeResult& res, bool moveStrings ) const noexcept
 {
 	const size_t segments = result_all.size();
 	// Resize both vectors
@@ -230,6 +230,10 @@ HRESULT COMLIGHTCALL ContextImpl::makeResults( eResultFlags flags, TranscribeRes
 		}
 		else
 			res.tokens.clear();
+
+		res.segmentsText.clear();
+		if( moveStrings )
+			res.segmentsText.resize( segments );
 	}
 	catch( const std::bad_alloc& )
 	{
@@ -243,7 +247,15 @@ HRESULT COMLIGHTCALL ContextImpl::makeResults( eResultFlags flags, TranscribeRes
 	{
 		sSegment& rdi = res.segments[ i ];
 		const auto& rsi = result_all[ i ];
-		rdi.text = rsi.text.c_str();
+
+		if( moveStrings )
+		{
+			res.segmentsText[ i ].swap( rsi.text );
+			rdi.text = res.segmentsText[ i ].c_str();
+		}
+		else
+			rdi.text = rsi.text.c_str();
+
 		if( flags & eResultFlags::Timestamps )
 		{
 			// Offset the time relative to the start of the media

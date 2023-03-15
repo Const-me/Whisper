@@ -32,7 +32,7 @@ namespace Whisper
 		{
 			int64_t t0;
 			int64_t t1;
-			std::string text;
+			mutable std::string text;
 			std::vector<sTokenData> tokens;
 			size_t memoryUsage() const;
 		};
@@ -62,7 +62,7 @@ namespace Whisper
 
 		mutable TranscribeResultStatic results;
 
-		HRESULT COMLIGHTCALL makeResults( eResultFlags flags, TranscribeResult& res ) const noexcept;
+		HRESULT COMLIGHTCALL makeResults( eResultFlags flags, TranscribeResult& res, bool moveStrings ) const noexcept;
 
 		HRESULT COMLIGHTCALL getResults( eResultFlags flags, iTranscribeResult** pp ) const noexcept override final;
 		HRESULT COMLIGHTCALL detectSpeaker( const sTimeInterval& time, eSpeakerChannel& result ) const noexcept override final;
