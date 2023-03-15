@@ -46,6 +46,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfSummary", "Tools\PerfSummary\PerfSummary.csproj", "{8AC301F0-FEC9-4F26-83DD-DB32969CD510}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhisperPS", "Examples\WhisperPS\WhisperPS.csproj", "{D6D188BB-237E-43F0-AFE3-8947FFD88FC7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{701DF8C8-E4A5-43EC-9C6B-747BBF4D8E71} = {701DF8C8-E4A5-43EC-9C6B-747BBF4D8E71}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

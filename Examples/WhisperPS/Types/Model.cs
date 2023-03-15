@@ -4,15 +4,19 @@ namespace Whisper
 {
 	public sealed class Model: IDisposable
 	{
-		iModel model;
+		internal iMediaFoundation mf { get; private set; }
+		internal iModel model { get; private set; }
 
-		internal Model( iModel model )
+		internal Model( iMediaFoundation mf, iModel model )
 		{
+			this.mf = mf;
 			this.model = model;
 		}
 
 		public void Dispose()
 		{
+			mf?.Dispose();
+			mf = null;
 			model?.Dispose();
 			model = null;
 			GC.SuppressFinalize( this );
@@ -20,6 +24,8 @@ namespace Whisper
 
 		~Model()
 		{
+			mf?.Dispose();
+			mf = null;
 			model?.Dispose();
 			model = null;
 		}

@@ -18,7 +18,7 @@ namespace Whisper.Internal
 
 	/// <summary>Output data from the model</summary>
 	[ComInterface( "2871a73f-5ce3-48f8-8779-6582ee11935e", eMarshalDirection.ToManaged ), CustomConventions( typeof( NativeLogger ) )]
-	public interface iTranscribeResult
+	public interface iTranscribeResult: IDisposable
 	{
 		/// <summary>Get size of the buffers</summary>
 		[RetValIndex, EditorBrowsable( EditorBrowsableState.Never )]

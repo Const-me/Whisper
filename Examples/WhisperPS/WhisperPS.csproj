@@ -118,6 +118,7 @@
     <Compile Include="..\..\WhisperNet\Internal\sLoggerSetup.cs">
       <Link>Internal\sLoggerSetup.cs</Link>
     </Compile>
+    <Compile Include="Commands\TranscribeBase.cs" />
     <Compile Include="Internal\iTranscribeResult.cs" />
     <Compile Include="Internal\MarshalEx.cs" />
     <Compile Include="Internal\NativeLogger.cs" />
@@ -127,10 +128,12 @@
     <Compile Include="Internal\sModelSetup.cs" />
     <Compile Include="Internal\sProgressSink.cs" />
     <Compile Include="Library.cs" />
-    <Compile Include="ListAdapters.cs" />
-    <Compile Include="LoadModel.cs" />
-    <Compile Include="Model.cs" />
+    <Compile Include="Commands\ListAdapters.cs" />
+    <Compile Include="Commands\LoadModel.cs" />
+    <Compile Include="Types\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Commands\TranscribeFile.cs" />
+    <Compile Include="Types\Transcription.cs" />
     <Compile Include="Utils\CommandLogger.cs" />
   </ItemGroup>
   <ItemGroup>
