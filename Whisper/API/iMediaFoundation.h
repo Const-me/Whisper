@@ -30,6 +30,7 @@ namespace Whisper
 	{
 		HRESULT __stdcall loadAudioFile( LPCTSTR path, bool stereo, iAudioBuffer** pp ) const;
 		HRESULT __stdcall openAudioFile( LPCTSTR path, bool stereo, iAudioReader** pp );
+		HRESULT __stdcall loadAudioFileData( const void* data, uint64_t size, bool stereo, iAudioReader** pp );
 
 		HRESULT __stdcall listCaptureDevices( pfnFoundCaptureDevices pfn, void* pv );
 		HRESULT __stdcall openCaptureDevice( LPCTSTR endpoint, const sCaptureParams& captureParams, iAudioCapture** pp );

@@ -43,7 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfSummary", "Tools\PerfSummary\PerfSummary.csproj", "{8AC301F0-FEC9-4F26-83DD-DB32969CD510}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerfSummary", "Tools\PerfSummary\PerfSummary.csproj", "{8AC301F0-FEC9-4F26-83DD-DB32969CD510}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +70,7 @@ Global
 		{0533B86C-D0E8-4190-9717-7DBD9EC8C11F}.Debug|x64.ActiveCfg = Debug|x64
 		{0533B86C-D0E8-4190-9717-7DBD9EC8C11F}.Debug|x64.Build.0 = Debug|x64
 		{0533B86C-D0E8-4190-9717-7DBD9EC8C11F}.Release|x64.ActiveCfg = Release|x64
+		{0533B86C-D0E8-4190-9717-7DBD9EC8C11F}.Release|x64.Build.0 = Release|x64
 		{596F9770-9AEB-49D3-86CA-4200197DF12B}.Debug|x64.ActiveCfg = Debug|x64
 		{596F9770-9AEB-49D3-86CA-4200197DF12B}.Debug|x64.Build.0 = Debug|x64
 		{596F9770-9AEB-49D3-86CA-4200197DF12B}.Release|x64.ActiveCfg = Release|x64
@@ -85,6 +86,7 @@ Global
 		{A49305C0-7022-45A6-89B4-4BD33138C98A}.Debug|x64.ActiveCfg = Debug|x64
 		{A49305C0-7022-45A6-89B4-4BD33138C98A}.Debug|x64.Build.0 = Debug|x64
 		{A49305C0-7022-45A6-89B4-4BD33138C98A}.Release|x64.ActiveCfg = Release|x64
+		{A49305C0-7022-45A6-89B4-4BD33138C98A}.Release|x64.Build.0 = Release|x64
 		{8478A77C-D851-4C63-9511-1770CC82D33E}.Debug|x64.ActiveCfg = Debug|x64
 		{8478A77C-D851-4C63-9511-1770CC82D33E}.Debug|x64.Build.0 = Debug|x64
 		{8478A77C-D851-4C63-9511-1770CC82D33E}.Release|x64.ActiveCfg = Release|x64

@@ -1,4 +1,5 @@
 ﻿using ComLight;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Whisper.Internal;
 
@@ -27,11 +28,33 @@ namespace Whisper
 		[RetValIndex( 2 )]
 		iAudioReader openAudioFile( [MarshalAs( UnmanagedType.LPWStr )] string path, [MarshalAs( UnmanagedType.U1 )] bool stereo = false );
 
+		/// <summary>Create a reader to decode audio file in memory</summary>
+		/// <remarks>The method first copies the content into another internal buffer, then creates a streaming decoder</remarks>
+		[RetValIndex( 3 ), EditorBrowsable( EditorBrowsableState.Never )]
+		iAudioReader loadAudioFileData( IntPtr data, long size, [MarshalAs( UnmanagedType.U1 )] bool stereo );
+
 		/// <summary>List capture devices</summary>
 		void listCaptureDevices( [MarshalAs( UnmanagedType.FunctionPtr )] pfnFoundCaptureDevices pfn, IntPtr pv );
 
 		/// <summary>Open audio capture device</summary>
 		[RetValIndex( 2 )]
 		iAudioCapture openCaptureDevice( [MarshalAs( UnmanagedType.LPWStr )] string endpoint, [In] ref sCaptureParams captureParams );
+	}
+
+	/// <summary>Extension methods for <see cref="iMediaFoundation" /> interface</summary>
+	public static class MediaFoundationExt
+	{
+		/// <summary>Create a reader to decode audio file in memory</summary>
+		/// <remarks>The method first copies the content into another internal buffer, then creates a streaming decoder</remarks>
+		public static iAudioReader loadAudioFileData( this iMediaFoundation mf, ReadOnlySpan<byte> span, bool stereo = false )
+		{
+			unsafe
+			{
+				fixed( byte* rsi = span )
+				{
+					return mf.loadAudioFileData( (IntPtr)rsi, span.Length, stereo );
+				}
+			}
+		}
 	}
 }

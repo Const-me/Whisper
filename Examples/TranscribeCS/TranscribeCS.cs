@@ -1,112 +1,131 @@
-﻿using Whisper;
+﻿namespace TranscribeCS;
+using Whisper;
 
-namespace TranscribeCS
+enum eFileOpenMode: byte
 {
-	static class Program
-	{
-		static readonly bool streamAudio = true;
+	/// <summary>Decode chunks of audio directly from the file, as needed</summary>
+	StreamFile,
 
-		static int Main( string[] args )
+	/// <summary>Decode the complete file into FP32 PCM buffer, transcribe from there</summary>
+	BufferPCM,
+
+	/// <summary>Load the complete input file into a buffer, decode chunks of audio from that memory buffer as needed</summary>
+	BufferFile
+}
+
+static class Program
+{
+	static readonly eFileOpenMode openMode = eFileOpenMode.StreamFile;
+	// static readonly eFileOpenMode openMode = eFileOpenMode.BufferPCM;
+	// static readonly eFileOpenMode openMode = eFileOpenMode.BufferFile;
+
+	static int Main( string[] args )
+	{
+		try
 		{
+			// dbgListGPUs();
+
+			CommandLineArgs cla;
 			try
 			{
-				// dbgListGPUs();
-
-				CommandLineArgs cla;
-				try
-				{
-					cla = new CommandLineArgs( args );
-				}
-				catch( OperationCanceledException )
-				{
-					return 1;
-				}
-				const eLoggerFlags loggerFlags = eLoggerFlags.UseStandardError | eLoggerFlags.SkipFormatMessage;
-				Library.setLogSink( eLogLevel.Debug, loggerFlags );
-
-				using iModel model = Library.loadModel( cla.model );
-				using Context context = model.createContext();
-				cla.apply( ref context.parameters );
-				// When there're multiple input files, assuming they're independent clips
-				context.parameters.setFlag( eFullParamsFlags.NoContext, true );
-				using iMediaFoundation mf = Library.initMediaFoundation();
-				Transcribe transcribe = new Transcribe( cla );
-
-				foreach( string audioFile in cla.fileNames )
-				{
-					if( streamAudio )
-					{
-						using iAudioReader reader = mf.openAudioFile( audioFile, cla.diarize );
-						context.runFull( reader, transcribe, null, cla.prompt );
-					}
-					else
-					{
-						using iAudioBuffer buffer = mf.loadAudioFile( audioFile, cla.diarize );
-						context.runFull( buffer, transcribe, cla.prompt );
-					}
-					// When asked to, produce these text files
-					if( cla.output_txt )
-						writeTextFile( context, audioFile );
-					if( cla.output_srt )
-						writeSubRip( context, audioFile, cla );
-					if( cla.output_vtt )
-						writeWebVTT( context, audioFile );
-				}
-
-				context.timingsPrint();
-				return 0;
+				cla = new CommandLineArgs( args );
 			}
-			catch( Exception ex )
+			catch( OperationCanceledException )
 			{
-				Console.WriteLine( ex.Message );
-				return ex.HResult;
+				return 1;
 			}
-		}
+			const eLoggerFlags loggerFlags = eLoggerFlags.UseStandardError | eLoggerFlags.SkipFormatMessage;
+			Library.setLogSink( eLogLevel.Debug, loggerFlags );
 
-		static void writeTextFile( Context context, string audioPath )
-		{
-			using var stream = File.CreateText( Path.ChangeExtension( audioPath, ".txt" ) );
-			foreach( sSegment seg in context.results().segments )
-				stream.WriteLine( seg.text );
-		}
+			using iModel model = Library.loadModel( cla.model );
+			using Context context = model.createContext();
+			cla.apply( ref context.parameters );
+			// When there're multiple input files, assuming they're independent clips
+			context.parameters.setFlag( eFullParamsFlags.NoContext, true );
+			using iMediaFoundation mf = Library.initMediaFoundation();
+			Transcribe transcribe = new Transcribe( cla );
 
-		static void writeSubRip( Context context, string audioPath, CommandLineArgs cliArgs )
-		{
-			using var stream = File.CreateText( Path.ChangeExtension( audioPath, ".srt" ) );
-			var segments = context.results( eResultFlags.Timestamps ).segments;
-
-			for( int i = 0; i < segments.Length; i++ )
+			foreach( string audioFile in cla.fileNames )
 			{
-				stream.WriteLine( i + 1 + cliArgs.offset_n );
-				sSegment seg = segments[ i ];
-				string begin = Transcribe.printTimeWithComma( seg.time.begin );
-				string end = Transcribe.printTimeWithComma( seg.time.end );
-				stream.WriteLine( "{0} --> {1}", begin, end );
-				stream.WriteLine( seg.text );
-				stream.WriteLine();
-			}
-		}
+				if( openMode == eFileOpenMode.StreamFile )
+				{
+					using iAudioReader reader = mf.openAudioFile( audioFile, cla.diarize );
+					context.runFull( reader, transcribe, null, cla.prompt );
+				}
+				else if( openMode == eFileOpenMode.BufferPCM )
+				{
+					using iAudioBuffer buffer = mf.loadAudioFile( audioFile, cla.diarize );
+					context.runFull( buffer, transcribe, cla.prompt );
+				}
+				else if( openMode == eFileOpenMode.BufferFile )
+				{
+					byte[] buffer = File.ReadAllBytes( audioFile );
+					using iAudioReader reader = mf.loadAudioFileData( buffer, cla.diarize );
+					context.runFull( reader, transcribe, null, cla.prompt );
+				}
 
-		static void writeWebVTT( Context context, string audioPath )
+				// When asked to, produce these text files
+				if( cla.output_txt )
+					writeTextFile( context, audioFile );
+				if( cla.output_srt )
+					writeSubRip( context, audioFile, cla );
+				if( cla.output_vtt )
+					writeWebVTT( context, audioFile );
+			}
+
+			context.timingsPrint();
+			return 0;
+		}
+		catch( Exception ex )
 		{
-			using var stream = File.CreateText( Path.ChangeExtension( audioPath, ".vtt" ) );
-			stream.WriteLine( "WEBVTT" );
+			Console.WriteLine( ex.Message );
+			return ex.HResult;
+		}
+	}
+
+	static void writeTextFile( Context context, string audioPath )
+	{
+		using var stream = File.CreateText( Path.ChangeExtension( audioPath, ".txt" ) );
+		foreach( sSegment seg in context.results().segments )
+			stream.WriteLine( seg.text );
+	}
+
+	static void writeSubRip( Context context, string audioPath, CommandLineArgs cliArgs )
+	{
+		using var stream = File.CreateText( Path.ChangeExtension( audioPath, ".srt" ) );
+		var segments = context.results( eResultFlags.Timestamps ).segments;
+
+		for( int i = 0; i < segments.Length; i++ )
+		{
+			stream.WriteLine( i + 1 + cliArgs.offset_n );
+			sSegment seg = segments[ i ];
+			string begin = Transcribe.printTimeWithComma( seg.time.begin );
+			string end = Transcribe.printTimeWithComma( seg.time.end );
+			stream.WriteLine( "{0} --> {1}", begin, end );
+			stream.WriteLine( seg.text );
 			stream.WriteLine();
-
-			foreach( sSegment seg in context.results( eResultFlags.Timestamps ).segments )
-			{
-				string begin = Transcribe.printTime( seg.time.begin );
-				string end = Transcribe.printTime( seg.time.end );
-				stream.WriteLine( "{0} --> {1}", begin, end );
-				stream.WriteLine( seg.text );
-				stream.WriteLine();
-			}
 		}
+	}
 
-		static void dbgListGPUs()
+	static void writeWebVTT( Context context, string audioPath )
+	{
+		using var stream = File.CreateText( Path.ChangeExtension( audioPath, ".vtt" ) );
+		stream.WriteLine( "WEBVTT" );
+		stream.WriteLine();
+
+		foreach( sSegment seg in context.results( eResultFlags.Timestamps ).segments )
 		{
-			string[] list = Library.listGraphicAdapters();
-			Console.WriteLine( "    Graphics Adapters:\n{0}", string.Join( "\n", list ) );
+			string begin = Transcribe.printTime( seg.time.begin );
+			string end = Transcribe.printTime( seg.time.end );
+			stream.WriteLine( "{0} --> {1}", begin, end );
+			stream.WriteLine( seg.text );
+			stream.WriteLine();
 		}
+	}
+
+	static void dbgListGPUs()
+	{
+		string[] list = Library.listGraphicAdapters();
+		Console.WriteLine( "    Graphics Adapters:\n{0}", string.Join( "\n", list ) );
 	}
 }
