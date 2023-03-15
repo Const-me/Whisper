@@ -46,6 +46,7 @@ public:
 		DDX_CONTROL_HANDLE( IDC_USE_INPUT_FOLDER, useInputFolder )
 		DDX_CONTROL_HANDLE( IDC_PATH_RESULT, transcribeOutputPath )
 		DDX_CONTROL_HANDLE( IDC_BROWSE_RESULT, transcribeOutputBrowse );
+		DDX_CONTROL_HANDLE( IDC_TRANSCRIBE, transcribeButton );
 		DDX_CONTROL_HANDLE( IDC_TRANSCRIBE_PROGRESS, progressBar );
 	END_DDX_MAP()
 
@@ -77,6 +78,7 @@ private:
 	CEdit transcribeOutputPath;
 	CButton transcribeOutputBrowse;
 	CComboBox transcribeOutFormat;
+	CButton transcribeButton;
 	CProgressBarCtrl progressBar;
 	void populateOutputFormats();
 
@@ -85,6 +87,7 @@ private:
 	void onInputFolderCheck();
 	void onBrowseMedia();
 	void onBrowseOutput();
+	// Despite the name, the method also handles the "Stop" button
 	void onTranscribe();
 	void onCapture()
 	{
@@ -94,6 +97,7 @@ private:
 	ThreadPoolWork work;
 
 	enum struct eOutputFormat : uint8_t;
+	enum struct eVisualState : uint8_t;
 
 	struct TranscribeArgs
 	{
@@ -103,6 +107,7 @@ private:
 		bool translate;
 		eOutputFormat format;
 		Whisper::eResultFlags resultFlags;
+		volatile eVisualState visualState = (eVisualState)0;
 		uint64_t startTime;
 		int64_t mediaDuration;
 		CString errorMessage;
@@ -121,6 +126,7 @@ private:
 	static HRESULT writeWebVTT( const Whisper::sSegment* const segments, const size_t length, CAtlFile& file );
 
 	static HRESULT __cdecl newSegmentCallbackStatic( Whisper::iContext* ctx, uint32_t n_new, void* user_data ) noexcept;
+	static HRESULT __cdecl encoderBeginCallback( Whisper::iContext* ctx, void* user_data ) noexcept;
 	HRESULT newSegmentCallback( Whisper::iContext* ctx, uint32_t n_new );
 
 	static HRESULT __cdecl progressCallbackStatic( double p, Whisper::iContext* ctx, void* pv ) noexcept;

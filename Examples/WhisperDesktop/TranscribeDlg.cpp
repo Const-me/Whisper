@@ -40,7 +40,6 @@ LRESULT TranscribeDlg::OnInitDialog( UINT nMessage, WPARAM wParam, LPARAM lParam
 			sourceMediaPath, GetDlgItem( IDC_BROWSE_MEDIA ),
 			transcribeOutFormat, useInputFolder,
 			transcribeOutputPath, GetDlgItem( IDC_BROWSE_RESULT ),
-			GetDlgItem( IDC_TRANSCRIBE ),
 			GetDlgItem( IDCANCEL ),
 			GetDlgItem( IDC_BACK ),
 			GetDlgItem( IDC_CAPTURE )
@@ -123,6 +122,13 @@ enum struct TranscribeDlg::eOutputFormat : uint8_t
 	TextTimestamps = 2,
 	SubRip = 3,
 	WebVTT = 4,
+};
+
+enum struct TranscribeDlg::eVisualState : uint8_t
+{
+	Idle = 0,
+	Running = 1,
+	Stopping = 2
 };
 
 // CBN_SELCHANGE notification for IDC_OUTPUT_FORMAT combobox
@@ -247,6 +253,16 @@ void TranscribeDlg::transcribeError( LPCTSTR text, HRESULT hr )
 
 void TranscribeDlg::onTranscribe()
 {
+	switch( transcribeArgs.visualState )
+	{
+	case eVisualState::Running:
+		transcribeArgs.visualState = eVisualState::Stopping;
+		transcribeButton.EnableWindow( FALSE );
+		return;
+	case eVisualState::Stopping:
+		return;
+	}
+
 	// Validate input
 	sourceMediaPath.GetWindowText( transcribeArgs.pathMedia );
 	if( transcribeArgs.pathMedia.GetLength() <= 0 )
@@ -293,7 +309,8 @@ void TranscribeDlg::onTranscribe()
 	appState.stringStore( regValInput, transcribeArgs.pathMedia );
 
 	setPending( true );
-
+	transcribeArgs.visualState = eVisualState::Running;
+	transcribeButton.SetWindowText( L"Stop" );
 	work.post();
 }
 
@@ -324,6 +341,11 @@ static void printTime( CString& rdi, int64_t ticks )
 LRESULT TranscribeDlg::onCallbackStatus( UINT, WPARAM wParam, LPARAM, BOOL& bHandled )
 {
 	setPending( false );
+	transcribeButton.SetWindowText( L"Transcribe" );
+	transcribeButton.EnableWindow( TRUE );
+	const bool prematurely = ( transcribeArgs.visualState == eVisualState::Stopping );
+	transcribeArgs.visualState = eVisualState::Idle;
+
 	const HRESULT hr = (HRESULT)wParam;
 	if( FAILED( hr ) )
 	{
@@ -344,7 +366,12 @@ LRESULT TranscribeDlg::onCallbackStatus( UINT, WPARAM wParam, LPARAM, BOOL& bHan
 
 	const int64_t elapsed = ( GetTickCount64() - transcribeArgs.startTime ) * 10'000;
 	const int64_t media = transcribeArgs.mediaDuration;
-	CString message = L"Transcribed the audio\nMedia duration: ";
+	CString message;
+	if( prematurely )
+		message = L"Transcribed an initial portion of the audio";
+	else
+		message = L"Transcribed the audio";
+	message += L"\nMedia duration: ";
 	printTime( message, media );
 	message += L"\nProcessing time: ";
 	printTime( message, elapsed );
@@ -390,8 +417,11 @@ HRESULT TranscribeDlg::transcribe()
 	fullParams.setFlag( eFullParamsFlags::Translate, transcribeArgs.translate );
 	fullParams.resetFlag( eFullParamsFlags::PrintRealtime );
 
-	fullParams.new_segment_callback_user_data = this;
+	// Setup the callbacks
 	fullParams.new_segment_callback = &newSegmentCallbackStatic;
+	fullParams.new_segment_callback_user_data = this;
+	fullParams.encoder_begin_callback = &encoderBeginCallback;
+	fullParams.encoder_begin_callback_user_data = this;
 
 	// Setup the progress indication sink
 	sProgressSink progressSink{ &progressCallbackStatic, this };
@@ -555,6 +585,23 @@ HRESULT __cdecl TranscribeDlg::newSegmentCallbackStatic( Whisper::iContext* ctx,
 {
 	TranscribeDlg* dlg = (TranscribeDlg*)user_data;
 	return dlg->newSegmentCallback( ctx, n_new );
+}
+
+HRESULT __cdecl TranscribeDlg::encoderBeginCallback( Whisper::iContext* ctx, void* user_data ) noexcept
+{
+	TranscribeDlg* dlg = (TranscribeDlg*)user_data;
+	const eVisualState visualState = dlg->transcribeArgs.visualState;
+	switch( visualState )
+	{
+	case eVisualState::Idle:
+		return E_NOT_VALID_STATE;
+	case eVisualState::Running:
+		return S_OK;
+	case eVisualState::Stopping:
+		return S_FALSE;
+	default:
+		return E_UNEXPECTED;
+	}
 }
 
 void TranscribeDlg::onWmClose()
