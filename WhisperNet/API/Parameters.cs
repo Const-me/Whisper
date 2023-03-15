@@ -2,6 +2,8 @@
 // TODO: remove this line and document them.
 #pragma warning disable CS1591
 
+using System;
+
 namespace Whisper
 {
 	/// <summary>Available sampling strategies</summary>

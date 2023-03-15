@@ -1,4 +1,6 @@
-﻿namespace Whisper
+﻿using System;
+
+namespace Whisper
 {
 	/// <summary>These flags affect compute shaders performance (which ones are faster depends on GPU model),<br/>
 	/// and VRAM memory usage (UseReshapedMatMul needs slightly more VRAM).</summary>

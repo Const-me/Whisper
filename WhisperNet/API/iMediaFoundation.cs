@@ -1,4 +1,5 @@
 ﻿using ComLight;
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Whisper.Internal;

@@ -1,4 +1,6 @@
-﻿namespace Whisper
+﻿using System;
+
+namespace Whisper
 {
 	/// <summary>Flags for the audio capture</summary>
 	[Flags]
@@ -25,12 +27,12 @@
 		public eCaptureFlags flags;
 
 		/// <summary>Initialize the structure with some reasonable default values</summary>
-		public sCaptureParams()
+		public sCaptureParams( bool unused )
 		{
-			minDuration = 7.0f;			// 7 seconds
-			maxDuration = 11.0f;		// 11 seconds
-			dropStartSilence = 0.25f;	// 250 ms
-			pauseDuration = 0.333f;		// 333 ms
+			minDuration = 7.0f;         // 7 seconds
+			maxDuration = 11.0f;        // 11 seconds
+			dropStartSilence = 0.25f;   // 250 ms
+			pauseDuration = 0.333f;     // 333 ms
 			flags = eCaptureFlags.None;
 		}
 	}

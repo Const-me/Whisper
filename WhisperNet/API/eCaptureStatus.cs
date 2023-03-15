@@ -1,4 +1,6 @@
-﻿namespace Whisper
+﻿using System;
+
+namespace Whisper
 {
 	/// <summary>Status of the voice capture</summary>
 	[Flags]

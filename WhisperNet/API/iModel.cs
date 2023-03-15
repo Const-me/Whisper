@@ -1,4 +1,5 @@
 ﻿using ComLight;
+using System;
 using System.ComponentModel;
 
 namespace Whisper

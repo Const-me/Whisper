@@ -1,4 +1,6 @@
-﻿namespace Whisper
+﻿using System;
+
+namespace Whisper
 {
 	/// <summary>Message log level</summary>
 	public enum eLogLevel: byte

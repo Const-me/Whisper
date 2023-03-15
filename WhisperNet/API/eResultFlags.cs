@@ -1,4 +1,6 @@
-﻿namespace Whisper
+﻿using System;
+
+namespace Whisper
 {
 	/// <summary>Flags for <see cref="Context.results(eResultFlags)" /> method</summary>
 	[Flags]

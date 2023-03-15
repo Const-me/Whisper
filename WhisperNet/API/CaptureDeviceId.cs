@@ -1,9 +1,10 @@
-﻿using Whisper.Internal;
+﻿using System;
+using Whisper.Internal;
 
 namespace Whisper
 {
 	/// <summary>Identifiers for an audio capture device</summary>
-	public record struct CaptureDeviceId
+	public struct CaptureDeviceId
 	{
 		/// <summary>The display name is suitable for showing to the user, but might not be unique.</summary>
 		public string displayName;
