@@ -17,3 +17,6 @@ Examples/MicrophoneCS/obj/
 Examples/MicrophoneCS/bin/
 Tools/PerfSummary/bin/
 Tools/PerfSummary/obj/
+packages/
+Examples/WhisperPS/obj/
+Examples/WhisperPS/bin/
