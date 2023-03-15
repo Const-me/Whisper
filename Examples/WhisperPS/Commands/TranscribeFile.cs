@@ -28,6 +28,7 @@ namespace Whisper
 
 		protected override void ProcessRecord()
 		{
+			using( var log = this.setupLog() )
 			using( iContext context = model.model.createContextInternal() ) 
 			using( iAudioReader reader = model.mf.openAudioFile( path ) )
 			{

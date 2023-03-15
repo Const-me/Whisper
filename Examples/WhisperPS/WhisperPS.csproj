@@ -157,6 +157,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Content Include="..\..\x64\Release\Whisper.dll" Link="Whisper.dll" />
+    <Content Include="..\..\x64\Release\Whisper.dll" Link="Whisper.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
