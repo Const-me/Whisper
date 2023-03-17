@@ -88,6 +88,19 @@ namespace DirectCompute
 		CComPtr<ID3D11Resource> sourceRes;
 		rsi->GetResource( &sourceRes );
 
+#ifdef DEBUG
+		CComPtr<ID3D11Buffer> sourceBuffer;
+		CHECK( sourceRes->QueryInterface( &sourceBuffer ) );
+		D3D11_BUFFER_DESC buffDesc;
+		sourceBuffer->GetDesc( &buffDesc );
+		const uint32_t miscFlags = buffDesc.MiscFlags;
+		if( 0 == ( miscFlags & D3D11_RESOURCE_MISC_SHARED ) )
+		{
+			logError( u8"Source buffer doesn't have D3D11_RESOURCE_MISC_SHARED flag" );
+			return E_INVALIDARG;
+		}
+#endif
+
 		CComPtr<IDXGIResource> sourceDxgiRes;
 		CHECK( sourceRes->QueryInterface( &sourceDxgiRes ) );
 

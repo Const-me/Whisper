@@ -18,7 +18,15 @@ HRESULT DirectCompute::createBuffer( eBufferUse use, size_t totalBytes, ID3D11Bu
 			return E_INVALIDARG;
 		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		if( gpuInfo().cloneableModel() )
+		{
+			// According to D3D11 documentation, the only resources that can be shared are 2D non-mipmapped textures.
+			// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_resource_misc_flag
+			// However, D3D9 documentation says all resource types are supported, as long as they are in the default pool.
+			// https://learn.microsoft.com/en-us/windows/win32/direct3d9/dx9lh?redirectedfrom=MSDN#sharing-resources
+			// Appears to work on my computer
+			bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 			bufferDesc.MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
+		}
 		break;
 	case eBufferUse::ReadWrite:
 	case eBufferUse::ReadWriteDownload:
