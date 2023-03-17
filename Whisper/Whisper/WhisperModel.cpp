@@ -447,6 +447,8 @@ HRESULT WhisperModel::load( ComLight::iReadStream* stm, bool hybrid, const sLoad
 		}
 	}
 
+	shared = std::make_shared<ModelShared>();
+
 	// hparams and MEL filters
 	{
 		ParamsAndMelHeader pmh;
@@ -454,11 +456,11 @@ HRESULT WhisperModel::load( ComLight::iReadStream* stm, bool hybrid, const sLoad
 		parameters = pmh.mp;
 		assert( parameters.n_text_state == parameters.n_audio_state );
 
-		filters.n_mel = pmh.n_mel;
-		filters.n_fft = pmh.n_fft;
-		const size_t len = (size_t)filters.n_mel * filters.n_fft;
-		filters.data.resize( len );
-		CHECK( readBytes( stm, filters.data.data(), len * 4 ) );
+		shared->filters.n_mel = pmh.n_mel;
+		shared->filters.n_fft = pmh.n_fft;
+		const size_t len = (size_t)pmh.n_mel * pmh.n_fft;
+		shared->filters.data.resize( len );
+		CHECK( readBytes( stm, shared->filters.data.data(), len * 4 ) );
 
 		const int64_t cb = len * 4;
 		constexpr double mulKb = 1.0 / ( 1 << 10 );
@@ -467,7 +469,7 @@ HRESULT WhisperModel::load( ComLight::iReadStream* stm, bool hybrid, const sLoad
 	CHECK( cb.call( stm ) );
 
 	// Vocabulary
-	CHECK( vocab.load( stm, parameters.n_vocab ) );
+	CHECK( shared->vocab.load( stm, parameters.n_vocab ) );
 	CHECK( cb.call( stm ) );
 
 	DirectCompute::GpuProfilerSimple gpuProfiler;
@@ -491,8 +493,8 @@ HRESULT WhisperModel::load( ComLight::iReadStream* stm, bool hybrid, const sLoad
 
 __m128i Whisper::WhisperModel::getMemoryUse() const
 {
-	size_t cb = vocab.getMemoryUse();
-	cb += vectorMemoryUse( filters.data );
+	size_t cb = shared->vocab.getMemoryUse();
+	cb += vectorMemoryUse( shared->filters.data );
 	__m128i v = _mm_cvtsi64_si128( (int64_t)cb );
 	v = _mm_add_epi64( v, tensors.getMemoryUse() );
 	return v;

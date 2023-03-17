@@ -20,18 +20,18 @@ namespace Whisper
 
 		HRESULT COMLIGHTCALL getSpecialTokens( SpecialTokens& rdi ) override final
 		{
-			model.vocab.getSpecialTokens( rdi );
+			model.shared->vocab.getSpecialTokens( rdi );
 			return S_OK;
 		}
 
 		HRESULT COMLIGHTCALL isMultilingual() override final
 		{
-			return model.vocab.is_multilingual() ? S_OK : S_FALSE;
+			return model.shared->vocab.is_multilingual() ? S_OK : S_FALSE;
 		}
 
 		const char* COMLIGHTCALL stringFromToken( whisper_token token ) override final
 		{
-			return model.vocab.string( token );
+			return model.shared->vocab.string( token );
 		}
 
 		static inline std::wstring makeString( const wchar_t* p )

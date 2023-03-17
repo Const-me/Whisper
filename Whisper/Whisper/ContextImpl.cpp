@@ -71,7 +71,7 @@ HRESULT ContextImpl::decode( const int* tokens, size_t length, int n_past, int t
 sTokenData ContextImpl::sampleBest( const float* probs, bool force_timestamp, bool is_initial )
 {
 	// whisper_sample_best
-	const Vocabulary& vocab = model.vocab;
+	const Vocabulary& vocab = model.shared->vocab;
 	sTokenData result = { 0 };
 
 	size_t n_logits = vocab.size();
@@ -158,13 +158,13 @@ sTokenData ContextImpl::sampleBest( const float* probs, bool force_timestamp, bo
 
 sTokenData ContextImpl::sampleBest()
 {
-	const int n_vocab = model.vocab.n_vocab;
+	const int n_vocab = model.shared->vocab.n_vocab;
 	return sampleBest( probs.data() + ( probs.size() - n_vocab ), false, false );
 }
 
 sTokenData ContextImpl::sampleTimestamp( bool initial )
 {
-	const int n_vocab = model.vocab.n_vocab;
+	const int n_vocab = model.shared->vocab.n_vocab;
 	return sampleBest( probs.data() + ( probs.size() - n_vocab ), true, initial );
 }
 
@@ -219,6 +219,7 @@ static int64_t sample_to_timestamp( int i_sample )
 void ContextImpl::expComputeTokenLevelTimestamps( int i_segment, float thold_pt, float thold_ptsum )
 {
 	// whisper_exp_compute_token_level_timestamps
+	const Whisper::Vocabulary& vocab = model.shared->vocab;
 
 	auto& segment = result_all[ i_segment ];
 	auto& tokens = segment.tokens;
@@ -255,7 +256,7 @@ void ContextImpl::expComputeTokenLevelTimestamps( int i_segment, float thold_pt,
 
 		if( j == 0 )
 		{
-			if( token.id == model.vocab.token_beg )
+			if( token.id == vocab.token_beg )
 			{
 				tokens[ j ].t0 = t0;
 				tokens[ j ].t1 = t0;
@@ -263,7 +264,7 @@ void ContextImpl::expComputeTokenLevelTimestamps( int i_segment, float thold_pt,
 
 				t_beg = t0;
 				t_last = t0;
-				tid_last = model.vocab.token_beg;
+				tid_last = vocab.token_beg;
 			}
 			else
 			{
@@ -271,14 +272,14 @@ void ContextImpl::expComputeTokenLevelTimestamps( int i_segment, float thold_pt,
 			}
 		}
 
-		const int64_t tt = t_beg + 2 * ( token.tid - model.vocab.token_beg );
+		const int64_t tt = t_beg + 2 * ( token.tid - vocab.token_beg );
 
 		tokens[ j ].id = token.id;
 		tokens[ j ].tid = token.tid;
 		tokens[ j ].p = token.p;
 		tokens[ j ].pt = token.pt;
 		tokens[ j ].ptsum = token.ptsum;
-		tokens[ j ].vlen = voice_length( model.vocab.string( token.id ) );
+		tokens[ j ].vlen = voice_length( vocab.string( token.id ) );
 
 		if( token.pt > thold_pt && token.ptsum > thold_ptsum && token.tid > tid_last && tt <= t1 )
 		{
@@ -355,7 +356,7 @@ void ContextImpl::expComputeTokenLevelTimestamps( int i_segment, float thold_pt,
 
 		for( int j = 0; j < n; j++ )
 		{
-			if( tokens[ j ].id >= model.vocab.token_eot )
+			if( tokens[ j ].id >= vocab.token_eot )
 				continue;
 
 			int s0 = timestamp_to_sample( tokens[ j ].t0, n_samples );
@@ -451,6 +452,7 @@ public:
 HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const sProgressSink& progress, iSpectrogram& mel )
 {
 	auto ts = device.setForCurrentThread();
+	const Whisper::Vocabulary& vocab = model.shared->vocab;
 
 	// Ported from whisper_full() function
 	result_all.clear();
@@ -487,8 +489,8 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 	exp_n_audio_ctx = params.audio_ctx;
 
 	// these tokens determine the task that will be performed
-	std::vector<whisper_token> prompt_init = { model.vocab.token_sot };
-	if( model.vocab.is_multilingual() )
+	std::vector<whisper_token> prompt_init = { vocab.token_sot };
+	if( vocab.is_multilingual() )
 	{
 		int langId = lookupLanguageId( params.language );
 		if( langId < 0 )
@@ -500,11 +502,11 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 			return E_INVALIDARG;
 		}
 
-		prompt_init.push_back( model.vocab.token_sot + 1 + langId );
+		prompt_init.push_back( vocab.token_sot + 1 + langId );
 		if( params.flag( eFullParamsFlags::Translate ) )
-			prompt_init.push_back( model.vocab.token_translate );
+			prompt_init.push_back( vocab.token_translate );
 		else
-			prompt_init.push_back( model.vocab.token_transcribe );
+			prompt_init.push_back( vocab.token_transcribe );
 	}
 
 	// int progress_prev = 0;
@@ -564,7 +566,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 		{
 			int n_take = std::min( std::min( params.n_max_text_ctx, model.parameters.n_text_ctx / 2 ), int( prompt_past.size() ) );
 
-			prompt = { model.vocab.token_prev };
+			prompt = { vocab.token_prev };
 			prompt.insert( prompt.begin() + 1, prompt_past.end() - n_take, prompt_past.end() );
 
 			prompt_past.clear();
@@ -611,9 +613,9 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 					const sTokenData token = ( i == 0 ) ? sampleTimestamp( true ) : sampleBest();
 
 					// timestamp token - update sliding window
-					if( token.id > model.vocab.token_beg )
+					if( token.id > vocab.token_beg )
 					{
-						const int seek_delta_new = 2 * ( token.id - model.vocab.token_beg );
+						const int seek_delta_new = 2 * ( token.id - vocab.token_beg );
 
 						// do not allow to go back in time
 						if( has_ts && seek_delta > seek_delta_new && result_len < i )
@@ -634,7 +636,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 					//}
 
 					// end of segment
-					if( token.id == model.vocab.token_eot ||                  // end of text token
+					if( token.id == vocab.token_eot ||                  // end of text token
 						( params.max_tokens > 0 && i >= params.max_tokens ) || // max tokens per segment reached
 						( has_ts && seek + seek_delta + 100 >= seek_end )     // end of audio reached
 						)
@@ -687,7 +689,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 		if( !tokens_cur.empty() )
 		{
 			int i0 = 0;
-			int t0 = seek + 2 * ( tokens_cur.front().tid - model.vocab.token_beg );
+			int t0 = seek + 2 * ( tokens_cur.front().tid - vocab.token_beg );
 			std::string text = "";
 
 			for( int i = 0; i < (int)tokens_cur.size(); i++ )
@@ -695,12 +697,12 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 				//printf("%s: %18s %6.3f %18s %6.3f\n", __func__,
 				//        ctx->vocab.id_to_token[tokens_cur[i].id].c_str(), tokens_cur[i].p,
 				//        ctx->vocab.id_to_token[tokens_cur[i].tid].c_str(), tokens_cur[i].pt);
-				if( params.flag( eFullParamsFlags::PrintSpecial ) || tokens_cur[ i ].id < model.vocab.token_eot )
-					text += model.vocab.string( tokens_cur[ i ].id );
+				if( params.flag( eFullParamsFlags::PrintSpecial ) || tokens_cur[ i ].id < vocab.token_eot )
+					text += vocab.string( tokens_cur[ i ].id );
 
-				if( tokens_cur[ i ].id > model.vocab.token_beg && !params.flag( eFullParamsFlags::SingleSegment ) )
+				if( tokens_cur[ i ].id > vocab.token_beg && !params.flag( eFullParamsFlags::SingleSegment ) )
 				{
-					const int t1 = seek + 2 * ( tokens_cur[ i ].tid - model.vocab.token_beg );
+					const int t1 = seek + 2 * ( tokens_cur[ i ].tid - vocab.token_beg );
 					if( !text.empty() )
 					{
 						const bool speedUp = params.flag( eFullParamsFlags::SpeedupAudio );
@@ -736,7 +738,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const 
 						}
 					}
 					text = "";
-					while( i < (int)tokens_cur.size() && tokens_cur[ i ].id > model.vocab.token_beg )
+					while( i < (int)tokens_cur.size() && tokens_cur[ i ].id > vocab.token_beg )
 						i++;
 					i--;
 					t0 = t1;

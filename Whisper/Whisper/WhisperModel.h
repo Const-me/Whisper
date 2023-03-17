@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <memory>
 #include "Vocabulary.h"
 #include "ModelBuffers.h"
 #include "../../ComLightLib/streams.h"
@@ -15,14 +16,19 @@ namespace Whisper
 		std::vector<float> data;
 	};
 
+	struct ModelShared
+	{
+		Vocabulary vocab;
+		Filters filters;
+	};
+
 	// The complete model, as loaded from a GGML binary file.
 	// The entire model is immutable, and can be safely used from multiple threads in parallel.
 	// The tensors are uploaded to VRAM and don’t stay in system memory, everything else is in the system RAM.
 	struct WhisperModel
 	{
 		sModelParams parameters;
-		Vocabulary vocab;
-		Filters filters;
+		std::shared_ptr<ModelShared> shared;
 		DirectCompute::ModelBuffers tensors;
 
 #if BUILD_HYBRID_VERSION

@@ -241,7 +241,8 @@ HRESULT COMLIGHTCALL ContextImpl::makeResults( eResultFlags flags, TranscribeRes
 		return E_OUTOFMEMORY;
 	}
 
-	const Vocabulary::id tokenEot = model.vocab.token_eot;
+	const Whisper::Vocabulary& vocab = model.shared->vocab;
+	const Vocabulary::id tokenEot = vocab.token_eot;
 
 	size_t tokensSoFar = 0;
 	for( size_t i = 0; i < segments; i++ )
@@ -276,7 +277,7 @@ HRESULT COMLIGHTCALL ContextImpl::makeResults( eResultFlags flags, TranscribeRes
 			{
 				sToken& rdi = res.tokens[ tokensSoFar + i ];
 				const auto& src = rsi.tokens[ i ];
-				rdi.text = model.vocab.string( src.id );
+				rdi.text = vocab.string( src.id );
 
 				if( flags & eResultFlags::Timestamps )
 				{
@@ -310,7 +311,8 @@ int ContextImpl::wrapSegment( int max_len )
 	int res = 1;
 	int acc = 0;
 	std::string text;
-	const int tokenEot = model.vocab.token_eot;
+	const Whisper::Vocabulary& vocab = model.shared->vocab;
+	const int tokenEot = vocab.token_eot;
 
 	for( int i = 0; i < (int)segment.tokens.size(); i++ )
 	{
@@ -318,7 +320,7 @@ int ContextImpl::wrapSegment( int max_len )
 		if( token.id >= tokenEot )
 			continue;
 
-		const char* txt = model.vocab.string( token.id );
+		const char* txt = vocab.string( token.id );
 		const int cur = (int)strlen( txt );
 
 		if( acc + cur > max_len && i > 0 )
@@ -364,7 +366,7 @@ HRESULT COMLIGHTCALL ContextImpl::runFull( const sFullParams& params, const iAud
 	auto profCompleteCpu = profiler.cpuBlock( eCpuBlock::RunComplete );
 	{
 		auto p = profiler.cpuBlock( eCpuBlock::Spectrogram );
-		CHECK( spectrogram.pcmToMel( buffer, model.filters, params.cpuThreads ) );
+		CHECK( spectrogram.pcmToMel( buffer, model.shared->filters, params.cpuThreads ) );
 	}
 
 	if( params.flag( eFullParamsFlags::TokenTimestamps ) )
@@ -401,12 +403,12 @@ HRESULT COMLIGHTCALL ContextImpl::runStreamed( const sFullParams& params, const 
 	{
 		if( params.cpuThreads > 1 )
 		{
-			MelStreamerThread mel{ model.filters, profiler, reader, params.cpuThreads };
+			MelStreamerThread mel{ model.shared->filters, profiler, reader, params.cpuThreads };
 			return runFullImpl( params, progress, mel );
 		}
 		else
 		{
-			MelStreamerSimple mel{ model.filters, profiler, reader };
+			MelStreamerSimple mel{ model.shared->filters, profiler, reader };
 			return runFullImpl( params, progress, mel );
 		}
 	}
