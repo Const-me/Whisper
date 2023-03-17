@@ -17,8 +17,8 @@ namespace Whisper
 				throw new ApplicationException( "This library only works in 64-bit processes" );
 			if( RuntimeInformation.ProcessArchitecture != Architecture.X64 )
 				throw new ApplicationException( "This library requires a processor with AMD64 instruction set" );
-			if( !Sse41.IsSupported )
-				throw new ApplicationException( "This library requires a CPU with SSE 4.1 support" );
+			if( !( Sse41.IsSupported && Avx.IsSupported ) )
+				throw new ApplicationException( "This library requires a CPU with AVX support" );
 			NativeLogger.startup();
 		}
 
