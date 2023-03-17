@@ -171,6 +171,7 @@ HRESULT COMLIGHTCALL ContextImpl::timingsPrint()
 {
 	profiler.print();
 
+	auto ts = device.setForCurrentThread();
 	const __m128i memModel = model.getMemoryUse();
 	const __m128i memContext = getMemoryUse();
 	logInfo( u8"    Memory Usage" );

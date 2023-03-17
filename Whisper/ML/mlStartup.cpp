@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "mlStartup.h"
-#include "../D3D/startup.h"
 #include "LookupTables.h"
 #include "../D3D/MappedResource.h"
 #include "mlUtils.h"
@@ -8,57 +7,8 @@
 #include "../D3D/Binder.h"
 #include "DbgNanTest.h"
 
-namespace
-{
-	static DirectCompute::LookupTables s_tables;
-	static CComPtr<ID3D11Buffer> s_smallCb;
-
-#if DBG_TEST_NAN
-	static DirectCompute::DbgNanTest s_nanTestBuffers;
-#endif
-}
-
 namespace DirectCompute
 {
-	const LookupTables& lookupTables() { return s_tables; }
-
-	HRESULT mlStartup( uint32_t flags, const std::wstring& adapter )
-	{
-		CHECK( d3dStartup( flags, adapter ) );
-		CHECK( s_tables.create() );
-		{
-			CD3D11_BUFFER_DESC desc{ 16, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE };
-			CHECK( device()->CreateBuffer( &desc, nullptr, &s_smallCb ) );
-		}
-#if DBG_TEST_NAN
-		CHECK( s_nanTestBuffers.create() );
-#endif
-		return S_OK;
-	}
-
-	void mlShutdown()
-	{
-#if DBG_TEST_NAN
-		s_nanTestBuffers.destroy();
-#endif
-		s_smallCb = nullptr;
-		s_tables.clear();
-		d3dShutdown();
-	}
-
-	ID3D11Buffer* __vectorcall updateSmallCb( __m128i cbData )
-	{
-		ID3D11Buffer* cb = s_smallCb;
-		if( nullptr != cb )
-		{
-			MappedResource mapped;
-			check( mapped.map( cb, false ) );
-			store16( mapped.data(), cbData );
-			return cb;
-		}
-		throw OLE_E_BLANK;
-	}
-
 	void zeroMemory( ID3D11UnorderedAccessView* uav, uint32_t length, bool fillWithNaN )
 	{
 		__m128i cbData = _mm_cvtsi32_si128( (int)length );

@@ -112,6 +112,7 @@
     <ClCompile Include="CPU\HybridLoader.cpp" />
     <ClCompile Include="D3D\createDevice.cpp" />
     <ClCompile Include="D3D\listGPUs.cpp" />
+    <ClCompile Include="ML\Device.cpp" />
     <ClCompile Include="ML\DbgNanTest.cpp" />
     <ClCompile Include="Utils\DelayExecution.cpp" />
     <ClCompile Include="Hybrid\HybridContext.cpp" />
@@ -191,7 +192,6 @@
     <ClCompile Include="ML\MlContext.cpp" />
     <ClCompile Include="ML\ConstantBuffer.cpp" />
     <ClCompile Include="D3D\createBuffer.cpp" />
-    <ClCompile Include="D3D\device.cpp" />
     <ClCompile Include="D3D\MappedResource.cpp" />
     <ClCompile Include="Whisper\WhisperContext.cpp" />
     <ClCompile Include="Whisper\ModelBuffers.cpp" />
@@ -209,7 +209,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="D3D\startup.cpp" />
     <ClCompile Include="ML\TempBuffers.cpp" />
     <ClCompile Include="ML\tensorOpsTests.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -246,6 +245,7 @@
     <ClInclude Include="D3D\createDevice.h" />
     <ClInclude Include="D3D\listGPUs.h" />
     <ClInclude Include="D3D\sGpuInfo.h" />
+    <ClInclude Include="ML\Device.h" />
     <ClInclude Include="ML\DbgNanTest.h" />
     <ClInclude Include="ML\mlUtils.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
@@ -325,7 +325,6 @@
     <ClInclude Include="ML\TensorShape.h" />
     <ClInclude Include="source\ggml.h" />
     <ClInclude Include="source\whisper.h" />
-    <ClInclude Include="D3D\startup.h" />
     <ClInclude Include="ML\TempBuffers.h" />
     <ClInclude Include="ML\tensorOpsTests.h" />
     <ClInclude Include="stdafx.h" />

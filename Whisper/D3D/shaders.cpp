@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "shaders.h"
-#include "startup.h"
 #include "device.h"
 #include "../Utils/LZ4/lz4.h"
 
@@ -12,10 +11,10 @@ namespace
 #include "shaderData-Release.inl"
 #endif
 
-	static std::vector<CComPtr<ID3D11ComputeShader>> s_shaders;
+	// static std::vector<CComPtr<ID3D11ComputeShader>> s_shaders;
 }
 
-HRESULT DirectCompute::createComputeShaders()
+HRESULT DirectCompute::createComputeShaders( std::vector<CComPtr<ID3D11ComputeShader>>& shaders )
 {
 	constexpr size_t countBinaries = s_shaderOffsets.size() - 1;
 	const size_t cbDecompressedLength = s_shaderOffsets[ countBinaries ];
@@ -24,7 +23,7 @@ HRESULT DirectCompute::createComputeShaders()
 	std::vector<uint8_t> dxbc;
 	try
 	{
-		s_shaders.resize( countShaders );
+		shaders.resize( countShaders );
 		dxbc.resize( cbDecompressedLength );
 	}
 	catch( const std::bad_alloc& )
@@ -48,7 +47,7 @@ HRESULT DirectCompute::createComputeShaders()
 		const uint32_t offThis = s_shaderOffsets[ idxBinary ];
 		const uint8_t* rsi = &dxbc[ offThis ];
 		const size_t len = s_shaderOffsets[ idxBinary + 1 ] - offThis;
-		const HRESULT hr = dev->CreateComputeShader( rsi, len, nullptr, &s_shaders[ i ] );
+		const HRESULT hr = dev->CreateComputeShader( rsi, len, nullptr, &shaders[ i ] );
 		if( SUCCEEDED( hr ) )
 			continue;
 
@@ -60,14 +59,4 @@ HRESULT DirectCompute::createComputeShaders()
 	}
 
 	return S_OK;
-}
-
-void DirectCompute::destroyComputeShaders()
-{
-	s_shaders.clear();
-}
-
-void DirectCompute::bindShader( eComputeShader shader )
-{
-	context()->CSSetShader( s_shaders[ (uint16_t)shader ], nullptr, 0 );
 }

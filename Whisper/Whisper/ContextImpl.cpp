@@ -4,7 +4,8 @@
 #include "../Utils/Trace/tracing.h"
 using namespace Whisper;
 
-ContextImpl::ContextImpl( const WhisperModel& modelData, iModel* modelPointer ) :
+ContextImpl::ContextImpl( const DirectCompute::Device& dev, const WhisperModel& modelData, iModel* modelPointer ) :
+	device( dev ),
 	model( modelData ),
 	modelPtr( modelPointer ),
 	context( modelData, profiler ),
@@ -449,6 +450,8 @@ public:
 
 HRESULT COMLIGHTCALL ContextImpl::runFullImpl( const sFullParams& params, const sProgressSink& progress, iSpectrogram& mel )
 {
+	auto ts = device.setForCurrentThread();
+
 	// Ported from whisper_full() function
 	result_all.clear();
 	if( params.flag( eFullParamsFlags::SpeedupAudio ) )

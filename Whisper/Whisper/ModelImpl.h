@@ -3,6 +3,7 @@
 #include "../ComLightLib/comLightServer.h"
 #include "WhisperModel.h"
 #include "../ComLightLib/streams.h"
+#include "../ML/Device.h"
 
 namespace Whisper
 {
@@ -10,6 +11,7 @@ namespace Whisper
 
 	class ModelImpl : public ComLight::ObjectRoot<iModel>
 	{
+		DirectCompute::Device device;
 		WhisperModel model;
 		const uint32_t gpuFlags;
 		const std::wstring adapter;

@@ -7,30 +7,24 @@
 #include "../modelFactory.h"
 using namespace Whisper;
 
-namespace
-{
-	volatile long s_refCounter = 0;
-}
-
 HRESULT ModelImpl::FinalConstruct()
 {
-	if( 1 != InterlockedIncrement( &s_refCounter ) )
-		return S_FALSE;
-	return DirectCompute::mlStartup( gpuFlags, adapter );
+	auto ts = device.setForCurrentThread();
+	return device.create( gpuFlags, adapter );
 }
 
 void ModelImpl::FinalRelease()
 {
-	if( 0 == InterlockedDecrement( &s_refCounter ) )
-		DirectCompute::mlShutdown();
+	device.destroy();
 }
 
 HRESULT COMLIGHTCALL ModelImpl::createContext( iContext** pp )
 {
+	auto ts = device.setForCurrentThread();
 	ComLight::CComPtr<ComLight::Object<ContextImpl>> obj;
 
 	iModel* m = this;
-	CHECK( ComLight::Object<ContextImpl>::create( obj, model, m ) );
+	CHECK( ComLight::Object<ContextImpl>::create( obj, device, model, m ) );
 
 	obj.detach( pp );
 	return S_OK;
@@ -38,6 +32,7 @@ HRESULT COMLIGHTCALL ModelImpl::createContext( iContext** pp )
 
 HRESULT ModelImpl::load( iReadStream* stm, bool hybrid, const sLoadModelCallbacks* callbacks )
 {
+	auto ts = device.setForCurrentThread();
 	return model.load( stm, hybrid, callbacks );
 }
 

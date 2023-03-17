@@ -5,11 +5,9 @@
     <ClCompile Include="whisperCom.cpp" />
     <ClCompile Include="source\ggml.c" />
     <ClCompile Include="source\whisper.cpp" />
-    <ClCompile Include="D3D\device.cpp" />
     <ClCompile Include="ML\ConstantBuffer.cpp" />
     <ClCompile Include="D3D\MappedResource.cpp" />
     <ClCompile Include="D3D\shaders.cpp" />
-    <ClCompile Include="D3D\startup.cpp" />
     <ClCompile Include="D3D\createBuffer.cpp" />
     <ClCompile Include="ML\TempBuffers.cpp" />
     <ClCompile Include="ML\MlContext.cpp" />
@@ -89,6 +87,7 @@
     <ClCompile Include="Utils\LZ4\lz4.c" />
     <ClCompile Include="D3D\createDevice.cpp" />
     <ClCompile Include="ML\DbgNanTest.cpp" />
+    <ClCompile Include="ML\Device.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ggml.h" />
@@ -100,7 +99,6 @@
     <ClInclude Include="D3D\MappedResource.h" />
     <ClInclude Include="D3D\shaderNames.h" />
     <ClInclude Include="D3D\shaders.h" />
-    <ClInclude Include="D3D\startup.h" />
     <ClInclude Include="D3D\createBuffer.h" />
     <ClInclude Include="ML\TempBuffers.h" />
     <ClInclude Include="ML\MlContext.h" />
@@ -201,6 +199,7 @@
     <ClInclude Include="D3D\sGpuInfo.h" />
     <ClInclude Include="D3D\createDevice.h" />
     <ClInclude Include="ML\DbgNanTest.h" />
+    <ClInclude Include="ML\Device.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="whisper.def" />

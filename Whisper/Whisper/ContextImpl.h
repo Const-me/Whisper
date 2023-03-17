@@ -5,11 +5,13 @@
 #include "Spectrogram.h"
 #include "TranscribeResult.h"
 #include "sTokenData.h"
+#include "../ML/Device.h"
 
 namespace Whisper
 {
 	class ContextImpl : public ComLight::ObjectRoot<iContext>
 	{
+		const DirectCompute::Device& device;
 		const WhisperModel& model;
 		ComLight::CComPtr<iModel> modelPtr;
 		DirectCompute::WhisperContext context;
@@ -74,6 +76,6 @@ namespace Whisper
 
 	public:
 
-		ContextImpl( const WhisperModel& modelData, iModel* modelPointer );
+		ContextImpl( const DirectCompute::Device& dev, const WhisperModel& modelData, iModel* modelPointer );
 	};
 }
