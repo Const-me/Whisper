@@ -120,8 +120,10 @@
     <Compile Include="..\..\WhisperNet\Internal\sLoggerSetup.cs">
       <Link>Internal\sLoggerSetup.cs</Link>
     </Compile>
+    <Compile Include="Commands\ExportWebVtt.cs" />
     <Compile Include="Commands\FormatSegments.cs" />
     <Compile Include="Commands\TranscribeBase.cs" />
+    <Compile Include="Commands\ExportSubrip.cs" />
     <Compile Include="Internal\iTranscribeResult.cs" />
     <Compile Include="Internal\MarshalEx.cs" />
     <Compile Include="Internal\NativeLogger.cs" />
