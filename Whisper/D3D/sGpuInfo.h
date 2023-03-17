@@ -16,6 +16,7 @@ namespace DirectCompute
 	{
 		Wave64 = 1,
 		ReshapedMatMul = 2,
+		Cloneable = 4,
 	};
 
 	struct sGpuInfo
@@ -40,6 +41,11 @@ namespace DirectCompute
 		inline bool useReshapedMatMul() const
 		{
 			return 0 != ( (uint8_t)flags & (uint8_t)eGpuEffectiveFlags::ReshapedMatMul );
+		}
+
+		inline bool cloneableModel() const
+		{
+			return 0 != ( (uint8_t)flags & (uint8_t)eGpuEffectiveFlags::Cloneable );
 		}
 	};
 }

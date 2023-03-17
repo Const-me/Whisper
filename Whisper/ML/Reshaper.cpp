@@ -43,7 +43,7 @@ HRESULT DirectCompute::Reshaper::makePanels( Tensor& tensor, eDataType dataType 
 	const uint32_t panelSize = ne[ 0 ] * TILE_SIZE;
 	
 	Tensor result;
-	result.create( dataType, ne );
+	result.create( dataType, ne, true );
 
 	{
 		MappedResource mapped;

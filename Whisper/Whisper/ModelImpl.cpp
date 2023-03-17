@@ -31,6 +31,12 @@ HRESULT COMLIGHTCALL ModelImpl::createContext( iContext** pp )
 
 HRESULT COMLIGHTCALL ModelImpl::clone( iModel** rdi )
 {
+	if( device.gpuInfo.cloneableModel() )
+	{
+		logError( u8"iModel.clone requires the Cloneable model flag" );
+		return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
+	}
+
 	return E_NOTIMPL;
 }
 

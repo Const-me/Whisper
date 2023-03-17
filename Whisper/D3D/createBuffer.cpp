@@ -3,7 +3,7 @@
 
 #define CHECK( hr ) { const HRESULT __hr = ( hr ); if( FAILED( __hr ) ) return __hr; }
 
-HRESULT DirectCompute::createBuffer( eBufferUse use, size_t totalBytes, ID3D11Buffer** ppGpuBuffer, const void* rsi, ID3D11Buffer** ppStagingBuffer )
+HRESULT DirectCompute::createBuffer( eBufferUse use, size_t totalBytes, ID3D11Buffer** ppGpuBuffer, const void* rsi, ID3D11Buffer** ppStagingBuffer, bool shared )
 {
 	if( totalBytes > INT_MAX )
 		return DISP_E_OVERFLOW;
@@ -17,10 +17,14 @@ HRESULT DirectCompute::createBuffer( eBufferUse use, size_t totalBytes, ID3D11Bu
 		if( nullptr == rsi )
 			return E_INVALIDARG;
 		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+		if( gpuInfo().cloneableModel() )
+			bufferDesc.MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
 		break;
 	case eBufferUse::ReadWrite:
 	case eBufferUse::ReadWriteDownload:
 		bufferDesc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
+		if( shared && gpuInfo().cloneableModel() )
+			bufferDesc.MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
 		break;
 	case eBufferUse::Dynamic:
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;

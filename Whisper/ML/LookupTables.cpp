@@ -12,6 +12,8 @@ namespace
 		CComPtr<ID3D11Buffer> buffer;
 
 		CD3D11_BUFFER_DESC desc{ 0x10000 * 2, D3D11_BIND_SHADER_RESOURCE, D3D11_USAGE_IMMUTABLE };
+		if( gpuInfo().cloneableModel() )
+			desc.MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
 		D3D11_SUBRESOURCE_DATA srd{ rsi.data(), 0, 0 };
 		CHECK( device()->CreateBuffer( &desc, &srd, &buffer ) );
 

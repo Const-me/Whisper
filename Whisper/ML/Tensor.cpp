@@ -154,7 +154,7 @@ HRESULT Tensor::createImmutable( eDataType type, const std::array<int, 4>& size,
 	return S_OK;
 }
 
-HRESULT Tensor::create( eDataType type, std::initializer_list<uint32_t> sizeElements, eBufferUse usage, CComPtr<ID3D11Buffer>& buffer, const void* rsi, ID3D11Buffer** ppStagingBuffer )
+HRESULT Tensor::create( eDataType type, std::initializer_list<uint32_t> sizeElements, eBufferUse usage, CComPtr<ID3D11Buffer>& buffer, const void* rsi, ID3D11Buffer** ppStagingBuffer, bool shared )
 {
 	TensorGpuViews::clear();
 
@@ -200,7 +200,7 @@ HRESULT Tensor::create( eDataType type, std::initializer_list<uint32_t> sizeElem
 		ne[ i ] = 1;
 	TensorShape::setDenseStrides();
 
-	CHECK( createBuffer( usage, totalBytes, &buffer, rsi, ppStagingBuffer ) );
+	CHECK( createBuffer( usage, totalBytes, &buffer, rsi, ppStagingBuffer, shared ) );
 
 	CHECK( TensorGpuViews::create( buffer, format, totalBytes / cbElement, true ) );
 #ifdef _DEBUG
@@ -211,16 +211,16 @@ HRESULT Tensor::create( eDataType type, std::initializer_list<uint32_t> sizeElem
 	return S_OK;
 }
 
-HRESULT Tensor::create( eDataType type, std::initializer_list<uint32_t> sizeElements )
+HRESULT Tensor::create( eDataType type, std::initializer_list<uint32_t> sizeElements, bool shared )
 {
 	CComPtr<ID3D11Buffer> buffer;
-	return create( type, sizeElements, eBufferUse::ReadWrite, buffer, nullptr, nullptr );
+	return create( type, sizeElements, eBufferUse::ReadWrite, buffer, nullptr, nullptr, shared );
 }
 
-HRESULT Tensor::create( eDataType type, const std::array<uint32_t, 4>& sizeElements )
+HRESULT Tensor::create( eDataType type, const std::array<uint32_t, 4>& sizeElements, bool shared )
 {
 	std::initializer_list<uint32_t> il( sizeElements.data(), sizeElements.data() + 4 );
-	return create( type, il );
+	return create( type, il, shared );
 }
 
 eDataType Tensor::getType() const

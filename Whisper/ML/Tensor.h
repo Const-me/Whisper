@@ -22,7 +22,7 @@ namespace DirectCompute
 		TensorType dbgType;
 #endif
 	protected:
-		HRESULT create( eDataType type, std::initializer_list<uint32_t> sizeElements, eBufferUse usage, CComPtr<ID3D11Buffer>& buffer, const void* rsi, ID3D11Buffer** ppStagingBuffer );
+		HRESULT create( eDataType type, std::initializer_list<uint32_t> sizeElements, eBufferUse usage, CComPtr<ID3D11Buffer>& buffer, const void* rsi, ID3D11Buffer** ppStagingBuffer, bool shared = false );
 
 		static uint32_t dxgiSizeof( DXGI_FORMAT format );
 
@@ -47,8 +47,8 @@ namespace DirectCompute
 		HRESULT create( const ggml_tensor& ggml, eBufferUse usage, bool uploadData );
 
 		// Create a new dense tensor of the specified size in elements, without initial data
-		HRESULT create( eDataType type, std::initializer_list<uint32_t> sizeElements );
-		HRESULT create( eDataType type, const std::array<uint32_t, 4>& sizeElements );
+		HRESULT create( eDataType type, std::initializer_list<uint32_t> sizeElements, bool shared = false );
+		HRESULT create( eDataType type, const std::array<uint32_t, 4>& sizeElements, bool shared = false );
 		HRESULT createImmutable( eDataType type, const std::array<int, 4>& size, const void* rsi );
 
 		eDataType getType() const;

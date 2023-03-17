@@ -3,6 +3,7 @@
 #include "listGPUs.h"
 #include "RenderDoc/renderDoc.h"
 #pragma comment(lib, "D3D11.lib")
+#include <atlstr.h>
 
 HRESULT DirectCompute::createDevice( const std::wstring& adapterName, ID3D11Device** dev, ID3D11DeviceContext** context )
 {
@@ -105,6 +106,8 @@ HRESULT DirectCompute::queryDeviceInfo( sGpuInfo& rdi, ID3D11Device* dev, uint32
 		ef |= (uint8_t)eGpuEffectiveFlags::Wave64;
 	if( merge3( flags, eGpuModelFlags::UseReshapedMatMul, eGpuModelFlags::NoReshapedMatMul, amd ) )
 		ef |= (uint8_t)eGpuEffectiveFlags::ReshapedMatMul;
+	if( 0 != ( flags & eGpuModelFlags::Cloneable ) )
+		ef |= (uint8_t)eGpuEffectiveFlags::Cloneable;
 	rdi.flags = (eGpuEffectiveFlags)ef;
 
 	if( willLogMessage( Whisper::eLogLevel::Debug ) )
@@ -113,10 +116,15 @@ HRESULT DirectCompute::queryDeviceInfo( sGpuInfo& rdi, ID3D11Device* dev, uint32
 		const int flMajor = ( fl >> 12 ) & 0xF;
 		const int flMinor = ( fl >> 8 ) & 0xF;
 
-		logDebug16( L"Using GPU \"%s\", feature level %i.%i, effective flags %S | %S",
-			rdi.description.c_str(), flMajor, flMinor,
-			rdi.wave64() ? "Wave64" : "Wave32",
+		CStringA flagsString;
+		flagsString.Format( "%s | %s", rdi.wave64() ? "Wave64" : "Wave32",
 			rdi.useReshapedMatMul() ? "UseReshapedMatMul" : "NoReshapedMatMul" );
+		if( rdi.cloneableModel() )
+			flagsString += " | Cloneable";
+
+		logDebug16( L"Using GPU \"%s\", feature level %i.%i, effective flags %S",
+			rdi.description.c_str(), flMajor, flMinor,
+			flagsString.operator const char* ( ) );
 	}
 	return S_OK;
 }
