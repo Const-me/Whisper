@@ -196,6 +196,7 @@
     <ClInclude Include="API\sModelSetup.h" />
     <ClInclude Include="D3D\listGPUs.h" />
     <ClInclude Include="Utils\LZ4\lz4.h" />
+    <ClInclude Include="D3D\sGpuInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="whisper.def" />
