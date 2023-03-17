@@ -67,7 +67,7 @@ namespace
 
 namespace DirectCompute
 {
-	const LookupTables& lookupTables = s_tables;
+	const LookupTables& lookupTables() { return s_tables; }
 
 	HRESULT mlStartup( uint32_t flags, const std::wstring& adapter )
 	{

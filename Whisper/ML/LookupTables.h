@@ -17,6 +17,5 @@ namespace DirectCompute
 		__m128i getMemoryUsage() const;
 	};
 
-	// Singleton instance, defined in mlStartup.cpp
-	extern const LookupTables& lookupTables;
+	const LookupTables& lookupTables();
 }

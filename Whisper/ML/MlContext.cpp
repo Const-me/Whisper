@@ -221,7 +221,7 @@ void MlContext::flashAttention( const Tensor& q, const Tensor& k, const Tensor& 
 	ID3D11DeviceContext* const ctx = context();
 
 	Binder bind;
-	bind.bind( { q, k, v, lookupTables.exponent() }, { res, tb } );
+	bind.bind( { q, k, v, lookupTables().exponent()}, {res, tb});
 
 	if constexpr( usePreciseComputeShaders && !enableInexactOptimizations )
 	{
@@ -527,7 +527,7 @@ void MlContext::softMax( Tensor& a, float inputScale )
 		check( cb.update( a, dummyShape ) );
 
 		Binder bind;
-		bind.bind( lookupTables.exponent(), a );
+		bind.bind( lookupTables().exponent(), a);
 		context()->Dispatch( ( nr + 31 ) / 32, 1, 1 );
 	}
 	else
@@ -557,7 +557,7 @@ void MlContext::softMax( Tensor& a, float inputScale )
 		check( cb.update( a, dummyShape ) );
 
 		Binder bind;
-		bind.bind( lookupTables.exponent(), a );
+		bind.bind( lookupTables().exponent(), a);
 		context()->Dispatch( nr, 1, 1 );
 	}
 }
@@ -569,7 +569,7 @@ void MlContext::addRepeatGelu( Tensor& a, const Tensor& b )
 	cb.bind();
 
 	Binder bind;
-	bind.bind( b, lookupTables.gelu(), a );
+	bind.bind( b, lookupTables().gelu(), a);
 	context()->Dispatch( a.ne[ 1 ], a.ne[ 2 ], a.ne[ 3 ] );
 }
 
@@ -743,6 +743,6 @@ __m128i MlContext::getMemoryUse() const
 	__m128i v = cb.getMemoryUse();
 	v = _mm_add_epi64( v, temp.getMemoryUse() );
 	v = _mm_add_epi64( v, bufferMemoryUsage( flashAttentionConstants ) );
-	v = _mm_add_epi64( v, lookupTables.getMemoryUsage() );
+	v = _mm_add_epi64( v, lookupTables().getMemoryUsage());
 	return v;
 }
