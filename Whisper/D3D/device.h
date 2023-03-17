@@ -7,17 +7,11 @@ namespace DirectCompute
 {
 	ID3D11Device* device();
 	ID3D11DeviceContext* context();
-	D3D_FEATURE_LEVEL featureLevel();
 
 	HRESULT initialize( uint32_t flags, const std::wstring& adapter );
 	void terminate();
 
 	const sGpuInfo& gpuInfo();
-
-	inline bool available()
-	{
-		return nullptr != device();
-	}
 
 	inline void csSetCB( ID3D11Buffer* cb )
 	{
