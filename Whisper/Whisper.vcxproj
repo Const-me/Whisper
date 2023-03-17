@@ -112,6 +112,7 @@
     <ClCompile Include="CPU\HybridLoader.cpp" />
     <ClCompile Include="D3D\createDevice.cpp" />
     <ClCompile Include="D3D\listGPUs.cpp" />
+    <ClCompile Include="ML\DbgNanTest.cpp" />
     <ClCompile Include="Utils\DelayExecution.cpp" />
     <ClCompile Include="Hybrid\HybridContext.cpp" />
     <ClCompile Include="CPU\ParallelForRunner.cpp">
@@ -245,6 +246,7 @@
     <ClInclude Include="D3D\createDevice.h" />
     <ClInclude Include="D3D\listGPUs.h" />
     <ClInclude Include="D3D\sGpuInfo.h" />
+    <ClInclude Include="ML\DbgNanTest.h" />
     <ClInclude Include="ML\mlUtils.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
     <ClInclude Include="Hybrid\HybridContext.h" />
