@@ -26,5 +26,8 @@ namespace Whisper
 		/// <summary>Use reshaped matrix multiplication shaders even on nVidia and Intel GPUs</summary>
 		/// <remarks>Incompatible with <see cref="NoReshapedMatMul" /></remarks>
 		UseReshapedMatMul = 8,
+
+		/// <summary>Create GPU tensors in a way which allows sharing across D3D devices</summary>
+		Cloneable = 0x10,
 	}
 }

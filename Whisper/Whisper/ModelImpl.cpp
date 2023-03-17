@@ -29,6 +29,11 @@ HRESULT COMLIGHTCALL ModelImpl::createContext( iContext** pp )
 	return S_OK;
 }
 
+HRESULT COMLIGHTCALL ModelImpl::clone( iModel** rdi )
+{
+	return E_NOTIMPL;
+}
+
 HRESULT ModelImpl::load( iReadStream* stm, bool hybrid, const sLoadModelCallbacks* callbacks )
 {
 	auto ts = device.setForCurrentThread();

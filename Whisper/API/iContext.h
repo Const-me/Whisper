@@ -50,6 +50,8 @@ namespace Whisper
 
 		// Token Id -> String
 		const char* __stdcall stringFromToken( whisper_token token );
+
+		HRESULT __stdcall clone( iModel** rdi ) = 0;
 	};
 
 	HRESULT __stdcall setupLogger( const sLoggerSetup& setup );

@@ -55,6 +55,8 @@ namespace Whisper
 
 		// Token Id -> String
 		virtual const char* COMLIGHTCALL stringFromToken( whisper_token token ) = 0;
+
+		virtual HRESULT COMLIGHTCALL clone( iModel** rdi ) = 0;
 	};
 
 	HRESULT COMLIGHTCALL setupLogger( const sLoggerSetup& setup );

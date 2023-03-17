@@ -23,6 +23,7 @@ namespace Whisper
 		Wave64 = 2,
 		NoReshapedMatMul = 4,
 		UseReshapedMatMul = 8,
+		Cloneable = 0x10,
 	};
 
 	struct sModelSetup

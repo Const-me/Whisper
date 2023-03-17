@@ -42,6 +42,8 @@ namespace Whisper
 				return std::wstring{ p };
 		}
 
+		HRESULT COMLIGHTCALL clone( iModel** rdi ) override final;
+
 	public:
 		ModelImpl( const sModelSetup& setup ) :
 			gpuFlags( setup.flags ),

@@ -25,5 +25,10 @@ namespace Whisper
 		/// <remarks>Don't call this method, use <see cref="ExtensionMethods.stringFromToken(iModel, int)" /> instead.</remarks>
 		[EditorBrowsable( EditorBrowsableState.Never )]
 		IntPtr stringFromTokenInternal( int id );
+
+		/// <summary>Clone the model</summary>
+		/// <remarks>You must pass <see cref="eGpuModelFlags.Cloneable" /> bit when creating this model, otherwise this method will throw an exception.</remarks>
+		[RetValIndex]
+		iModel clone();
 	}
 }
