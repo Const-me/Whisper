@@ -57,7 +57,7 @@ namespace DirectCompute
 	}
 
 	sGpuInfo s_gpuInfo = {};
-	const sGpuInfo& gpuInfo = s_gpuInfo;
+	const sGpuInfo& gpuInfo() { return s_gpuInfo; }
 
 	using Whisper::eGpuModelFlags;
 	inline constexpr uint32_t operator|( eGpuModelFlags a, eGpuModelFlags b )

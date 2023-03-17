@@ -40,7 +40,7 @@ HRESULT DirectCompute::createComputeShaders()
 	}
 	ID3D11Device* const dev = device();
 
-	const auto& blobs = gpuInfo.wave64() ? s_shaderBlobs64 : s_shaderBlobs32;
+	const auto& blobs = gpuInfo().wave64() ? s_shaderBlobs64 : s_shaderBlobs32;
 
 	for( size_t i = 0; i < countShaders; i++ )
 	{

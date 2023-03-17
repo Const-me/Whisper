@@ -44,7 +44,7 @@ namespace
 			case ePostProcessing::None:
 				return S_OK;
 			case ePostProcessing::MakePanels:
-				if( gpuInfo.useReshapedMatMul() )
+				if( gpuInfo().useReshapedMatMul() )
 				{
 					// GpuInfo structure says we should use that new method
 					return rs.makePanels( *dest, dt );

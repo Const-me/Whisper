@@ -170,7 +170,7 @@ Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t
 	// self-attention
 	Tensor Qcur;
 	Tensor reshaped;
-	if( gpuInfo.useReshapedMatMul() )
+	if( gpuInfo().useReshapedMatMul() )
 	{
 		const uint16_t tag = profiler.setNextTag( "enc.layer.1" );
 		reshaped = reshapePanels( cur );
@@ -189,7 +189,7 @@ Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t
 
 	// note: no bias for Key
 	Tensor Kcur;
-	if( gpuInfo.useReshapedMatMul() )
+	if( gpuInfo().useReshapedMatMul() )
 	{
 		// Already reshaped by the previous `if`
 		profiler.setNextTag( "enc.layer.2" );
@@ -205,7 +205,7 @@ Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t
 		Tracing::tensor( "enc-Kcur", Kcur );
 
 	Tensor Vcur;
-	if( gpuInfo.useReshapedMatMul() )
+	if( gpuInfo().useReshapedMatMul() )
 	{
 		// Already reshaped by the previous `if`
 		profiler.setNextTag( "enc.layer.3" );
@@ -232,7 +232,7 @@ Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t
 	copyInPlace( cur, KQV_merged, eDataType::FP32, { n_state, n_ctx } );
 
 	// projection
-	if( gpuInfo.useReshapedMatMul() )
+	if( gpuInfo().useReshapedMatMul() )
 	{
 		const uint16_t tag = profiler.setNextTag( "enc.layer.4" );
 		cur = reshapePanels( cur );
@@ -255,7 +255,7 @@ Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t
 	fmaRepeat( cur, layer.mlpLn );
 
 	// fully connected
-	if( gpuInfo.useReshapedMatMul() )
+	if( gpuInfo().useReshapedMatMul() )
 	{
 		const uint16_t tag = profiler.setNextTag( "enc.layer.5" );
 		cur = reshapePanels( cur );
@@ -270,7 +270,7 @@ Tensor WhisperContext::encodeLayer( const Tensor& source, size_t index, uint32_t
 	addRepeatGelu( cur, layer.mlp0.b );
 
 	// projection
-	if( gpuInfo.useReshapedMatMul() )
+	if( gpuInfo().useReshapedMatMul() )
 	{
 		const uint16_t tag = profiler.setNextTag( "enc.layer.6" );
 		cur = reshapePanels( cur );
@@ -344,7 +344,7 @@ Tensor WhisperContext::encode( Whisper::iSpectrogram& spectrogram, const sEncode
 	// pre-compute cross-attention buffers
 	{
 		Tensor reshaped;
-		if( gpuInfo.useReshapedMatMul() )
+		if( gpuInfo().useReshapedMatMul() )
 		{
 			if( cur.ne[ 1 ] != 1 )
 			{
@@ -362,7 +362,7 @@ Tensor WhisperContext::encode( Whisper::iSpectrogram& spectrogram, const sEncode
 		{
 			const LayerDecoder& layer = gpuModel.dec.layers[ i ];
 			Tensor Kcross, Vcross;
-			if( gpuInfo.useReshapedMatMul() )
+			if( gpuInfo().useReshapedMatMul() )
 				Kcross = mulMatEx( layer.crossAttnKey, reshaped, "enc.cross.1" );
 			else
 			{
@@ -371,7 +371,7 @@ Tensor WhisperContext::encode( Whisper::iSpectrogram& spectrogram, const sEncode
 			}
 			scale( Kcross, finalScaling );
 
-			if( gpuInfo.useReshapedMatMul() )
+			if( gpuInfo().useReshapedMatMul() )
 				Vcross = mulMatEx( layer.crossAttnValue.w, reshaped, "enc.cross.2" );
 			else
 			{
@@ -531,7 +531,7 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 		cur = norm( inpFF );
 		fmaRepeat( cur, layer.mlpLn );
 
-		if( gpuInfo.useReshapedMatMul() )
+		if( gpuInfo().useReshapedMatMul() )
 			cur = mulMatEx( layer.mlp0.w, cur, "dec.layer.11" );
 		else
 		{
@@ -542,7 +542,7 @@ Tensor WhisperContext::decodeLayer( const Tensor& inpL, size_t il, const sLayerD
 		addRepeatGelu( cur, layer.mlp0.b );
 
 		// projection
-		if( gpuInfo.useReshapedMatMul() )
+		if( gpuInfo().useReshapedMatMul() )
 		{
 			if( cur.ne[ 1 ] != 1 )
 			{

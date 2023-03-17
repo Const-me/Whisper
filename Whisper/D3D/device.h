@@ -50,7 +50,7 @@ namespace DirectCompute
 			return 0 != ( (uint8_t)flags & (uint8_t)eGpuEffectiveFlags::ReshapedMatMul );
 		}
 	};
-	extern const sGpuInfo& gpuInfo;
+	const sGpuInfo& gpuInfo();
 
 	inline bool available()
 	{
