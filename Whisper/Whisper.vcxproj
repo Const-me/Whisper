@@ -182,7 +182,7 @@
     <ClCompile Include="Whisper\Vocabulary.cpp" />
     <ClCompile Include="Whisper\DecoderResultBuffer.cpp" />
     <ClCompile Include="Whisper\DecoderInputBuffers.cpp" />
-    <ClCompile Include="ML\mlStartup.cpp" />
+    <ClCompile Include="ML\mlUtils.cpp" />
     <ClCompile Include="Whisper\KeyValueBuffers.cpp" />
     <ClCompile Include="D3D\Binder.cpp" />
     <ClCompile Include="ML\LookupTables.cpp" />
@@ -301,7 +301,6 @@
     <ClInclude Include="Whisper\Vocabulary.h" />
     <ClInclude Include="Whisper\DecoderResultBuffer.h" />
     <ClInclude Include="Whisper\DecoderInputBuffers.h" />
-    <ClInclude Include="ML\mlStartup.h" />
     <ClInclude Include="Whisper\KeyValueBuffers.h" />
     <ClInclude Include="D3D\Binder.h" />
     <ClInclude Include="ML\LookupTables.h" />

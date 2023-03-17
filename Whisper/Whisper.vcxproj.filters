@@ -29,7 +29,7 @@
     <ClCompile Include="ML\LookupTablesData.cpp" />
     <ClCompile Include="ML\LookupTables.cpp" />
     <ClCompile Include="Whisper\KeyValueBuffers.cpp" />
-    <ClCompile Include="ML\mlStartup.cpp" />
+    <ClCompile Include="ML\mlUtils.cpp" />
     <ClCompile Include="Whisper\DecoderInputBuffers.cpp" />
     <ClCompile Include="Whisper\DecoderResultBuffer.cpp" />
     <ClCompile Include="Whisper\Vocabulary.cpp" />
@@ -122,7 +122,6 @@
     <ClInclude Include="ML\LookupTables.h" />
     <ClInclude Include="Whisper\sEncodeParams.h" />
     <ClInclude Include="Whisper\KeyValueBuffers.h" />
-    <ClInclude Include="ML\mlStartup.h" />
     <ClInclude Include="Whisper\DecoderInputBuffers.h" />
     <ClInclude Include="Whisper\DecoderResultBuffer.h" />
     <ClInclude Include="Whisper\Vocabulary.h" />

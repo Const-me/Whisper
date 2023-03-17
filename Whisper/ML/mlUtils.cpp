@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "mlStartup.h"
 #include "LookupTables.h"
 #include "../D3D/MappedResource.h"
 #include "mlUtils.h"
