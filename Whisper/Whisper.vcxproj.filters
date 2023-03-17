@@ -87,6 +87,7 @@
     <ClCompile Include="Whisper\ContextImpl.diarize.cpp" />
     <ClCompile Include="D3D\listGPUs.cpp" />
     <ClCompile Include="Utils\LZ4\lz4.c" />
+    <ClCompile Include="D3D\createDevice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ggml.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="D3D\listGPUs.h" />
     <ClInclude Include="Utils\LZ4\lz4.h" />
     <ClInclude Include="D3D\sGpuInfo.h" />
+    <ClInclude Include="D3D\createDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="whisper.def" />
