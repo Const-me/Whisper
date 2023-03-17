@@ -10,6 +10,7 @@ namespace DirectCompute
 	public:
 
 		HRESULT create();
+		HRESULT createClone( const LookupTables& source );
 		void clear();
 		ID3D11ShaderResourceView* gelu() const { return m_gelu; }
 		ID3D11ShaderResourceView* exponent() const { return m_exponent; }

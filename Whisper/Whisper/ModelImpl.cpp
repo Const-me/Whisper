@@ -6,12 +6,6 @@
 #include "../modelFactory.h"
 using namespace Whisper;
 
-HRESULT ModelImpl::FinalConstruct()
-{
-	auto ts = device.setForCurrentThread();
-	return device.create( gpuFlags, adapter );
-}
-
 void ModelImpl::FinalRelease()
 {
 	device.destroy();
@@ -31,18 +25,30 @@ HRESULT COMLIGHTCALL ModelImpl::createContext( iContext** pp )
 
 HRESULT COMLIGHTCALL ModelImpl::clone( iModel** rdi )
 {
-	if( device.gpuInfo.cloneableModel() )
+	if( !device.gpuInfo.cloneableModel() )
 	{
 		logError( u8"iModel.clone requires the Cloneable model flag" );
 		return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
 	}
 
-	return E_NOTIMPL;
+	ComLight::CComPtr<ComLight::Object<ModelImpl>> obj;
+	CHECK( ComLight::Object<ModelImpl>::create( obj, *this ) );
+	CHECK( obj->createClone( *this ) );
+	obj.detach( rdi );
+	return S_OK;
+}
+
+HRESULT ModelImpl::createClone( const ModelImpl& source )
+{
+	auto ts = device.setForCurrentThread();
+	CHECK( device.createClone( source.device ) );
+	return model.createClone( source.model );
 }
 
 HRESULT ModelImpl::load( iReadStream* stm, bool hybrid, const sLoadModelCallbacks* callbacks )
 {
 	auto ts = device.setForCurrentThread();
+	CHECK( device.create( gpuFlags, adapter ) );
 	return model.load( stm, hybrid, callbacks );
 }
 

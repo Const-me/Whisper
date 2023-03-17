@@ -20,6 +20,7 @@ namespace DirectCompute
 #endif
 
 		HRESULT create( uint32_t flags, const std::wstring& adapter );
+		HRESULT createClone( const Device& source );
 		void destroy();
 
 		class ThreadSetupRaii

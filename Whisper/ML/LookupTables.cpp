@@ -2,6 +2,7 @@
 #include "LookupTables.h"
 #include "LookupTablesData.h"
 #include <memory>
+#include "mlUtils.h"
 using namespace DirectCompute;
 
 namespace
@@ -39,6 +40,13 @@ HRESULT LookupTables::create()
 	CHECK( uploadLookupTable( data->gelu, m_gelu ) );
 	CHECK( uploadLookupTable( data->exponent, m_exponent ) );
 
+	return S_OK;
+}
+
+HRESULT LookupTables::createClone( const LookupTables& source )
+{
+	CHECK( cloneResourceView( source.m_gelu, &m_gelu ) );
+	CHECK( cloneResourceView( source.m_exponent, &m_exponent ) );
 	return S_OK;
 }
 

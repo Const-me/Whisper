@@ -13,4 +13,7 @@ namespace DirectCompute
 
 	// true when the tensor contains at least 1 NaN value
 	bool scanTensorForNaN( ID3D11ShaderResourceView* tensor, uint32_t length );
+
+	// Create SRV on another device, reusing the resource
+	HRESULT cloneResourceView( ID3D11ShaderResourceView* rsi, ID3D11ShaderResourceView** rdi );
 }

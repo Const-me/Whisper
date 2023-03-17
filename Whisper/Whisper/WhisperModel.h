@@ -36,6 +36,7 @@ namespace Whisper
 #endif
 
 		HRESULT load( ComLight::iReadStream* stm, bool hybrid, const sLoadModelCallbacks* callbacks );
+		HRESULT createClone( const WhisperModel& rsi );
 
 		// A vector of 2 uint64_t values, both numbers are 100 nanosecond ticks:
 		// 0. The time it took to load the model, measured on CPU

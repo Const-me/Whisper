@@ -491,6 +491,20 @@ HRESULT WhisperModel::load( ComLight::iReadStream* stm, bool hybrid, const sLoad
 	return S_OK;
 }
 
+HRESULT Whisper::WhisperModel::createClone( const WhisperModel& rsi )
+{
+	parameters = rsi.parameters;
+	shared = rsi.shared;
+	CHECK( tensors.createClone( rsi.tensors ) );
+
+#if BUILD_HYBRID_VERSION
+	// TODO: move hybridTensors field into ModelShared structure
+	return E_NOTIMPL;
+#endif
+
+	return S_OK;
+}
+
 __m128i Whisper::WhisperModel::getMemoryUse() const
 {
 	size_t cb = shared->vocab.getMemoryUse();

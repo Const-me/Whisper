@@ -42,6 +42,7 @@ namespace Whisper
 				return std::wstring{ p };
 		}
 
+		HRESULT createClone( const ModelImpl& source );
 		HRESULT COMLIGHTCALL clone( iModel** rdi ) override final;
 
 	public:
@@ -49,7 +50,12 @@ namespace Whisper
 			gpuFlags( setup.flags ),
 			adapter( makeString( setup.adapter ) )
 		{ }
-		HRESULT FinalConstruct();
+
+		ModelImpl( const ModelImpl& source ) :
+			gpuFlags( source.gpuFlags ),
+			adapter( source.adapter )
+		{ }
+
 		void FinalRelease();
 
 		HRESULT load( iReadStream* stm, bool hybrid, const sLoadModelCallbacks* callbacks );

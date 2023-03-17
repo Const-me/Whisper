@@ -35,6 +35,20 @@ HRESULT DirectCompute::createDevice( const std::wstring& adapterName, ID3D11Devi
 	return hr;
 }
 
+HRESULT DirectCompute::cloneDevice( ID3D11Device* source, ID3D11Device** dev, ID3D11DeviceContext** context )
+{
+	CComPtr<IDXGIDevice> dxgiDev;
+	CHECK( source->QueryInterface( &dxgiDev ) );
+
+	CComPtr<IDXGIAdapter> adapter;
+	CHECK( dxgiDev->GetAdapter( &adapter ) );
+
+	const uint32_t flags = source->GetCreationFlags();
+	const D3D_FEATURE_LEVEL level = source->GetFeatureLevel();
+	return D3D11CreateDevice( adapter, D3D_DRIVER_TYPE_UNKNOWN, nullptr, flags, &level, 1,
+		D3D11_SDK_VERSION, dev, nullptr, context );
+}
+
 namespace
 {
 	using Whisper::eGpuModelFlags;

@@ -72,4 +72,35 @@ namespace DirectCompute
 		return false;
 #endif
 	}
+
+	HRESULT cloneResourceView( ID3D11ShaderResourceView* rsi, ID3D11ShaderResourceView** rdi )
+	{
+		if( nullptr == rdi || nullptr == rsi )
+			return E_POINTER;
+
+		if( nullptr == rsi )
+		{
+			*rdi = nullptr;
+			return S_FALSE;
+		}
+
+		// Open shared resource on another device
+		CComPtr<ID3D11Resource> sourceRes;
+		rsi->GetResource( &sourceRes );
+
+		CComPtr<IDXGIResource> sourceDxgiRes;
+		CHECK( sourceRes->QueryInterface( &sourceDxgiRes ) );
+
+		HANDLE h = nullptr;
+		CHECK( sourceDxgiRes->GetSharedHandle( &h ) );
+
+		CComPtr<ID3D11Buffer> newBuffer;
+		CHECK( device()->OpenSharedResource( h, IID_PPV_ARGS( &newBuffer ) ) );
+
+		// Create shader resource view on the new device, using the same specs
+		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+		rsi->GetDesc( &desc );
+		CHECK( device()->CreateShaderResourceView( newBuffer, &desc, rdi ) );
+		return S_OK;
+	}
 }

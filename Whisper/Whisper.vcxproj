@@ -149,6 +149,7 @@
     </ClCompile>
     <ClCompile Include="Utils\miscUtils.cpp" />
     <ClCompile Include="Whisper\ContextImpl.diarize.cpp" />
+    <ClCompile Include="Whisper\ModelBuffers.clone.cpp" />
     <ClCompile Include="Whisper\voiceActivityDetection.cpp" />
     <ClCompile Include="Whisper\ContextImpl.capture.cpp" />
     <ClCompile Include="Whisper\MelStreamer.cpp" />

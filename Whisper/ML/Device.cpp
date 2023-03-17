@@ -29,6 +29,26 @@ HRESULT Device::create( uint32_t flags, const std::wstring& adapter )
 	return S_OK;
 }
 
+HRESULT Device::createClone( const Device& source )
+{
+	CHECK( cloneDevice( source.device, &device, &context ) );
+	gpuInfo = source.gpuInfo;
+
+	CHECK( createComputeShaders( shaders ) );
+	CHECK( lookupTables.createClone( source.lookupTables ) );
+
+	{
+		CD3D11_BUFFER_DESC desc{ 16, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE };
+		CHECK( device->CreateBuffer( &desc, nullptr, &smallCb ) );
+	}
+
+#if DBG_TEST_NAN
+	CHECK( nanTestBuffers.create() );
+#endif
+
+	return S_OK;
+}
+
 void Device::destroy()
 {
 #if DBG_TEST_NAN

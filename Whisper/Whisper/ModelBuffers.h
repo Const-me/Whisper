@@ -106,6 +106,8 @@ namespace DirectCompute
 		EncoderBuffers enc;
 		DecoderBuffers dec;
 		__m128i getMemoryUse() const;
+
+		HRESULT createClone( const ModelBuffers& rsi );
 	};
 
 #if BUILD_BOTH_VERSIONS
