@@ -10,7 +10,7 @@ using Whisper.Internal;
 namespace Whisper
 {
 	/// <summary>Factory methods implemented by the C++ DLL</summary>
-	public static class Library
+	static class Library
 	{
 		static Library()
 		{
@@ -119,8 +119,8 @@ namespace Whisper
 
 		/// <summary>Enumerate graphics adapters on this computer, and return their names.</summary>
 		/// <remarks>To manually select the GPU to use for the inference, pass one of these names to<br/>
-		/// <see cref="loadModel(string, eGpuModelFlags, string?, eModelImplementation)" /> or <br/>
-		/// <see cref="loadModelAsync(string, CancellationToken, eGpuModelFlags, string?, Action{double}?, eModelImplementation)" /> factory function.</remarks>
+		/// <see cref="loadModel(string, eGpuModelFlags, string, eModelImplementation)" /> or <br/>
+		/// <see cref="loadModelAsync(string, CancellationToken, eGpuModelFlags, string, Action{double}, eModelImplementation)" /> factory function.</remarks>
 		public static string[] listGraphicAdapters()
 		{
 			List<string> list = new List<string>();

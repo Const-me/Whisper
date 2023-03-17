@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\WhisperPS.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\WhisperPS.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ComLight, Version=1.3.7.0, Culture=neutral, processorArchitecture=MSIL">
@@ -118,6 +120,7 @@
     <Compile Include="..\..\WhisperNet\Internal\sLoggerSetup.cs">
       <Link>Internal\sLoggerSetup.cs</Link>
     </Compile>
+    <Compile Include="Commands\FormatSegments.cs" />
     <Compile Include="Commands\TranscribeBase.cs" />
     <Compile Include="Internal\iTranscribeResult.cs" />
     <Compile Include="Internal\MarshalEx.cs" />
@@ -133,11 +136,13 @@
     <Compile Include="Types\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\TranscribeFile.cs" />
+    <Compile Include="Types\Segment.cs" />
     <Compile Include="Types\Transcription.cs" />
     <Compile Include="Utils\CommandLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Readme.md" />
     <None Include="WhisperPS.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -150,6 +155,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\ComLightInterop.1.3.7\build\ComLightInterop.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ComLightInterop.1.3.7\build\ComLightInterop.targets'))" />
+    <Error Condition="!Exists('..\..\packages\XmlDoc2CmdletDoc.0.3.0\build\XmlDoc2CmdletDoc.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\XmlDoc2CmdletDoc.0.3.0\build\XmlDoc2CmdletDoc.targets'))" />
   </Target>
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Content Include="..\..\x64\Debug\Whisper.dll" Link="Whisper.dll">
@@ -161,4 +167,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <Import Project="..\..\packages\XmlDoc2CmdletDoc.0.3.0\build\XmlDoc2CmdletDoc.targets" Condition="Exists('..\..\packages\XmlDoc2CmdletDoc.0.3.0\build\XmlDoc2CmdletDoc.targets')" />
 </Project>

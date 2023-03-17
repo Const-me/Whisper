@@ -5,6 +5,7 @@ namespace Whisper.Internal
 {
 	static class MarshalEx
 	{
+		/// <summary>Workaround for the missing <c>Marshal.PtrToStringUTF8</c> method</summary>
 		public static string PtrToStringUTF8( IntPtr ptr )
 		{
 			if( ptr != IntPtr.Zero )

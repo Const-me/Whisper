@@ -2,6 +2,10 @@
 
 namespace Whisper
 {
+	/// <summary>
+	/// <para type="synopsis">This object holds a Whisper model, loaded from disk to VRAM on the GPU.</para>
+	/// <para type="description">For large models, the data size may exceed 4GB of video memory</para>
+	/// </summary>
 	public sealed class Model: IDisposable
 	{
 		internal iMediaFoundation mf { get; private set; }
