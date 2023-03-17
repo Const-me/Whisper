@@ -130,6 +130,16 @@ ID3D11Buffer* __vectorcall DirectCompute::updateSmallCb( __m128i cbData )
 	throw OLE_E_BLANK;
 }
 
+#if DBG_TEST_NAN
+const DbgNanTest& DirectCompute::getNanTestBuffers()
+{
+	const Device* dev = ts_device;
+	if( nullptr != dev )
+		return dev->nanTestBuffers;
+	throw OLE_E_BLANK;
+}
+#endif
+
 Device::ThreadSetupRaii::ThreadSetupRaii( const Device* dev )
 {
 	assert( ts_device == nullptr );

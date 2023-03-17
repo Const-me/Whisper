@@ -40,6 +40,7 @@ namespace DirectCompute
 	{
 #if DBG_TEST_NAN
 		// Unlike fillTensorWithNaN function, this one only tests initial portion of the buffer
+		const DbgNanTest& buffers = getNanTestBuffers();
 
 		// Update constant buffer with elements = length, reset = true
 		__m128i cbData = _mm_cvtsi32_si128( (int)length );
@@ -50,7 +51,7 @@ namespace DirectCompute
 		bindShader( eComputeShader::dbgFindNaN );
 		csSetCB( cb );
 		Binder bind;
-		bind.bind( tensor, s_nanTestBuffers );
+		bind.bind( tensor, buffers );
 		// Dispatch exactly 1 thread group of that shader
 		context()->Dispatch( 1, 1, 1 );
 
@@ -67,7 +68,7 @@ namespace DirectCompute
 
 		// Download result from GPU. This stalls the GPU pipeline, and ruins the performance.
 		// This code better be disabled with DBG_TEST_NAN=0 macro
-		return s_nanTestBuffers.test();
+		return buffers.test();
 #else
 		return false;
 #endif

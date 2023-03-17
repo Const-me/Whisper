@@ -15,4 +15,8 @@ namespace DirectCompute
 		}
 		bool test() const;
 	};
+
+#if DBG_TEST_NAN
+	const DbgNanTest& getNanTestBuffers();
+#endif
 }
