@@ -60,7 +60,7 @@ WhisperContext::WhisperContext( const Whisper::WhisperModel& wm, Whisper::Profil
 	gpuModel( wm.tensors )
 {
 #if BUILD_HYBRID_VERSION
-	if( !wm.hybridTensors.layers.empty() )
+	if( !wm.shared->hybridTensors.layers.empty() )
 	{
 		hybridContext = std::make_unique<HybridContext>( wm );
 		check( hybridContext->create() );

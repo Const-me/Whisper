@@ -38,7 +38,7 @@ static int getCpuCoresCount()
 int ContextImpl::defaultThreadsCount() const
 {
 #if BUILD_HYBRID_VERSION
-	const bool isHybrid = !model.hybridTensors.layers.empty();
+	const bool isHybrid = !model.shared->hybridTensors.layers.empty();
 #else
 	constexpr bool isHybrid = false;
 #endif

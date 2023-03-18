@@ -29,7 +29,7 @@ namespace
 
 HybridContext::HybridContext( const Whisper::WhisperModel& wm ) :
 	ml( threadsCount( 0 ) ),
-	model( wm.hybridTensors ),
+	model( wm.shared->hybridTensors ),
 	whisperModel( wm )
 { }
 

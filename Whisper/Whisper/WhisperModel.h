@@ -20,6 +20,9 @@ namespace Whisper
 	{
 		Vocabulary vocab;
 		Filters filters;
+#if BUILD_HYBRID_VERSION
+		CpuCompute::DecoderTensors hybridTensors;
+#endif
 	};
 
 	// The complete model, as loaded from a GGML binary file.
@@ -30,10 +33,6 @@ namespace Whisper
 		sModelParams parameters;
 		std::shared_ptr<ModelShared> shared;
 		DirectCompute::ModelBuffers tensors;
-
-#if BUILD_HYBRID_VERSION
-		CpuCompute::DecoderTensors hybridTensors;
-#endif
 
 		HRESULT load( ComLight::iReadStream* stm, bool hybrid, const sLoadModelCallbacks* callbacks );
 		HRESULT createClone( const WhisperModel& rsi );

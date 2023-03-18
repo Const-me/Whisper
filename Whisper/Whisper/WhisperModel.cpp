@@ -345,7 +345,7 @@ HRESULT WhisperModel::loadHybrid( ComLight::iReadStream* stm, CallbacksImpl& cal
 	CAtlMap<CStringA, PendingTensor> map;
 	populateTensorsMap( map, parameters.n_audio_layer, parameters.n_text_layer, tensors, true );
 	DirectCompute::Reshaper reshape;
-	CpuCompute::HybridLoader loader( hybridTensors, parameters.n_text_layer );
+	CpuCompute::HybridLoader loader( shared->hybridTensors, parameters.n_text_layer );
 
 	std::vector<uint8_t> bytesVector;
 	size_t countLoaded = 0;
@@ -496,12 +496,6 @@ HRESULT Whisper::WhisperModel::createClone( const WhisperModel& rsi )
 	parameters = rsi.parameters;
 	shared = rsi.shared;
 	CHECK( tensors.createClone( rsi.tensors ) );
-
-#if BUILD_HYBRID_VERSION
-	// TODO: move hybridTensors field into ModelShared structure
-	return E_NOTIMPL;
-#endif
-
 	return S_OK;
 }
 
