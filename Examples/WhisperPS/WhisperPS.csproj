@@ -143,6 +143,7 @@
     <Compile Include="Types\Segment.cs" />
     <Compile Include="Types\Transcription.cs" />
     <Compile Include="Utils\CommandLogger.cs" />
+    <Compile Include="Utils\MiscUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

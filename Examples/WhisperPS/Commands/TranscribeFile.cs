@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Management.Automation;
 using Whisper.Internal;
 using Whisper.Internals;
@@ -44,12 +45,12 @@ namespace Whisper
 		protected override void ProcessRecord()
 		{
 			using( var log = this.setupLog() )
-			using( iContext context = model.model.createContextInternal() ) 
+			using( iContext context = model.model.createContextInternal() )
 			using( iAudioReader reader = model.mf.openAudioFile( path ) )
 			{
 				sFullParams fullParams = context.fullDefaultParams( eSamplingStrategy.Greedy );
-				sProgressSink progressSink = default;
 				applyParams( ref fullParams.publicParams );
+				sProgressSink progressSink = makeProgressSink();
 				context.runStreamed( ref fullParams, ref progressSink, reader );
 				var obj = context.getResults( eResultFlags.Tokens | eResultFlags.NewObject );
 				WriteObject( new Transcription( obj ) );

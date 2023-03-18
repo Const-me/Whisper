@@ -38,11 +38,11 @@ namespace Whisper
 		/// Consider <see cref="loadModelAsync" /> instead.</remarks>
 		/// <seealso href="https://huggingface.co/datasets/ggerganov/whisper.cpp" />
 		public static iModel loadModel( string path, eGpuModelFlags flags = eGpuModelFlags.None,
-			string adapter = null, eModelImplementation impl = eModelImplementation.GPU )
+			string adapter = null, Action<double> progress=null, eModelImplementation impl = eModelImplementation.GPU )
 		{
 			iModel model;
 			sModelSetup setup = new sModelSetup( flags, impl, adapter );
-			sLoadModelCallbacks callbacks = default;
+			sLoadModelCallbacks callbacks = new sLoadModelCallbacks( CancellationToken.None, progress );
 			NativeLogger.prologue();
 			int hr = loadModel( path, ref setup, ref callbacks, out model );
 			NativeLogger.throwForHR( hr );

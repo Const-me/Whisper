@@ -44,13 +44,16 @@ namespace Whisper
 			base.BeginProcessing();
 		}
 
+		void reportProgress( double progressValue ) =>
+			this.writeProgress( progressValue, "Loading model" );
+
 		/// <summary>Performs execution of the command</summary>
 		protected override void ProcessRecord()
 		{
 			using( var log = this.setupLog() )
 			{
 				iMediaFoundation mf = Library.initMediaFoundation();
-				iModel model = Library.loadModel( path, flags, adapter );
+				iModel model = Library.loadModel( path, flags, adapter, reportProgress );
 				WriteObject( new Model( mf, model ) );
 			}
 		}

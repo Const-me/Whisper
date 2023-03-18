@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
+using Whisper.Internal;
 
 namespace Whisper
 {
@@ -47,6 +48,26 @@ namespace Whisper
 				parameters.flags |= eFullParamsFlags.Translate;
 			else
 				parameters.flags &= ~eFullParamsFlags.Translate;
+		}
+
+		protected internal sProgressSink makeProgressSink()
+		{
+			sProgressSink res = default;
+
+			res.pfn = delegate ( double progressValue, IntPtr context, IntPtr pv )
+			{
+				try
+				{
+					this.writeProgress( progressValue, "Transcribing audio" );
+					return 0;
+				}
+				catch( Exception ex )
+				{
+					return ex.HResult;
+				}
+			};
+
+			return res;
 		}
 	}
 }
