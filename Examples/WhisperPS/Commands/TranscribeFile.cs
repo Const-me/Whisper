@@ -44,7 +44,7 @@ namespace Whisper
 				sProgressSink progressSink = makeProgressSink( $"Transcribing {path}" );
 				context.runStreamed( ref fullParams, ref progressSink, reader );
 				var obj = context.getResults( eResultFlags.Tokens | eResultFlags.NewObject );
-				WriteObject( new Transcription( obj ) );
+				WriteObject( new Transcription( path, obj ) );
 			}
 		}
 	}

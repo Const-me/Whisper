@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using Whisper.Internal;
 
@@ -12,8 +13,9 @@ namespace Whisper
 	{
 		iTranscribeResult result;
 
-		internal Transcription( iTranscribeResult result )
+		internal Transcription( string src, iTranscribeResult result )
 		{
+			Source = src;
 			this.result = result;
 		}
 
@@ -33,7 +35,7 @@ namespace Whisper
 		internal TranscribeResult getResult() =>
 			new TranscribeResult( result );
 
-		public override string ToString()
+		string makeText()
 		{
 			TranscribeResult res = getResult();
 			StringBuilder sb = new StringBuilder();
@@ -44,10 +46,22 @@ namespace Whisper
 					first = false;
 				else
 					sb.AppendLine();
-				sb.Append( seg.text );
+				sb.Append( seg.text.Trim() );
 			}
-
 			return sb.ToString();
 		}
+
+		/// <summary>Return the text</summary>
+		public override string ToString() => makeText();
+
+		/// <summary>Source file</summary>
+		public string Source { get; }
+
+		/// <summary>Source file name, no extension</summary>
+		public string SourceName =>
+			Path.GetFileNameWithoutExtension( Source );
+
+		/// <summary>Text of the complete transcription</summary>
+		public string Text => makeText();
 	}
 }

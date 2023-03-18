@@ -5,7 +5,14 @@ The supported PowerShell version is the one I have in my Windows 10, specificall
 
 Usage example:
 
-
+```
+Import-Module C:\Temp\WhisperPS\WhisperPS.dll
+$m = Import-WhisperModel D:\Data\Whisper\ggml-medium.bin
+cd C:\Temp\2remove\Whisper
+$res = dir .\* -include *.wma, *.wav | Transcribe-File $m
+foreach ( $t in $res ) { $r = $t.SourceName + ".txt"; $t | Export-Text $r; }
+foreach ( $t in $res ) { $r = $t.SourceName + ".ts.txt"; $t | Export-Text $r -timestamps; }
+```
 
 Unfortunately, PS 5.1 uses the legacy .NET framework 4.8.<br />
 That’s why I couldn’t simply consume WhisperNet library.
