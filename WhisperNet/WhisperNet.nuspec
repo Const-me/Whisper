@@ -10,7 +10,7 @@
 		<releaseNotes>
 			New API method function to decode audio files from memory buffers.
 			The library should now support consurrent transcribes, when loading multiple models.
-			Also, added an API method to clone the model, and the corresponding flag in the <c>eGpuModelFlags</c> enumeration.
+			Also, added an API method to clone the model, and the corresponding flag in the `eGpuModelFlags` enumeration.
 		</releaseNotes>
 		<copyright>Copyright © const.me, 2022-2023</copyright>
 		<tags>whisper, gpgpu, speech recognition</tags>
