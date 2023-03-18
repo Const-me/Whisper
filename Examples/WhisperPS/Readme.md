@@ -7,11 +7,11 @@ Usage example:
 
 ```
 Import-Module C:\Temp\WhisperPS\WhisperPS.dll
-$m = Import-WhisperModel D:\Data\Whisper\ggml-medium.bin
+$Model = Import-WhisperModel D:\Data\Whisper\ggml-medium.bin
 cd C:\Temp\2remove\Whisper
-$res = dir .\* -include *.wma, *.wav | Transcribe-File $m
-foreach ( $t in $res ) { $r = $t.SourceName + ".txt"; $t | Export-Text $r; }
-foreach ( $t in $res ) { $r = $t.SourceName + ".ts.txt"; $t | Export-Text $r -timestamps; }
+$Results = dir .\* -include *.wma, *.wav | Transcribe-File $Model
+foreach ( $i in $Results ) { $txt = $i.SourceName + ".txt"; $i | Export-Text $txt; }
+foreach ( $i in $Results ) { $txt = $i.SourceName + ".ts.txt"; $i | Export-Text $txt -timestamps; }
 ```
 
 Unfortunately, PS 5.1 uses the legacy .NET framework 4.8.<br />
