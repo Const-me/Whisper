@@ -14,12 +14,12 @@ namespace Whisper
 	/// <para type="link" uri="https://huggingface.co/datasets/ggerganov/whisper.cpp">Download models from Hugging Face</para>
 
 	[Cmdlet( VerbsData.Import, "WhisperModel" )]
-	public sealed class LoadModel: Cmdlet
+	public sealed class LoadModel: PSCmdlet
 	{
 		/// <summary>
 		/// <para type="synopsis">Path to the GGML file on disk</para>
 		/// </summary>
-		[Parameter( Mandatory = true )]
+		[Parameter( Mandatory = true, Position = 0 ), ValidateNotNullOrEmpty]
 		public string path { get; set; }
 
 		/// <summary>
@@ -39,8 +39,6 @@ namespace Whisper
 		{
 			if( !Environment.Is64BitProcess )
 				throw new PSNotSupportedException( "Whisper cmdlets require 64-bit version of PowerShell " );
-			if( !File.Exists( path ) )
-				throw new FileNotFoundException( "Model file not found" );
 			base.BeginProcessing();
 		}
 
@@ -50,6 +48,10 @@ namespace Whisper
 		/// <summary>Performs execution of the command</summary>
 		protected override void ProcessRecord()
 		{
+			string path = this.absolutePath( this.path );
+			if( !File.Exists( path ) )
+				throw new FileNotFoundException( "Model file not found" );
+
 			using( var log = this.setupLog() )
 			{
 				iMediaFoundation mf = Library.initMediaFoundation();

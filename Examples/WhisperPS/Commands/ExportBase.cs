@@ -5,7 +5,7 @@ using System.Management.Automation;
 namespace Whisper
 {
 	/// <summary>Base class for commands which export results into some text-based format</summary>
-	public abstract class ExportBase: Cmdlet
+	public abstract class ExportBase: PSCmdlet
 	{
 		/// <summary>
 		/// <para type="synopsis">Transcribe result produced by <see cref="TranscribeFile" /></para>
@@ -17,14 +17,13 @@ namespace Whisper
 		/// <summary>
 		/// <para type="synopsis">Output file to write</para>
 		/// </summary>
-		[Parameter( Mandatory = true )]
+		[Parameter( Mandatory = true, Position = 0 ), ValidateNotNullOrEmpty]
 		public string path { get; set; }
 
 		/// <summary>Performs execution of the command</summary>
 		protected override void ProcessRecord()
 		{
-			if( string.IsNullOrEmpty( path ) )
-				throw new ArgumentException( "The output path is empty" );
+			string path = this.absolutePath( this.path );
 			string dir = Path.GetDirectoryName( path );
 			if( !string.IsNullOrEmpty( dir ) )
 				Directory.CreateDirectory( dir );

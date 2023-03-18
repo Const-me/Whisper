@@ -5,8 +5,15 @@ using Whisper.Internal;
 namespace Whisper
 {
 	/// <summary>Base class for transcribing cmdlets, it contains a few common parameters</summary>
-	public abstract class TranscribeBase: Cmdlet
+	public abstract class TranscribeBase: PSCmdlet
 	{
+		/// <summary>
+		/// <para type="synopsis">Whisper model in VRAM</para>
+		/// <para type="description">Use <c>Import-WhisperModel</c> command to load the model from disk</para>
+		/// </summary>
+		[Parameter( Mandatory = true, Position = 0 )]
+		public Model model { get; set; }
+
 		/// <summary>
 		/// <para type="synopsis">Language code to use</para>
 		/// </summary>
