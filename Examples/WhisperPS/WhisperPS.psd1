@@ -97,14 +97,13 @@ CmdletsToExport = @(
 # List of all files packaged with this module
 FileList = @(
 	"ComLight.dll",
-	"Microsoft.Management.Infrastructure.dll",
-	"System.Buffers.dll",
-	"System.Management.Automation.dll",
 	"System.Memory.dll",
-	"System.Numerics.Vectors.dll",
+	"System.Buffers.dll",
 	"System.Runtime.CompilerServices.Unsafe.dll",
-	"Whisper.dll"
-	"WhisperPS.dll"
+	"Whisper.dll",
+	"WhisperPS.dll",
+	"WhisperPS.dll.config",
+	"WhisperPS.dll-Help.xml"
 )
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
