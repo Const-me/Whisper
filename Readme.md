@@ -51,7 +51,7 @@ Should work on Windows 8.1 or newer, but I have only tested on Windows 10.<br/>
 The library requires a Direct3D 11.0 capable GPU, which in 2023 simply means “any hardware GPU”.
 The most recent GPU without D3D 11.0 support was Intel [Sandy Bridge](https://en.wikipedia.org/wiki/Sandy_Bridge) from 2011.
 
-On the CPU side, the library requires [SSE 4.1](https://en.wikipedia.org/wiki/SSE4#SSE4.1) and [F16C](https://en.wikipedia.org/wiki/F16C) support.
+On the CPU side, the library requires [AVX1](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) and [F16C](https://en.wikipedia.org/wiki/F16C) support.
 
 # Developer Guide
 

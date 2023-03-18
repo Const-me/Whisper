@@ -7,7 +7,11 @@
 		<license type="expression">MPL-2.0</license>
 		<projectUrl>https://github.com/Const-me/Whisper</projectUrl>
 		<description>High-performance GPGPU inference of OpenAI's Whisper automatic speech recognition (ASR) model</description>
-		<releaseNotes>Removed the dependency on `cabinet.dll` Windows component. Reportedly, the library now runs on Linux, using Wine 8.3.</releaseNotes>
+		<releaseNotes>
+			New API method function to decode audio files from memory buffers.
+			The library should now support consurrent transcribes, when loading multiple models.
+			Also, added an API method to clone the model, and the corresponding flag in the <c>eGpuModelFlags</c> enumeration.
+		</releaseNotes>
 		<copyright>Copyright © const.me, 2022-2023</copyright>
 		<tags>whisper, gpgpu, speech recognition</tags>
 		<repository type="git" url="https://github.com/Const-me/Whisper.git" />
