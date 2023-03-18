@@ -33,6 +33,9 @@ It returns the object which keeps both source file name, and transcribed text.
 * `Export-SubRip` saves transcribed text in *.srt format.
 * `Export-WebVTT` saves transcribed text in *.vtt format.
 
+You can use `man` (an alias for `get-help`) for detailed documentation on specific commands, example:<br/>
+`man Import-WhisperModel -full`
+
 By default, PowerShell doesn’t print any informational or debug messages.
 If you want these messages, run these commends:
 
