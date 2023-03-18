@@ -18,7 +18,7 @@ foreach ( $i in $Results ) { $txt = $i.SourceName + ".ts.txt"; $i | Export-Text 
 ```
 
 If you’ve extracted to the local module directory, which is<br/>
-`%USERPROFRILE%\Documents\WindowsPowerShell\Modules`<br/>
+`%USERPROFILE%\Documents\WindowsPowerShell\Modules`<br/>
 you can simplify the first line, use the following one instead:<br/>
 `Import-Module WhisperPS -DisableNameChecking`
 

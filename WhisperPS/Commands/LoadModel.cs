@@ -31,6 +31,8 @@ namespace Whisper
 
 		/// <summary>
 		/// <para type="synopsis">Advanced GPU flags</para>
+		/// <para type="description">To combine multiple flags, use comma for the separator, example:<br />
+		/// <c>-flags UseReshapedMatMul, Wave64</c></para>
 		/// </summary>
 		[Parameter( Mandatory = false )]
 		public eGpuModelFlags flags { get; set; }
