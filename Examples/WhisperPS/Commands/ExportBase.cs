@@ -25,8 +25,10 @@ namespace Whisper
 		{
 			string path = this.absolutePath( this.path );
 			string dir = Path.GetDirectoryName( path );
-			if( !string.IsNullOrEmpty( dir ) )
-				Directory.CreateDirectory( dir );
+			Directory.CreateDirectory( dir );
+			if( File.Exists( path ) )
+				if( !ShouldContinue( $"Overwrite \"{path}\" ?", "The output file already exists" ) )
+					return;
 
 			var results = source.getResult();
 			using( var stream = File.CreateText( path ) )
