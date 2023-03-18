@@ -120,6 +120,8 @@
     <Compile Include="..\..\WhisperNet\Internal\sLoggerSetup.cs">
       <Link>Internal\sLoggerSetup.cs</Link>
     </Compile>
+    <Compile Include="Commands\ExportBase.cs" />
+    <Compile Include="Commands\ExportText.cs" />
     <Compile Include="Commands\ExportWebVtt.cs" />
     <Compile Include="Commands\FormatSegments.cs" />
     <Compile Include="Commands\TranscribeBase.cs" />
