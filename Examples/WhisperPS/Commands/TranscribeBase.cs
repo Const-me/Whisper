@@ -33,6 +33,13 @@ namespace Whisper
 		[Parameter( Mandatory = false )]
 		public int threads { get; set; } = Environment.ProcessorCount;
 
+		/// <summary>
+		/// <para type="synopsis">Maximum segment length in characters</para>
+		/// <para type="description">The default is 60</para>
+		/// </summary>
+		[Parameter( Mandatory = false )]
+		public ushort maxSegmentLength { get; set; } = 60;
+
 		/// <summary></summary>
 		protected eLanguage languageCode { get; private set; } = eLanguage.English;
 
@@ -55,6 +62,7 @@ namespace Whisper
 				parameters.flags |= eFullParamsFlags.Translate;
 			else
 				parameters.flags &= ~eFullParamsFlags.Translate;
+			parameters.max_len = maxSegmentLength;
 		}
 
 		protected internal sProgressSink makeProgressSink( string what )
