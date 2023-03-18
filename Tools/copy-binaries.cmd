@@ -25,10 +25,10 @@ copy ..\x64\Release\main.exe ..\..\Release\Next\cli\
 
 rem PowerShell module
 mkdir ..\..\Release\Next\WhisperPS
-copy ..\Examples\WhisperPS\bin\Release\*.dll ..\..\Release\Next\WhisperPS\
-copy ..\Examples\WhisperPS\bin\Release\WhisperPS.psd1 ..\..\Release\Next\WhisperPS\
-copy ..\Examples\WhisperPS\bin\Release\WhisperPS.dll.config ..\..\Release\Next\WhisperPS\
-copy ..\Examples\WhisperPS\bin\Release\WhisperPS.dll-Help.xml ..\..\Release\Next\WhisperPS\
+copy ..\WhisperPS\bin\Release\*.dll ..\..\Release\Next\WhisperPS\
+copy ..\WhisperPS\bin\Release\WhisperPS.psd1 ..\..\Release\Next\WhisperPS\
+copy ..\WhisperPS\bin\Release\WhisperPS.dll.config ..\..\Release\Next\WhisperPS\
+copy ..\WhisperPS\bin\Release\WhisperPS.dll-Help.xml ..\..\Release\Next\WhisperPS\
 
 rem Zip these things, using command-line 7zip.exe with maximum level
 rem https://www.7-zip.org/download.html
