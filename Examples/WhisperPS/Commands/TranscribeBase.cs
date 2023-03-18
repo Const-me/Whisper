@@ -57,7 +57,7 @@ namespace Whisper
 				parameters.flags &= ~eFullParamsFlags.Translate;
 		}
 
-		protected internal sProgressSink makeProgressSink()
+		protected internal sProgressSink makeProgressSink( string what )
 		{
 			sProgressSink res = default;
 
@@ -65,7 +65,7 @@ namespace Whisper
 			{
 				try
 				{
-					this.writeProgress( progressValue, "Transcribing audio" );
+					this.writeProgress( progressValue, what );
 					return 0;
 				}
 				catch( Exception ex )

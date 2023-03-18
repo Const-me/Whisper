@@ -18,7 +18,7 @@ namespace Whisper
 		/// <para type="synopsis">Path to the input file</para>
 		/// <para type="description">The command supports most audio and video formats, with the notable exception of Ogg Vorbis.</para>
 		/// </summary>
-		[Parameter( Mandatory = true, Position = 1 ), ValidateNotNullOrEmpty]
+		[Parameter( Mandatory = true, Position = 1, ValueFromPipeline = true ), ValidateNotNullOrEmpty]
 		public string path { get; set; }
 
 		protected override void BeginProcessing()
@@ -41,7 +41,7 @@ namespace Whisper
 			{
 				sFullParams fullParams = context.fullDefaultParams( eSamplingStrategy.Greedy );
 				applyParams( ref fullParams.publicParams );
-				sProgressSink progressSink = makeProgressSink();
+				sProgressSink progressSink = makeProgressSink( $"Transcribing {path}" );
 				context.runStreamed( ref fullParams, ref progressSink, reader );
 				var obj = context.getResults( eResultFlags.Tokens | eResultFlags.NewObject );
 				WriteObject( new Transcription( obj ) );
