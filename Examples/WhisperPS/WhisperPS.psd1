@@ -9,13 +9,13 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# RootModule = ''
+RootModule = 'WhisperPS.dll'
 
 # Version number of this module.
-ModuleVersion = '0.1'
+ModuleVersion = '1.9'
 
 # Supported PSEditions
-# CompatiblePSEditions = @()
+CompatiblePSEditions = @('Desktop')
 
 # ID used to uniquely identify this module
 GUID = '80df9a7f-d9ab-47a6-b783-c6fdccf8d15d'
@@ -30,10 +30,10 @@ CompanyName = 'const.me'
 Copyright = '(c) 2023 const.me. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'High-performance GPGPU inference of OpenAI''s Whisper automatic speech recognition (ASR) model'
 
 # Minimum version of the Windows PowerShell engine required by this module
-# PowerShellVersion = ''
+PowerShellVersion = '5.1'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -42,13 +42,13 @@ Copyright = '(c) 2023 const.me. All rights reserved.'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-# DotNetFrameworkVersion = ''
+DotNetFrameworkVersion = '4.7.2'
 
 # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
 # CLRVersion = ''
 
 # Processor architecture (None, X86, Amd64) required by this module
-# ProcessorArchitecture = ''
+ProcessorArchitecture = 'Amd64'
 
 # Modules that must be imported into the global environment prior to importing this module
 # RequiredModules = @()
@@ -119,7 +119,7 @@ PrivateData = @{
         # LicenseUri = ''
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/Const-me/Whisper'
 
         # A URL to an icon representing this module.
         # IconUri = ''
