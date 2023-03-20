@@ -52,7 +52,7 @@ namespace Whisper
 			HRESULT hr = MFCreateSourceReaderFromURL( path, nullptr, &reader );
 			if( FAILED( hr ) )
 			{
-				logErrorHr( hr, u8"MFCreateSourceReaderFromURL failed" );
+				logError16( L"Unable to decode audio file \"%s\", MFCreateSourceReaderFromURL failed", path );
 				return hr;
 			}
 			wantStereo = stereo;
