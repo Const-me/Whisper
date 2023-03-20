@@ -12,7 +12,7 @@
 RootModule = 'WhisperPS.dll'
 
 # Version number of this module.
-ModuleVersion = '1.9'
+ModuleVersion = '1.10.1'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop')
