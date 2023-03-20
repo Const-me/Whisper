@@ -3,13 +3,29 @@
 I wouldn’t call the wrapper particularly great, but it works on my computer.<br/>
 This should handle use cases like “transcribe all files in a directory” or “export multiple formats”.
 
-The supported PowerShell version is 5.1, the one I have preinstalled in my Windows 10 computer.<br/>
+The supported PowerShell version is 5.1, the one I have preinstalled on my Windows 10 computer.<br/>
 I wouldn’t expect it to work with the newer PowerShell Core, the runtime is different.
 
-Usage example, assuming you’ve extracted WhisperPS.zip into C:\Temp\
+## Installation
+
+To install from [PowerShell Gallery](https://www.powershellgallery.com/) for the current user,
+open Windows PowerShell, and run the following command:<br/>
+`Install-Module -Name WhisperPS -Scope CurrentUser`
+
+To install from PowerShell Gallery for all users,
+open Windows PowerShell **as an administrator**, and run the following command:<br/>
+`Install-Module -Name WhisperPS`
+
+To install manually from github.com,
+download WhisperPS.zip from [Releases](https://github.com/Const-me/Whisper/releases) page of this repository,
+and extract into the following folder:<br/>
+`%USERPROFILE%\Documents\WindowsPowerShell\Modules`<br/>
+Create that folder if you don’t yet have it.
+
+## Usage Example
 
 ```
-Import-Module C:\Temp\WhisperPS\WhisperPS.dll -DisableNameChecking
+Import-Module WhisperPS -DisableNameChecking
 $Model = Import-WhisperModel D:\Data\Whisper\ggml-medium.bin
 cd C:\Temp\2remove\Whisper
 $Results = dir .\* -include *.wma, *.wav | Transcribe-File $Model
@@ -17,10 +33,7 @@ foreach ( $i in $Results ) { $txt = $i.SourceName + ".txt"; $i | Export-Text $tx
 foreach ( $i in $Results ) { $txt = $i.SourceName + ".ts.txt"; $i | Export-Text $txt -timestamps; }
 ```
 
-If you’ve extracted to the local module directory, which is<br/>
-`%USERPROFILE%\Documents\WindowsPowerShell\Modules`<br/>
-you can simplify the first line, use the following one instead:<br/>
-`Import-Module WhisperPS -DisableNameChecking`
+## Commands
 
 Here’s the list of commands implemented by this module.
 
@@ -36,8 +49,10 @@ It returns the object which keeps both source file name, and transcribed text.
 You can use `man` (an alias for `get-help`) for detailed documentation on specific commands, example:<br/>
 `man Import-WhisperModel -full`
 
-By default, PowerShell doesn’t print any informational or debug messages.
-If you want these messages, run these commends:
+## Miscellaneous
+
+By default, PowerShell doesn’t print any informational or debug messages.<br/>
+If you want these messages, run these commands:
 
 ```
 $InformationPreference="Continue"
