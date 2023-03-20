@@ -113,10 +113,10 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @("Windows","PSEdition_Desktop")
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://www.mozilla.org/en-US/MPL/2.0/'
 
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/Const-me/Whisper'
