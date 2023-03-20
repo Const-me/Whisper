@@ -7,6 +7,8 @@ namespace Whisper
 	/// <summary>Base class for transcribing cmdlets, it contains a few common parameters</summary>
 	public abstract class TranscribeBase: PSCmdlet
 	{
+		const eLanguage defaultLanguage = eLanguage.English;
+
 		/// <summary>
 		/// <para type="synopsis">Whisper model in VRAM</para>
 		/// <para type="description">Use <c>Import-WhisperModel</c> command to load the model from disk</para>
@@ -43,13 +45,29 @@ namespace Whisper
 		/// <summary></summary>
 		protected eLanguage languageCode { get; private set; } = eLanguage.English;
 
+		static eLanguage parseLanguage( string lang )
+		{
+			// When no parameter supplied, default to English
+			if( string.IsNullOrEmpty( lang ) )
+				return defaultLanguage;
+
+			// Try human-readable names, such as "Chinese" or "Ukrainian"
+			eLanguage res;
+			const bool ignoreCase = true;
+			if( Enum.TryParse( lang, ignoreCase, out res ) )
+				return res;
+
+			// Try OpenAI's language codes, the 1988 version of ISO 639-1
+			eLanguage? nullable = Library.languageFromCode( lang );
+			if( nullable.HasValue )
+				return nullable.Value;
+
+			throw new PSArgumentException( $"Unable to parse the string \"{lang}\" into language" );
+		}
+
 		protected void validateLanguage()
 		{
-			if( string.IsNullOrEmpty( language ) )
-				languageCode = eLanguage.English;
-			else
-				languageCode = Library.languageFromCode( language ) ?? throw new PSArgumentException( "language" );
-
+			languageCode = parseLanguage( language );
 			if( languageCode == eLanguage.English && translate )
 				throw new ArgumentException( "The translate feature translates speech to English.\nIt’s not available when the audio language is already English.", nameof( language ) );
 		}
