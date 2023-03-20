@@ -103,7 +103,8 @@ FileList = @(
 	"Whisper.dll",
 	"WhisperPS.dll",
 	"WhisperPS.dll.config",
-	"WhisperPS.dll-Help.xml"
+	"WhisperPS.dll-Help.xml",
+	"lz4.txt"
 )
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
