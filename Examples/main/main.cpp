@@ -10,8 +10,8 @@
 #include "textWriter.h"
 using namespace Whisper;
 
-#define STREAM_AUDIO 0
-#define USEBUFFER 1
+#define STREAM_AUDIO 1
+#define USEBUFFER 0
 
 static HRESULT loadWhisperModel( const wchar_t* path, const std::wstring& gpu, iModel** pp )
 {
