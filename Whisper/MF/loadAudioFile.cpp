@@ -6,6 +6,7 @@
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mfapi.h>
+#include <shlwapi.h>
 #pragma comment(lib, "Mfreadwrite.lib")
 #pragma comment(lib, "mfuuid.lib")
 
@@ -37,8 +38,10 @@ namespace Whisper
 			rdi = 0;
 			return S_OK;
 		}
+		HRESULT _loadBuffer(CComPtr<IMFSourceReader> reader, LPCTSTR path, bool stereo);
 	public:
 		HRESULT load( LPCTSTR path, bool stereo );
+		HRESULT loadBuffer(const void* data, uint64_t size, bool stereo);
 	};
 
 	HRESULT MediaFileBuffer::load( LPCTSTR path, bool stereo )
@@ -51,8 +54,16 @@ namespace Whisper
 			return hr;
 		}
 
-		CHECK( reader->SetStreamSelection( MF_SOURCE_READER_ALL_STREAMS, FALSE ) );
-		CHECK( reader->SetStreamSelection( MF_SOURCE_READER_FIRST_AUDIO_STREAM, TRUE ) );
+		return _loadBuffer(reader, path, stereo);
+	}
+
+
+	HRESULT MediaFileBuffer::_loadBuffer(CComPtr<IMFSourceReader> reader, LPCTSTR path, bool stereo)
+	{
+
+		CHECK(reader->SetStreamSelection(MF_SOURCE_READER_ALL_STREAMS, FALSE));
+		CHECK(reader->SetStreamSelection(MF_SOURCE_READER_FIRST_AUDIO_STREAM, TRUE));
+
 
 		CComPtr<IMFMediaType> mtNative;
 		CHECK( reader->GetNativeMediaType( MF_SOURCE_READER_FIRST_AUDIO_STREAM, MF_SOURCE_READER_CURRENT_TYPE_INDEX, &mtNative ) );
@@ -136,7 +147,33 @@ namespace Whisper
 		return S_OK;
 
 	}
+
+	
+
+	HRESULT MediaFileBuffer::loadBuffer(const void* data, uint64_t size, bool stereo)
+	{
+
+		CComPtr<IMFSourceReader> reader;
+		CComPtr<IStream> comStream;
+		// Microsoft neglected to document their API, but Wine returns a new stream with reference counter = 1
+		// See shstream_create() function there https://source.winehq.org/source/dlls/shcore/main.c#0832
+		// That's why we need the Attach(), as opposed to an assignment
+		comStream.Attach(SHCreateMemStream((const BYTE*)data, (UINT)size));
+		if (!comStream)
+		{
+			logError(u8"SHCreateMemStream failed");
+			return E_FAIL;
+		}
+
+		CComPtr<IMFByteStream> mfStream;
+		CHECK(MFCreateMFByteStreamOnStream(comStream, &mfStream));
+		HRESULT hr = MFCreateSourceReaderFromByteStream(mfStream, nullptr, &reader);
+
+		return _loadBuffer(reader, L"memory", stereo);
+	}
 }
+
+
 
 HRESULT COMLIGHTCALL Whisper::loadAudioFile( LPCTSTR path, bool stereo, iAudioBuffer** pp )
 {
@@ -147,5 +184,17 @@ HRESULT COMLIGHTCALL Whisper::loadAudioFile( LPCTSTR path, bool stereo, iAudioBu
 	CHECK( ComLight::Object<MediaFileBuffer>::create( obj ) );
 	CHECK( obj->load( path, stereo ) );
 	obj.detach( pp );
+	return S_OK;
+}
+
+HRESULT COMLIGHTCALL Whisper::loadAudioMemoryFile(const void *data, uint64_t size, bool stereo, iAudioBuffer** pp)
+{
+	if (nullptr == data || nullptr == pp || size == 0)
+		return E_POINTER;
+
+	ComLight::CComPtr<ComLight::Object<MediaFileBuffer>> obj;
+	CHECK(ComLight::Object<MediaFileBuffer>::create(obj));
+	CHECK(obj->loadBuffer(data, size, stereo));
+	obj.detach(pp); 
 	return S_OK;
 }
