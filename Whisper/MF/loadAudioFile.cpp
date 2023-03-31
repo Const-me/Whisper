@@ -84,7 +84,7 @@ namespace Whisper
 			CComPtr<IMFSample> sample;
 
 			// Read the next sample.
-			hr = reader->ReadSample( (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &dwFlags, nullptr, &sample );
+			HRESULT hr = reader->ReadSample( (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &dwFlags, nullptr, &sample );
 			if( FAILED( hr ) )
 			{
 				logErrorHr( hr, u8"IMFSourceReader.ReadSample" );
