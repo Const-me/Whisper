@@ -26,8 +26,15 @@ HRESULT COMLIGHTCALL ModelImpl::createContext( iContext** pp )
 
 HRESULT COMLIGHTCALL ModelImpl::tokenize( const char* text, pfnDecodedTokens pfn, void* pv )
 {
-	// TODO
-	return E_NOTIMPL;
+	std::vector<int> tokens;
+	CHECK( model.shared->vocab.tokenize( text, tokens ) );
+
+	if( !tokens.empty() )
+		pfn( tokens.data(), (int)tokens.size(), pv );
+	else
+		pfn( nullptr, 0, pv );
+
+	return S_OK;
 }
 
 HRESULT COMLIGHTCALL ModelImpl::clone( iModel** rdi )

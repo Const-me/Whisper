@@ -1,8 +1,13 @@
 #include "stdafx.h"
 #include "Vocabulary.h"
 #include "loaderUtils.h"
+#include <regex>
 using ComLight::iReadStream;
 using namespace Whisper;
+
+Vocabulary::Vocabulary() :
+	idFromToken( 17u, 0.75f, 0.25f, 1.5f, 1024 )
+{ }
 
 void Vocabulary::addExtra( int index, const char* format, int i )
 {
@@ -19,6 +24,7 @@ void Vocabulary::completeBuild()
 {
 	stringData.shrink_to_fit();
 
+	// Replace offsets with char pointers
 	const size_t dataLength = stringData.size();
 	for( auto& s : tokens )
 	{
@@ -29,10 +35,34 @@ void Vocabulary::completeBuild()
 			s = stringData.data() + ri;
 	}
 
+	// Build hash map to lookup the tokens
+	const size_t tokensCount = tokens.size();
+	idFromToken.DisableAutoRehash();
+	for( size_t i = 0; i < tokensCount; i++ )
+	{
+		idFromToken.SetAt( tokens[ i ], (int)i );
+	}
+	idFromToken.EnableAutoRehash();
+	idFromToken.Rehash();
+
+	// Log success message
 	int64_t cb = stringData.size();
 	cb += tokens.size() * sizeof( void* );
+
+	cb += sizeof( void* ) * idFromToken.GetHashTableSize();
+	cb += ( sizeof( THashMap::CPair ) + 16 ) * idFromToken.GetCount();
+
 	constexpr double mulKb = 1.0 / ( 1 << 10 );
 	logDebug( u8"Loaded vocabulary, %zu strings, %.1f kb RAM", tokens.size(), mulKb * cb );
+}
+
+int Vocabulary::findId( const char* token ) const
+{
+	auto p = idFromToken.Lookup( token );
+	if( nullptr != p )
+		return p->m_value;
+	else
+		return -1;
 }
 
 HRESULT Vocabulary::load( ComLight::iReadStream* stm, int lengthInHeader )
@@ -126,4 +156,71 @@ void Vocabulary::getSpecialTokens( SpecialTokens& rdi ) const
 	rdi.TranscriptionBegin = token_beg;
 	rdi.TaskTranslate = token_translate;
 	rdi.TaskTranscribe = token_transcribe;
+}
+
+// https://github.com/ggerganov/whisper.cpp/blob/v1.2.1/whisper.cpp#L2451
+HRESULT Vocabulary::tokenize( const std::string& text, std::vector<id>& tokens ) const
+{
+	std::vector<std::string> words;
+
+	// first split the text into words
+	{
+		std::string str = text;
+		std::string pat = R"('s|'t|'re|'ve|'m|'ll|'d| ?[[:alpha:]]+| ?[[:digit:]]+| ?[^\s[:alpha:][:digit:]]+|\s+(?!\S)|\s+)";
+		std::regex re( pat );
+		std::smatch m;
+
+		while( std::regex_search( str, m, re ) )
+		{
+			for( auto x : m )
+				words.push_back( x );
+			str = m.suffix();
+		}
+	}
+
+	// find the longest tokens that form the words:
+	tokens.clear();
+	for( const auto& word : words )
+	{
+		if( word.empty() )
+			continue;
+
+		int i = 0;
+		int n = (int)word.size();
+		while( i < n )
+		{
+			int j = n;
+			while( j > i )
+			{
+				const int it = findId( word.substr( i, j - i ) );
+				if( it >= 0 )
+				{
+					tokens.push_back( it );
+					i = j;
+					break;
+				}
+				j--;
+			}
+			if( i == n )
+				break;
+
+			if( j == i )
+			{
+				const auto sub = word.substr( i, 1 );
+				const int it = findId( sub );
+				if( it >= 0 )
+				{
+					tokens.push_back( it );
+				}
+				else
+				{
+					logError( u8"Unknown token \"%s\"", sub.c_str() );
+					return E_INVALIDARG;
+				}
+				i++;
+			}
+		}
+	}
+
+	return S_OK;
 }
