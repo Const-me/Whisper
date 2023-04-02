@@ -34,6 +34,11 @@ copy ..\WhisperPS\bin\Release\WhisperPS.dll.config ..\..\Release\Next\WhisperPS\
 copy ..\WhisperPS\bin\Release\WhisperPS.dll-Help.xml ..\..\Release\Next\WhisperPS\
 copy ..\Whisper\Utils\LZ4\LICENSE ..\..\Release\Next\WhisperPS\lz4.txt
 
+rem Deploy that PowerShell module locally
+rmdir /s /q %USERPROFILE%\Documents\WindowsPowerShell\Modules\WhisperPS
+mkdir %USERPROFILE%\Documents\WindowsPowerShell\Modules\WhisperPS
+copy ..\..\Release\Next\WhisperPS\* %USERPROFILE%\Documents\WindowsPowerShell\Modules\WhisperPS\
+
 rem Zip these things, using command-line 7zip.exe with maximum level
 rem https://www.7-zip.org/download.html
 
