@@ -23,6 +23,13 @@ HRESULT COMLIGHTCALL ModelImpl::createContext( iContext** pp )
 	return S_OK;
 }
 
+
+HRESULT COMLIGHTCALL ModelImpl::tokenize( const char* text, pfnDecodedTokens pfn, void* pv )
+{
+	// TODO
+	return E_NOTIMPL;
+}
+
 HRESULT COMLIGHTCALL ModelImpl::clone( iModel** rdi )
 {
 	if( !device.gpuInfo.cloneableModel() )

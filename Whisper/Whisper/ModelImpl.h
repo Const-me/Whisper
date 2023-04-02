@@ -18,6 +18,8 @@ namespace Whisper
 
 		HRESULT COMLIGHTCALL createContext( iContext** pp ) override final;
 
+		HRESULT COMLIGHTCALL tokenize( const char* text, pfnDecodedTokens pfn, void* pv ) override final;
+
 		HRESULT COMLIGHTCALL getSpecialTokens( SpecialTokens& rdi ) override final
 		{
 			model.shared->vocab.getSpecialTokens( rdi );

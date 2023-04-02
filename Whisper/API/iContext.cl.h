@@ -49,8 +49,8 @@ namespace Whisper
 
 		virtual HRESULT COMLIGHTCALL createContext( iContext** pp ) = 0;
 
+		virtual HRESULT COMLIGHTCALL tokenize( const char* text, pfnDecodedTokens pfn, void* pv ) = 0;
 		virtual HRESULT COMLIGHTCALL isMultilingual() = 0;
-
 		virtual HRESULT COMLIGHTCALL getSpecialTokens( SpecialTokens& rdi ) = 0;
 
 		// Token Id -> String
