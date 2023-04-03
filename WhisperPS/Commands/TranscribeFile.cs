@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Management.Automation;
 using Whisper.Internal;
 using Whisper.Internals;
@@ -21,11 +22,18 @@ namespace Whisper
 		[Parameter( Mandatory = true, Position = 1, ValueFromPipeline = true ), ValidateNotNullOrEmpty]
 		public string path { get; set; }
 
+		int[] promptTokens = null;
+
 		protected override void BeginProcessing()
 		{
 			if( null == model )
 				throw new PSArgumentNullException( nameof( model ) );
+
 			validateLanguage();
+
+			promptTokens = null;
+			if( !string.IsNullOrEmpty( prompt ) )
+				promptTokens = tokenize( model.model, prompt );
 		}
 
 		/// <summary>Performs execution of the command</summary>
@@ -42,7 +50,22 @@ namespace Whisper
 				sFullParams fullParams = context.fullDefaultParams( eSamplingStrategy.Greedy );
 				applyParams( ref fullParams.publicParams );
 				sProgressSink progressSink = makeProgressSink( $"Transcribing {path}" );
-				context.runStreamed( ref fullParams, ref progressSink, reader );
+
+				if( null == promptTokens || promptTokens.Length <= 0 )
+					context.runStreamed( ref fullParams, ref progressSink, reader );
+				else
+				{
+					unsafe
+					{
+						fixed( int* p = promptTokens )
+						{
+							fullParams.prompt_tokens = (IntPtr)p;
+							fullParams.prompt_n_tokens = promptTokens.Length;
+							context.runStreamed( ref fullParams, ref progressSink, reader );
+						}
+					}
+				}
+
 				var obj = context.getResults( eResultFlags.Tokens | eResultFlags.NewObject );
 				WriteObject( new Transcription( path, obj ) );
 			}
