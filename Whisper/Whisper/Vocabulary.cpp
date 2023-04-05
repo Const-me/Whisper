@@ -37,12 +37,8 @@ void Vocabulary::completeBuild()
 
 	// Build hash map to lookup the tokens
 	const size_t tokensCount = tokens.size();
-	idFromToken.DisableAutoRehash();
 	for( size_t i = 0; i < tokensCount; i++ )
-	{
 		idFromToken.SetAt( tokens[ i ], (int)i );
-	}
-	idFromToken.EnableAutoRehash();
 	idFromToken.Rehash();
 
 	// Log success message
