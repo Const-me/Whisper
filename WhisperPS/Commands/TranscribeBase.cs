@@ -36,7 +36,7 @@ namespace Whisper
 		public int threads { get; set; } = Environment.ProcessorCount;
 
 		/// <summary>
-		/// <para type="synopsis">Initial prompt</para>
+		/// <para type="synopsis">Optional initial prompt for the model. For example, &quot;繁體中文&quot; for traditional Chinese, &quot;简体中文&quot; for simplified.</para>
 		/// </summary>
 		[Parameter( Mandatory = false )]
 		public string prompt { get; set; }
@@ -60,8 +60,7 @@ namespace Whisper
 		[Parameter( Mandatory = false )]
 		public ushort maxSegmentLength { get; set; } = 60;
 
-		/// <summary></summary>
-		protected eLanguage languageCode { get; private set; } = eLanguage.English;
+		internal eLanguage languageCode { get; private set; } = eLanguage.English;
 
 		static eLanguage parseLanguage( string lang )
 		{

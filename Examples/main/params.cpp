@@ -51,6 +51,7 @@ void whisper_print_usage( int argc, wchar_t** argv, const whisper_params& params
 	fprintf( stderr, "  -l LANG,  --language LANG [%-7s] spoken language\n", params.language.c_str() );
 	fprintf( stderr, "  -m FNAME, --model FNAME   [%-7S] model path\n", params.model.c_str() );
 	fprintf( stderr, "  -f FNAME, --file FNAME    [%-7s] path of the input audio file\n", "" );
+	fprintf( stderr, "  --prompt                            initial prompt for the model\n" );
 	fprintf( stderr, "\n" );
 }
 
