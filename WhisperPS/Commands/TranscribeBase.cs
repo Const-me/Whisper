@@ -36,14 +36,31 @@ namespace Whisper
 		public int threads { get; set; } = Environment.ProcessorCount;
 
 		/// <summary>
+		/// <para type="synopsis">Optional initial prompt for the model. For example, &quot;繁體中文&quot; for traditional Chinese, &quot;简体中文&quot; for simplified.</para>
+		/// </summary>
+		[Parameter( Mandatory = false )]
+		public string prompt { get; set; }
+
+		/// <summary>Convert the provided text into tokens</summary>
+		internal static int[] tokenize( iModel model, string text )
+		{
+			int[] result = null;
+			pfnDecodedTokens pfn = delegate ( int[] arr, int length, IntPtr pv )
+			{
+				result = arr;
+			};
+			model.tokenize( text, pfn, IntPtr.Zero );
+			return result;
+		}
+
+		/// <summary>
 		/// <para type="synopsis">Maximum segment length in characters</para>
 		/// <para type="description">The default is 60</para>
 		/// </summary>
 		[Parameter( Mandatory = false )]
 		public ushort maxSegmentLength { get; set; } = 60;
 
-		/// <summary></summary>
-		protected eLanguage languageCode { get; private set; } = eLanguage.English;
+		internal eLanguage languageCode { get; private set; } = eLanguage.English;
 
 		static eLanguage parseLanguage( string lang )
 		{
@@ -65,14 +82,14 @@ namespace Whisper
 			throw new PSArgumentException( $"Unable to parse the string \"{lang}\" into language" );
 		}
 
-		protected void validateLanguage()
+		internal void validateLanguage()
 		{
 			languageCode = parseLanguage( language );
 			if( languageCode == eLanguage.English && translate )
 				throw new ArgumentException( "The translate feature translates speech to English.\nIt’s not available when the audio language is already English.", nameof( language ) );
 		}
 
-		protected void applyParams( ref Parameters parameters )
+		internal void applyParams( ref Parameters parameters )
 		{
 			parameters.language = languageCode;
 			parameters.cpuThreads = threads;
@@ -83,7 +100,7 @@ namespace Whisper
 			parameters.max_len = maxSegmentLength;
 		}
 
-		protected internal sProgressSink makeProgressSink( string what )
+		internal sProgressSink makeProgressSink( string what )
 		{
 			sProgressSink res = default;
 

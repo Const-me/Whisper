@@ -69,5 +69,17 @@ namespace Whisper
 			sCaptureParams captureParams = cp ?? new sCaptureParams();
 			return mf.openCaptureDevice( id.endpoint, ref captureParams );
 		}
+
+		/// <summary>Convert the provided text into tokens</summary>
+		public static int[]? tokenize( this iModel model, string text )
+		{
+			int[]? result = null;
+			pfnDecodedTokens pfn = delegate ( int[] arr, int length, IntPtr pv )
+			{
+				result = arr;
+			};
+			model.tokenize( text, pfn, IntPtr.Zero );
+			return result;
+		}
 	}
 }

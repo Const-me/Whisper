@@ -49,7 +49,6 @@ static DirectCompute::Tensor gpuEncode( const whisper_context& wctx, const int m
 #include "source/whisper.cpp"
 #include "API/iContext.cl.h"
 #include "../ComLightLib/comLightServer.h"
-#include "ML/mlStartup.h"
 #include "Whisper/WhisperContext.h"
 #include "Whisper/ModelLoader.h"
 #include "Whisper/WhisperModel.h"
@@ -84,6 +83,23 @@ namespace Whisper
 			rdi.TaskTranslate = whisper_token_translate();
 			rdi.TaskTranscribe = whisper_token_transcribe();
 			return S_OK;
+		}
+		HRESULT COMLIGHTCALL tokenize( const char* text, pfnDecodedTokens pfn, void* pv ) override final
+		{
+			const auto res = ::tokenize( ctx.vocab, text );
+			if( !res.empty() )
+				pfn( res.data(), res.size(), pv );
+			return S_OK;
+		}
+		HRESULT COMLIGHTCALL clone( iModel** rdi ) override final
+		{
+			logError( u8"Reference CPU model doesn’t support clone()" );
+			return E_NOTIMPL;
+		}
+		HRESULT COMLIGHTCALL detectSpeaker( const sTimeInterval& time, eSpeakerChannel& result ) const override final
+		{
+			logError( u8"Reference CPU model doesn’t support speaker detection" );
+			return E_NOTIMPL;
 		}
 
 		// Performance information

@@ -25,7 +25,7 @@ namespace TranscribeCS
 		public bool print_progress = false;
 		public bool print_colors = true;
 		public bool no_timestamps = false;
-		public int[]? prompt = null;
+		public string? prompt = null;
 
 		public eLanguage language = eLanguage.English;
 		public string model = string.Empty;
@@ -98,7 +98,7 @@ namespace TranscribeCS
 				else if( arg == "-pp" || arg == "--print-progress" ) print_progress = true;
 				else if( arg == "-nt" || arg == "--no-timestamps" ) no_timestamps = true;
 				else if( arg == "-l" || arg == "--language" ) language = parseLanguage( argv[ ++i ] );
-				else if( arg == "--prompt" ) prompt = parsePrompt( argv[ ++i ] );
+				else if( arg == "--prompt" ) prompt = argv[ ++i ];
 				else if( arg == "-m" || arg == "--model" ) model = argv[ ++i ];
 				else if( arg == "-f" || arg == "--file" ) fileNames.Add( argv[ ++i ] );
 				else
@@ -113,14 +113,6 @@ namespace TranscribeCS
 		}
 
 		static string cstr( bool b ) => b.ToString();
-
-		static int[]? parsePrompt( string str )
-		{
-			if( string.IsNullOrWhiteSpace( str ) )
-				return null;
-			// TODO: expose whisper_tokenize function, as a method of iModel COM interface
-			throw new NotImplementedException();
-		}
 
 		void printUsage()
 		{

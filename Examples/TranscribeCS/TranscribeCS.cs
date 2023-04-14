@@ -38,6 +38,10 @@ static class Program
 			Library.setLogSink( eLogLevel.Debug, loggerFlags );
 
 			using iModel model = Library.loadModel( cla.model );
+			int[]? prompt = null;
+			if( !string.IsNullOrEmpty( cla.prompt ) )
+				prompt = model.tokenize( cla.prompt );
+
 			using Context context = model.createContext();
 			cla.apply( ref context.parameters );
 			// When there're multiple input files, assuming they're independent clips
@@ -50,18 +54,18 @@ static class Program
 				if( openMode == eFileOpenMode.StreamFile )
 				{
 					using iAudioReader reader = mf.openAudioFile( audioFile, cla.diarize );
-					context.runFull( reader, transcribe, null, cla.prompt );
+					context.runFull( reader, transcribe, null, prompt );
 				}
 				else if( openMode == eFileOpenMode.BufferPCM )
 				{
 					using iAudioBuffer buffer = mf.loadAudioFile( audioFile, cla.diarize );
-					context.runFull( buffer, transcribe, cla.prompt );
+					context.runFull( buffer, transcribe, prompt );
 				}
 				else if( openMode == eFileOpenMode.BufferFile )
 				{
 					byte[] buffer = File.ReadAllBytes( audioFile );
 					using iAudioReader reader = mf.loadAudioFileData( buffer, cla.diarize );
-					context.runFull( reader, transcribe, null, cla.prompt );
+					context.runFull( reader, transcribe, null, prompt );
 				}
 
 				// When asked to, produce these text files

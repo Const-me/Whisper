@@ -116,6 +116,7 @@
     <ClCompile Include="D3D\listGPUs.cpp" />
     <ClCompile Include="ML\Device.cpp" />
     <ClCompile Include="ML\DbgNanTest.cpp" />
+    <ClCompile Include="Utils\MurmurHash3.cpp" />
     <ClCompile Include="Utils\DelayExecution.cpp" />
     <ClCompile Include="Hybrid\HybridContext.cpp" />
     <ClCompile Include="CPU\ParallelForRunner.cpp">
@@ -251,6 +252,7 @@
     <ClInclude Include="ML\Device.h" />
     <ClInclude Include="ML\DbgNanTest.h" />
     <ClInclude Include="ML\mlUtils.h" />
+    <ClInclude Include="Utils\MurmurHash3.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
     <ClInclude Include="Hybrid\HybridContext.h" />
     <ClInclude Include="CPU\ParallelForRunner.h" />

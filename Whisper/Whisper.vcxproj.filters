@@ -89,6 +89,7 @@
     <ClCompile Include="ML\DbgNanTest.cpp" />
     <ClCompile Include="ML\Device.cpp" />
     <ClCompile Include="Whisper\ModelBuffers.clone.cpp" />
+    <ClCompile Include="Utils\MurmurHash3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\ggml.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="D3D\createDevice.h" />
     <ClInclude Include="ML\DbgNanTest.h" />
     <ClInclude Include="ML\Device.h" />
+    <ClInclude Include="Utils\MurmurHash3.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="whisper.def" />

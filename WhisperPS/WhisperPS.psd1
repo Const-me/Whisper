@@ -12,7 +12,7 @@
 RootModule = 'WhisperPS.dll'
 
 # Version number of this module.
-ModuleVersion = '1.10.1'
+ModuleVersion = '1.11.0'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop')
@@ -125,8 +125,8 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
-
+        ReleaseNotes = 'When loading models, adapters can be selected with 0-based index, in addition to the name.
+Added an API method to decode initial prompt into array of tokens.'
     } # End of PSData hashtable
 
 } # End of PrivateData hashtable

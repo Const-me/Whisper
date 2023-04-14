@@ -45,6 +45,8 @@ namespace Whisper
 	{
 		HRESULT __stdcall createContext( iContext** pp );
 
+		HRESULT __stdcall tokenize( const char* text, pfnDecodedTokens pfn, void* pv );
+
 		HRESULT __stdcall isMultilingual();
 
 		HRESULT __stdcall getSpecialTokens( SpecialTokens& rdi );
@@ -52,7 +54,7 @@ namespace Whisper
 		// Token Id -> String
 		const char* __stdcall stringFromToken( whisper_token token );
 
-		HRESULT __stdcall clone( iModel** rdi ) = 0;
+		HRESULT __stdcall clone( iModel** rdi );
 	};
 
 	HRESULT __stdcall setupLogger( const sLoggerSetup& setup );

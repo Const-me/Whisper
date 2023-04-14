@@ -33,5 +33,9 @@ namespace Whisper
 		const wchar_t* adapter = nullptr;
 	};
 
+	// Function pointer to enumerate GPUs
 	using pfnListAdapters = void( __stdcall* )( const wchar_t* name, void* pv );
+
+	// Function pointer to receive array of tokens from iModel.tokenize() API method
+	using pfnDecodedTokens = void( __stdcall* )( const int* tokens, int tokensLength, void* pv );
 }

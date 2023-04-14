@@ -1,6 +1,7 @@
 #pragma once
 #include "../../ComLightLib/streams.h"
 #include "../API/SpecialTokens.h"
+#include "../Utils/MurmurHash3.h"
 
 namespace Whisper
 {
@@ -8,11 +9,14 @@ namespace Whisper
 	{
 		std::vector<const char*> tokens;
 		std::vector<char> stringData;
+		using THashMap = CAtlMap<const char*, int, StringPtrTraits>;
+		THashMap idFromToken;
 
 		void addExtra( int index, const char* format, int i );
 
 		void completeBuild();
 	public:
+		Vocabulary();
 
 		int n_vocab = 51864;
 
@@ -43,6 +47,12 @@ namespace Whisper
 			return nullptr;
 		}
 
+		int findId( const char* token ) const;
+		int findId( const std::string& token ) const
+		{
+			return findId( token.c_str() );
+		}
+
 		size_t size() const
 		{
 			return tokens.size();
@@ -54,5 +64,7 @@ namespace Whisper
 		{
 			return vectorMemoryUse( tokens ) + vectorMemoryUse( stringData );
 		}
+
+		HRESULT tokenize( const std::string& text, std::vector<id>& tokens ) const;
 	};
 }

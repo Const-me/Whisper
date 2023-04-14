@@ -51,6 +51,7 @@ void whisper_print_usage( int argc, wchar_t** argv, const whisper_params& params
 	fprintf( stderr, "  -l LANG,  --language LANG [%-7s] spoken language\n", params.language.c_str() );
 	fprintf( stderr, "  -m FNAME, --model FNAME   [%-7S] model path\n", params.model.c_str() );
 	fprintf( stderr, "  -f FNAME, --file FNAME    [%-7s] path of the input audio file\n", "" );
+	fprintf( stderr, "  --prompt                            initial prompt for the model\n" );
 	fprintf( stderr, "\n" );
 }
 
@@ -114,6 +115,7 @@ bool whisper_params::parse( int argc, wchar_t* argv[] )
 		else if( arg == L"-m" || arg == L"--model" ) { model = argv[ ++i ]; }
 		else if( arg == L"-f" || arg == L"--file" ) { fname_inp.push_back( argv[ ++i ] ); }
 		else if( arg == L"-gpu" || arg == L"--use-gpu" ) { gpu = argv[ ++i ]; }
+		else if( arg == L"--prompt" ) { prompt = utf8( argv[ ++i ] ); }
 		else
 		{
 			fprintf( stderr, "error: unknown argument: %S\n", arg.c_str() );

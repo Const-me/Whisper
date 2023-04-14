@@ -2,12 +2,15 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>WhisperNet</id>
-		<version>1.10.1</version>
+		<version>1.11.0</version>
 		<authors>Konstantin, const.me</authors>
 		<license type="expression">MPL-2.0</license>
 		<projectUrl>https://github.com/Const-me/Whisper</projectUrl>
 		<description>High-performance GPGPU inference of OpenAI's Whisper automatic speech recognition (ASR) model</description>
-		<releaseNotes>Minor, error handling improvement</releaseNotes>
+		<releaseNotes>
+			When loading models, adapters can be selected with 0-based index, in addition to the name.
+			Added an API method to decode initial prompt into array of tokens.
+		</releaseNotes>
 		<copyright>Copyright © const.me, 2022-2023</copyright>
 		<tags>whisper, gpgpu, speech recognition</tags>
 		<repository type="git" url="https://github.com/Const-me/Whisper.git" />

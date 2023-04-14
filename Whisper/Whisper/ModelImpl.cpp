@@ -23,6 +23,20 @@ HRESULT COMLIGHTCALL ModelImpl::createContext( iContext** pp )
 	return S_OK;
 }
 
+
+HRESULT COMLIGHTCALL ModelImpl::tokenize( const char* text, pfnDecodedTokens pfn, void* pv )
+{
+	std::vector<int> tokens;
+	CHECK( model.shared->vocab.tokenize( text, tokens ) );
+
+	if( !tokens.empty() )
+		pfn( tokens.data(), (int)tokens.size(), pv );
+	else
+		pfn( nullptr, 0, pv );
+
+	return S_OK;
+}
+
 HRESULT COMLIGHTCALL ModelImpl::clone( iModel** rdi )
 {
 	if( !device.gpuInfo.cloneableModel() )

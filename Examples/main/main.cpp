@@ -167,6 +167,13 @@ namespace
 	}
 }
 
+static void __stdcall setPrompt( const int* ptr, int length, void* pv )
+{
+	std::vector<int>& vec = *( std::vector<int> * )( pv );
+	if( length > 0 )
+		vec.assign( ptr, ptr + length );
+}
+
 int wmain( int argc, wchar_t* argv[] )
 {
 	// Whisper::dbgCompareTraces( LR"(C:\Temp\2remove\Whisper\ref.bin)", LR"(C:\Temp\2remove\Whisper\gpu.bin )" ); return 0;
@@ -211,12 +218,23 @@ int wmain( int argc, wchar_t* argv[] )
 		return 4;
 	}
 
+	std::vector<int> prompt;
+	if( !params.prompt.empty() )
+	{
+		hr = model->tokenize( params.prompt.c_str(), &setPrompt, &prompt );
+		if( FAILED( hr ) )
+		{
+			printError( "failed to tokenize the initial prompt", hr );
+			return 5;
+		}
+	}
+
 	ComLight::CComPtr<iContext> context;
 	hr = model->createContext( &context );
 	if( FAILED( hr ) )
 	{
 		printError( "failed to initialize whisper context", hr );
-		return 5;
+		return 6;
 	}
 
 	ComLight::CComPtr<iMediaFoundation> mf;
@@ -224,7 +242,7 @@ int wmain( int argc, wchar_t* argv[] )
 	if( FAILED( hr ) )
 	{
 		printError( "failed to initialize Media Foundation runtime", hr );
-		return 5;
+		return 7;
 	}
 
 	for( const std::wstring& fname : params.fname_inp )
@@ -264,6 +282,12 @@ int wmain( int argc, wchar_t* argv[] )
 		wparams.max_len = params.output_wts && params.max_len == 0 ? 60 : params.max_len;
 
 		wparams.setFlag( eFullParamsFlags::SpeedupAudio, params.speed_up );
+
+		if( !prompt.empty() )
+		{
+			wparams.prompt_tokens = prompt.data();
+			wparams.prompt_n_tokens = (int)prompt.size();
+		}
 
 		// This callback is called on each new segment
 		if( !wparams.flag( eFullParamsFlags::PrintRealtime ) )
