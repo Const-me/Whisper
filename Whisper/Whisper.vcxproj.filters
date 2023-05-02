@@ -211,6 +211,7 @@
     <None Include="Whisper\languageCodez.tsv" />
     <None Include="CPU\mulMat.kernel.hpp" />
     <None Include="source\LICENSE" />
+    <None Include="ML\LookupTablesData.inl" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="misc.natvis" />

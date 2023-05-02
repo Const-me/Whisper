@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "LookupTablesData.h"
 #include <immintrin.h>
+#include <atlfile.h>
+#include <Utils/LZ4/lz4.h>
 using namespace DirectCompute;
 
 namespace
@@ -29,12 +31,40 @@ namespace
 	}
 }
 
+#ifndef __AVX__
+namespace
+{
+	// Compressed data of these two lookup tables
+#include "LookupTablesData.inl"
+}
+#endif
+
 LookupTablesData::LookupTablesData()
 {
+#ifdef __AVX__
+	// When compiling for AVX, we assume the CPU also has F16C
+	// https://en.wikipedia.org/wiki/F16C
 	for( int i = 0; i < 0x10000; i++ )
 	{
 		const float f = fp32( i );
 		gelu[ i ] = fp16( computeGelu( f ) );
 		exponent[ i ] = fp16( (float)exp( f ) );
 	}
+#else
+	// When compiling without AVX, use the data compiled into the DLL
+	constexpr int cbThis = (int)( sizeof( *this ) );
+	const int lz4Status = LZ4_decompress_safe( (const char*)s_tableData.data(), (char*)this, (int)s_tableData.size(), cbThis );
+	if( lz4Status != cbThis )
+	{
+		logError( u8"LZ4_decompress_safe failed with status %i", lz4Status );
+		throw PLA_E_CABAPI_FAILURE;
+	}
+#endif
+
+#if false
+	// Temporary code to save the content of these lookup tables
+	CAtlFile tempFile;
+	tempFile.Create( LR"(C:\Temp\2remove\Whisper\tables.bin)", GENERIC_WRITE, 0, CREATE_ALWAYS );
+	tempFile.Write( this, (DWORD)sizeof( *this ) );
+#endif
 }

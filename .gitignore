@@ -20,3 +20,5 @@ Tools/PerfSummary/obj/
 packages/
 WhisperPS/obj/
 WhisperPS/bin/
+Tools/CompressTables/bin/
+Tools/CompressTables/obj/

@@ -341,6 +341,7 @@
     <None Include="D3D\shaderData-Debug.inl" />
     <None Include="D3D\shaderData-Release.inl" />
     <None Include="CPU\mulMat.kernel.hpp" />
+    <None Include="ML\LookupTablesData.inl" />
     <None Include="source\LICENSE" />
     <None Include="whisper.def" />
     <None Include="Whisper\languageCodez.inl" />
