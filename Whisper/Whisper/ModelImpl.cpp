@@ -74,7 +74,12 @@ inline bool hasSse41AndF16C()
 	// https://en.wikipedia.org/wiki/CPUID EAX=1: Processor Info and Feature Bits
 	constexpr uint32_t sse41 = ( 1u << 19 );
 	constexpr uint32_t f16c = ( 1u << 29 );
+
+#ifdef __AVX__
 	constexpr uint32_t requiredBits = sse41 | f16c;
+#else
+	constexpr uint32_t requiredBits = sse41;
+#endif
 
 	const uint32_t ecx = (uint32_t)cpu_info[ 2 ];
 	return ( ecx & requiredBits ) == requiredBits;
