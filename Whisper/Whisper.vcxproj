@@ -97,51 +97,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CPU\BufferAllocator.cpp" />
-    <ClCompile Include="CPU\DecoderTensors.cpp" />
-    <ClCompile Include="CPU\mulMatImpl.avx2.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="CPU\mulMatImpl.panel.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="CPU\TensorCpu.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="CPU\HybridLoader.cpp" />
     <ClCompile Include="D3D\createDevice.cpp" />
     <ClCompile Include="D3D\listGPUs.cpp" />
     <ClCompile Include="ML\Device.cpp" />
     <ClCompile Include="ML\DbgNanTest.cpp" />
     <ClCompile Include="Utils\MurmurHash3.cpp" />
     <ClCompile Include="Utils\DelayExecution.cpp" />
-    <ClCompile Include="Hybrid\HybridContext.cpp" />
-    <ClCompile Include="CPU\ParallelForRunner.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="CPU\LargeBuffer.cpp" />
-    <ClCompile Include="CPU\simdUtils.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="CPU\mulMat.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="CPU\MlContextCpu.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="CPU\KvTensorsCpu.cpp" />
-    <ClCompile Include="Hybrid\KeyValueDownloader.cpp" />
-    <ClCompile Include="CPU\mulMatImpl.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-    </ClCompile>
     <ClCompile Include="ML\Reshaper.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="MF\AudioCapture.cpp" />
@@ -161,16 +122,11 @@
     <ClCompile Include="Utils\Trace\tracing.cpp" />
     <ClCompile Include="Utils\Trace\TraceStructures.cpp" />
     <ClCompile Include="Utils\Trace\TraceWriter.cpp" />
-    <ClCompile Include="source.compat\convertThings.cpp" />
     <ClCompile Include="D3D\shaderNames.cpp" />
     <ClCompile Include="MF\mfUtils.cpp" />
     <ClCompile Include="MF\loadAudioFile.cpp" />
     <ClCompile Include="MF\MediaFoundation.cpp" />
     <ClCompile Include="MF\mfStartup.cpp" />
-    <ClCompile Include="source.compat\ggmlMsvc.c">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-    </ClCompile>
     <ClCompile Include="Whisper\ContextImpl.misc.cpp" />
     <ClCompile Include="Utils\ProfileCollection.cpp" />
     <ClCompile Include="Utils\CpuProfiler.cpp" />
@@ -192,7 +148,6 @@
     <ClCompile Include="ML\LookupTables.cpp" />
     <ClCompile Include="ML\LookupTablesData.cpp" />
     <ClCompile Include="ML\Context.ops.cpp" />
-    <ClCompile Include="ML\MlContext.dbg.cpp" />
     <ClCompile Include="ML\MlContext.cpp" />
     <ClCompile Include="ML\ConstantBuffer.cpp" />
     <ClCompile Include="D3D\createBuffer.cpp" />
@@ -214,7 +169,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="ML\TempBuffers.cpp" />
-    <ClCompile Include="ML\tensorOpsTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -241,11 +195,6 @@
     <ClInclude Include="API\sFullParams.h" />
     <ClInclude Include="API\whisperComLight.h" />
     <ClInclude Include="API\whisperWindows.h" />
-    <ClInclude Include="CPU\BufferAllocator.h" />
-    <ClInclude Include="CPU\mulMatUtils.hpp" />
-    <ClInclude Include="CPU\Tensor.h" />
-    <ClInclude Include="CPU\DecoderTensors.h" />
-    <ClInclude Include="CPU\HybridLoader.h" />
     <ClInclude Include="D3D\createDevice.h" />
     <ClInclude Include="D3D\listGPUs.h" />
     <ClInclude Include="D3D\sGpuInfo.h" />
@@ -254,17 +203,8 @@
     <ClInclude Include="ML\mlUtils.h" />
     <ClInclude Include="Utils\MurmurHash3.h" />
     <ClInclude Include="Utils\DelayExecution.h" />
-    <ClInclude Include="Hybrid\HybridContext.h" />
-    <ClInclude Include="CPU\ParallelForRunner.h" />
-    <ClInclude Include="CPU\LargeBuffer.h" />
-    <ClInclude Include="CPU\simdUtils.h" />
-    <ClInclude Include="CPU\MlContext.h" />
-    <ClInclude Include="CPU\KvTensors.h" />
-    <ClInclude Include="Hybrid\KeyValueDownloader.h" />
     <ClInclude Include="ML\reshapedMultiply.h" />
     <ClInclude Include="ML\testUtilsC.h" />
-    <ClInclude Include="CPU\mulMat.h" />
-    <ClInclude Include="CPU\mulMatImpl.h" />
     <ClInclude Include="ML\Reshaper.h" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="MF\AudioCapture.h" />
@@ -280,7 +220,6 @@
     <ClInclude Include="Utils\Trace\tracing.h" />
     <ClInclude Include="Utils\Trace\TraceStructures.h" />
     <ClInclude Include="Utils\Trace\TraceWriter.h" />
-    <ClInclude Include="source.compat\convertThings.h" />
     <ClInclude Include="MF\mfUtils.h" />
     <ClInclude Include="MF\loadAudioFile.h" />
     <ClInclude Include="MF\mfStartup.h" />
@@ -330,7 +269,6 @@
     <ClInclude Include="source\ggml.h" />
     <ClInclude Include="source\whisper.h" />
     <ClInclude Include="ML\TempBuffers.h" />
-    <ClInclude Include="ML\tensorOpsTests.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="ML\testUtils.h" />
     <ClInclude Include="ML\Tensor.h" />
@@ -340,7 +278,6 @@
   <ItemGroup>
     <None Include="D3D\shaderData-Debug.inl" />
     <None Include="D3D\shaderData-Release.inl" />
-    <None Include="CPU\mulMat.kernel.hpp" />
     <None Include="ML\LookupTablesData.inl" />
     <None Include="source\LICENSE" />
     <None Include="whisper.def" />
@@ -355,10 +292,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="API\Readme.txt" />
-    <Text Include="CPU\Readme.txt" />
-    <Text Include="Hybrid\Readme.txt" />
     <Text Include="Readme.txt" />
-    <Text Include="source.compat\Readme.txt" />
     <Text Include="source\Readme.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
