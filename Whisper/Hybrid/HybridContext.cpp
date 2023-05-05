@@ -5,6 +5,10 @@
 #include "../Utils/Trace/tracing.h"
 
 #if BUILD_HYBRID_VERSION
+#ifndef __AVX__
+#error Hybrid version requires AVX build, and ideally AVX2 CPU
+#endif // !__AVX__
+
 namespace
 {
 	int threadsCount( int t )
