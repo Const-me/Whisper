@@ -22,6 +22,12 @@ and extract into the following folder:<br/>
 `%USERPROFILE%\Documents\WindowsPowerShell\Modules`<br/>
 Create that folder if you don’t yet have it.
 
+## Models
+
+The binary files with the models are available for free download on [Hugging Face](https://huggingface.co/ggerganov/whisper.cpp/tree/main).<br/>
+I recommend `ggml-medium.bin` (1.42GB in size, but that web page says 1.53 GB), because I’ve mostly tested the software with that model.<br/>
+Compressed models in ZIP format with `mlmodelc` in the file name are not supported.
+
 ## Usage Example
 
 ```

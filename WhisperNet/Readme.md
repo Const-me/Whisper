@@ -5,8 +5,9 @@ The library requires a hardware GPU which supports Direct3D 11.0, a 64-bit Windo
 The main entry point of the llibrary is `Whisper.Library` static class.
 Call `loadModel` function from that class to load an ML model from a binary file.
 
-These binary files are available for free download on [Hugging Face]( https://huggingface.co/datasets/ggerganov/whisper.cpp).
-I recommend `ggml-medium.bin` (1.42GB in size), because I’ve mostly tested the software with that model.
+These binary files are available for free download on [Hugging Face](https://huggingface.co/ggerganov/whisper.cpp/tree/main).<br/>
+I recommend `ggml-medium.bin` (1.42GB in size, but that web page says 1.53 GB), because I’ve mostly tested the software with that model.<br/>
+Compressed models in ZIP format with `mlmodelc` in the file name are not supported.
 
 Once the model is loaded, create a context by calling `createContext` extension method,
 then use that object to transcribe or translate multimedia files or realtime audio captured from microphones.
