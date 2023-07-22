@@ -270,11 +270,19 @@ namespace
 		hr = workStatus;
 		CHECK( hr );
 		if( hr == S_OK )
+		{
+			// S_OK workStatus means the previously posted transcribe job has completed successfully by now
 			return postPoolWork();
+		}
 
-		// workStatus = S_FALSE means the previous task has not finished yet.
-		// We don't want concurrency here because it's not implemented, and will simply crash.
-		// The "Stalled" flag which will cause capture to drop further samples.
+		// S_FALSE means the previously posted transcribe job is still running
+		// Allow the buffer to grow up to maxDuration length, before starting to drop the samples
+		if( newSamples < captureParams.maxDuration )
+			return S_OK;
+
+		// The previous task has not finished yet, but we don't want to grow the buffer even further.
+		// We don't want concurrent transcribes here because not implemented, will simply crash.
+		// Set the "Stalled" flag which causes capture to drop further samples
 		setStateFlag( eCaptureStatus::Stalled );
 		return S_OK;
 	}
