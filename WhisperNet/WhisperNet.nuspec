@@ -8,8 +8,8 @@
 		<projectUrl>https://github.com/Const-me/Whisper</projectUrl>
 		<description>High-performance GPGPU inference of OpenAI's Whisper automatic speech recognition (ASR) model</description>
 		<releaseNotes>
-			When loading models, adapters can be selected with 0-based index, in addition to the name.
-			Added an API method to decode initial prompt into array of tokens.
+			Updated models source URL in the documentation.
+			Reliability enhancement, microphone capture less likely to transition to “Stalled” state and discard the audio.
 		</releaseNotes>
 		<copyright>Copyright © const.me, 2022-2023</copyright>
 		<tags>whisper, gpgpu, speech recognition</tags>
