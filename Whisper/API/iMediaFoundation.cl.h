@@ -40,6 +40,7 @@ namespace Whisper
 		virtual HRESULT COMLIGHTCALL loadAudioFile( LPCTSTR path, bool stereo, iAudioBuffer** pp ) const = 0;
 		virtual HRESULT COMLIGHTCALL openAudioFile( LPCTSTR path, bool stereo, iAudioReader** pp ) = 0;
 		virtual HRESULT COMLIGHTCALL loadAudioFileData( const void* data, uint64_t size, bool stereo, iAudioReader** pp ) = 0;
+		virtual HRESULT COMLIGHTCALL loadAudioFileDataBuffer(const void* data, uint64_t size, bool stereo, iAudioBuffer** pp) = 0;
 
 		virtual HRESULT COMLIGHTCALL listCaptureDevices( pfnFoundCaptureDevices pfn, void* pv ) = 0;
 		virtual HRESULT COMLIGHTCALL openCaptureDevice( LPCTSTR endpoint, const sCaptureParams& captureParams, iAudioCapture** pp ) = 0;

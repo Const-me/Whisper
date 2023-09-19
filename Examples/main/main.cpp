@@ -5,10 +5,13 @@
 #include "miscUtils.h"
 #include <array>
 #include <atomic>
+#include <fstream>
+#include <vector>
 #include "textWriter.h"
 using namespace Whisper;
 
 #define STREAM_AUDIO 1
+#define USEBUFFER 0
 
 static HRESULT loadWhisperModel( const wchar_t* path, const std::wstring& gpu, iModel** pp )
 {
@@ -302,21 +305,46 @@ int wmain( int argc, wchar_t* argv[] )
 			wparams.encoder_begin_callback_user_data = &is_aborted;
 		}
 
-		if( STREAM_AUDIO && !wparams.flag( eFullParamsFlags::TokenTimestamps ) )
+#ifdef USEBUFFER
+		printf("----- USING BUFFER-------");
+			
+		std::ifstream file(fname, std::ios::binary);
+		file.seekg(0, std::ios::end);
+		size_t fileSize = file.tellg();
+		file.seekg(0, std::ios::beg);
+		std::vector<std::byte> data(fileSize);
+		file.read(reinterpret_cast<char*>(data.data()), fileSize);
+		file.close();
+		if (STREAM_AUDIO && !wparams.flag(eFullParamsFlags::TokenTimestamps)) {
+			ComLight::CComPtr<iAudioReader> reader;
+			CHECK(mf->loadAudioFileData(data.data(), data.size(), false, &reader));
+			sProgressSink progressSink{ nullptr, nullptr };
+			hr = context->runStreamed(wparams, progressSink, reader);
+		} 
+		else
+		{
+			ComLight::CComPtr<iAudioBuffer> buffer;
+			CHECK(mf->loadAudioFileDataBuffer(data.data(), data.size(), false, &buffer));
+			hr = context->runFull(wparams, buffer);
+		}
+		
+#else
+		if (STREAM_AUDIO && !wparams.flag(eFullParamsFlags::TokenTimestamps))
 		{
 			ComLight::CComPtr<iAudioReader> reader;
-			CHECK( mf->openAudioFile( fname.c_str(), params.diarize, &reader ) );
+			CHECK(mf->openAudioFile(fname.c_str(), params.diarize, &reader));
 			sProgressSink progressSink{ nullptr, nullptr };
-			hr = context->runStreamed( wparams, progressSink, reader );
+			hr = context->runStreamed(wparams, progressSink, reader);
 		}
 		else
 		{
 			// Token-level timestamps feature is not currently implemented when streaming the audio
 			// When these timestamps are requested, fall back to buffered mode.
 			ComLight::CComPtr<iAudioBuffer> buffer;
-			CHECK( mf->loadAudioFile( fname.c_str(), params.diarize, &buffer ) );
-			hr = context->runFull( wparams, buffer );
+			CHECK(mf->loadAudioFile(fname.c_str(), params.diarize, &buffer));
+			hr = context->runFull(wparams, buffer);
 		}
+#endif
 
 		if( FAILED( hr ) )
 		{

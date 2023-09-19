@@ -29,6 +29,7 @@ namespace Whisper
 		HRESULT COMLIGHTCALL runFull( const sFullParams& params, const iAudioBuffer* buffer ) override final;
 		HRESULT COMLIGHTCALL runStreamed( const sFullParams& params, const sProgressSink& progress, const iAudioReader* reader ) override final;
 		HRESULT COMLIGHTCALL runCapture( const sFullParams& params, const sCaptureCallbacks& callbacks, const iAudioCapture* reader ) override final;
+		HRESULT COMLIGHTCALL  getLastError(char* error, size_t errorSize) override final;
 
 		struct Segment
 		{

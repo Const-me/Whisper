@@ -356,6 +356,21 @@ int ContextImpl::wrapSegment( int max_len )
 	return res;
 }
 
+static std::string lastError;
+
+HRESULT COMLIGHTCALL ContextImpl::getLastError( char *error, size_t errorSize )
+{
+	if( errorSize == 0 )
+		return E_INVALIDARG;
+
+	if( errorSize > lastError.size() )
+		errorSize = lastError.size();
+
+	memcpy( error, lastError.c_str(), errorSize );
+	error[ errorSize] = 0;
+	return S_OK;
+}
+
 HRESULT COMLIGHTCALL ContextImpl::runFull( const sFullParams& params, const iAudioBuffer* buffer )
 {
 #if SAVE_DEBUG_TRACE
@@ -379,8 +394,14 @@ HRESULT COMLIGHTCALL ContextImpl::runFull( const sFullParams& params, const iAud
 
 	try
 	{
+		lastError = "";
 		sProgressSink progressSink{ nullptr, nullptr };
 		return runFullImpl( params, progressSink, spectrogram );
+	}
+	catch (const std::exception& e)
+	{
+		lastError = e.what();
+		return E_FAIL;
 	}
 	catch( HRESULT hr )
 	{
@@ -401,6 +422,7 @@ HRESULT COMLIGHTCALL ContextImpl::runStreamed( const sFullParams& params, const 
 
 	try
 	{
+		lastError = "";
 		if( params.cpuThreads > 1 )
 		{
 			MelStreamerThread mel{ model.shared->filters, profiler, reader, params.cpuThreads };
@@ -411,6 +433,11 @@ HRESULT COMLIGHTCALL ContextImpl::runStreamed( const sFullParams& params, const 
 			MelStreamerSimple mel{ model.shared->filters, profiler, reader };
 			return runFullImpl( params, progress, mel );
 		}
+	}
+	catch (const std::exception& e)
+	{
+		lastError = e.what();
+		return E_FAIL;
 	}
 	catch( HRESULT hr )
 	{

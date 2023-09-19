@@ -136,6 +136,10 @@ namespace Whisper
 			res.detach( pp );
 			return S_OK;
 		}
+		HRESULT COMLIGHTCALL loadAudioFileDataBuffer(const void* data, uint64_t size, bool stereo, iAudioBuffer** pp) noexcept override final
+		{
+			return Whisper::loadAudioMemoryFile(data, size, stereo, pp);
+		}
 		HRESULT COMLIGHTCALL listCaptureDevices( pfnFoundCaptureDevices pfn, void* pv ) noexcept override final
 		{
 			return captureDeviceList( pfn, pv );
