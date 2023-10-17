@@ -6,7 +6,7 @@
 namespace
 {
 #ifdef _DEBUG
-#include "shaderData-Debug.inl"
+#include "shaderData-Release.inl" //"shaderData-Debug.inl"
 #else
 #include "shaderData-Release.inl"
 #endif
