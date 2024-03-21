@@ -23,7 +23,7 @@ public:
 	// Show this dialog modally, without parent.
 	HRESULT show();
 
-	BEGIN_MSG_MAP( LoadModelDlg )
+	BEGIN_MSG_MAP(TranscribeDlg)
 		MESSAGE_HANDLER( WM_INITDIALOG, OnInitDialog )
 		ON_BUTTON_CLICK( IDC_CONSOLE, cbConsole.click )
 		ON_BUTTON_CLICK( IDCANCEL, onClose )
@@ -36,10 +36,12 @@ public:
 		COMMAND_HANDLER( IDC_OUTPUT_FORMAT, CBN_SELCHANGE, onOutFormatChange )
 		COMMAND_HANDLER( IDC_PATH_MEDIA, EN_CHANGE, onInputChange )
 		MESSAGE_HANDLER( WM_CALLBACK_STATUS, onCallbackStatus )
+		MESSAGE_HANDLER(WM_DROPFILES, OnDropFiles)
+
 		MSG_WM_CLOSE( onWmClose )
 	END_MSG_MAP()
 
-	BEGIN_DDX_MAP( LoadModelDlg )
+	BEGIN_DDX_MAP(TranscribeDlg)
 		DDX_CONTROL_HANDLE( IDC_MODEL_DESC, modelDesc )
 		DDX_CONTROL_HANDLE( IDC_PATH_MEDIA, sourceMediaPath )
 		DDX_CONTROL_HANDLE( IDC_OUTPUT_FORMAT, transcribeOutFormat )
@@ -117,6 +119,7 @@ private:
 	void __stdcall poolCallback() noexcept override final;
 
 	LRESULT onCallbackStatus( UINT, WPARAM wParam, LPARAM, BOOL& bHandled );
+	LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 	HRESULT transcribe();
 	void getThreadError();

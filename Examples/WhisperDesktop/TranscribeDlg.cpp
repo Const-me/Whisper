@@ -131,6 +131,25 @@ enum struct TranscribeDlg::eVisualState : uint8_t
 	Stopping = 2
 };
 
+LRESULT TranscribeDlg::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	HDROP hDrop = (HDROP)wParam;
+
+	UINT fileCount = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+
+	if (fileCount > 0)
+	{
+		TCHAR filePath[MAX_PATH];
+		if (DragQueryFile(hDrop, 0, filePath, MAX_PATH) > 0)
+		{
+			sourceMediaPath.SetWindowText(filePath);
+		}
+	}
+
+	DragFinish(hDrop);
+
+	return 0;
+}
 // CBN_SELCHANGE notification for IDC_OUTPUT_FORMAT combobox
 LRESULT TranscribeDlg::onOutFormatChange( UINT, INT, HWND, BOOL& bHandled )
 {
