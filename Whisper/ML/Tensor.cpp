@@ -65,62 +65,6 @@ Tensor::Tensor( const TensorShape& shape, const TensorGpuViews& views ) :
 	uav = views;
 }
 
-HRESULT Tensor::create( const ggml_tensor& ggml, eBufferUse usage, bool uploadData )
-{
-	TensorGpuViews::clear();
-
-	switch( usage )
-	{
-	case eBufferUse::Immutable:
-	case eBufferUse::ReadWriteDownload:
-		break;
-	default:
-		return E_INVALIDARG;
-	}
-
-	CComPtr<ID3D11Buffer> buffer;
-
-	CHECK( TensorShape::create( ggml ) );
-	const ggml_type dataType = ggml.type;
-	const uint32_t cbElement = (uint32_t)ggml_type_size( dataType );
-
-	const size_t totalBytes = ggml_nbytes( &ggml );
-	if( totalBytes > INT_MAX )
-		return DISP_E_OVERFLOW;
-	const uint32_t countElements = (uint32_t)( totalBytes / cbElement );
-
-	{
-		const void* const rsi = uploadData ? ggml.data : nullptr;
-		CHECK( createBuffer( usage, totalBytes, &buffer, rsi, nullptr ) );
-	}
-
-	DXGI_FORMAT format;
-	eDataType type;
-	switch( dataType )
-	{
-	case GGML_TYPE_F16:
-		format = DXGI_FORMAT_R16_FLOAT;
-		type = eDataType::FP16;
-		break;
-	case GGML_TYPE_F32:
-		format = DXGI_FORMAT_R32_FLOAT;
-		type = eDataType::FP32;
-		break;
-	default:
-		return E_NOTIMPL;
-	}
-
-	const bool makeUav = ( usage == eBufferUse::ReadWrite );
-
-	CHECK( TensorGpuViews::create( buffer, format, totalBytes / cbElement, makeUav ) );
-#ifdef _DEBUG
-	dbgType.type = type;
-	dbgType.usage = usage;
-	dbgType.hasInitialData = uploadData;
-#endif
-	return S_OK;
-}
-
 HRESULT Tensor::createImmutable( eDataType type, const std::array<int, 4>& size, const void* rsi )
 {
 	size_t elts = (uint32_t)size[ 0 ];
