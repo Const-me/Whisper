@@ -1,3 +1,4 @@
+---
 title: Create SKILL.md (agent-customization)
 scope: workspace
 tags: [onboarding, automation, agent-customization]
