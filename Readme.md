@@ -1,6 +1,14 @@
 ﻿This project is a Windows port of the [whisper.cpp](https://github.com/ggerganov/whisper.cpp) implementation.<br/>
 Which in turn is a C++ port of [OpenAI's Whisper](https://github.com/openai/whisper) automatic speech recognition (ASR) model.
 
+# Identity Hijacking Warning
+
+**The website `whisperdesktop.com` is impersonating this project and should not be trusted.**
+
+It presents itself as an official resource.
+Whilst it currently links to GitHub for downloads,
+the site operator may substitute these links with malware at any time and without warning.
+
 # Quick Start Guide
 
 Download WhisperDesktop.zip from the “Releases” section of this repository, unpack the ZIP, and run WhisperDesktop.exe.
