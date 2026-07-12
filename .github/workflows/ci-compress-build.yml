@@ -1,0 +1,30 @@
+name: CI — Compress Shaders & Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Show .NET info
+        run: dotnet --info
+
+      - name: Compress Shaders
+        run: |
+          dotnet run --project Tools/CompressShaders/CompressShaders.csproj --configuration Release --no-launch-profile --verbosity minimal
+
+      - name: Build solution (msbuild)
+        run: |
+          msbuild WhisperCpp.sln /property:GenerateFullPaths=true /t:build /p:Configuration=Release /consoleloggerparameters:NoSummary

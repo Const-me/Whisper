@@ -29,3 +29,7 @@
 - Do not introduce unnecessary dependencies.
 - Keep comments concise and useful.
 - For user-facing changes, preserve the project’s existing terminology and documentation style.
+
+Note: A concise agent-focused summary is available in the repository root: [AGENTS.md](../AGENTS.md)
+
+Agent skills: for automation around shader compression see [.github/skills/compress-shaders.SKILL.md](.github/skills/compress-shaders.SKILL.md)
