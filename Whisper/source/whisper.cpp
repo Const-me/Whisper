@@ -1013,6 +1013,11 @@ static bool whisper_model_load(const std::string & fname, whisper_context & wctx
                 break;
             }
 
+            if (n_dims < 1 || n_dims > 3) {
+                fprintf(stderr, "%s: invalid n_dims=%d (corrupt model)\n", __func__, n_dims);
+                return false;
+            }
+
             int32_t nelements = 1;
             int32_t ne[3] = { 1, 1, 1 };
             for (int i = 0; i < n_dims; ++i) {
