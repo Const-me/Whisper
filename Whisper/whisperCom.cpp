@@ -832,6 +832,19 @@ namespace Whisper
 
 				int32_t nelements = 1;
 				int32_t ne[ 3 ] = { 1, 1, 1 };
+				// n_dims and length come straight from the model file. n_dims is the loop
+				// bound for the fixed-size ne[] above, and length is used as an allocation
+				// size just below, so both have to be bounded before use.
+				if( n_dims < 0 || n_dims >( int32_t )( sizeof( ne ) / sizeof( ne[ 0 ] ) ) )
+				{
+					logError( u8"Invalid n_dims %i in the model file", n_dims );
+					return E_INVALIDARG;
+				}
+				if( length < 0 )
+				{
+					logError( u8"Invalid tensor name length %i in the model file", length );
+					return E_INVALIDARG;
+				}
 				for( int i = 0; i < n_dims; ++i )
 				{
 					CHECK( readStruct( stm, ne[ i ] ) );
