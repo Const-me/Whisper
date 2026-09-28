@@ -11,7 +11,6 @@
     <ClCompile Include="D3D\createBuffer.cpp" />
     <ClCompile Include="ML\TempBuffers.cpp" />
     <ClCompile Include="ML\MlContext.cpp" />
-    <ClCompile Include="ML\tensorOpsTests.cpp" />
     <ClCompile Include="D3D\Binder.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="ML\testUtils.cpp" />
@@ -25,7 +24,6 @@
     <ClCompile Include="ML\TensorGpuViews.cpp" />
     <ClCompile Include="ML\TensorEx.cpp" />
     <ClCompile Include="Whisper\WhisperContext.cpp" />
-    <ClCompile Include="ML\MlContext.dbg.cpp" />
     <ClCompile Include="ML\LookupTablesData.cpp" />
     <ClCompile Include="ML\LookupTables.cpp" />
     <ClCompile Include="Whisper\KeyValueBuffers.cpp" />
@@ -49,8 +47,6 @@
     <ClCompile Include="MF\MediaFoundation.cpp" />
     <ClCompile Include="MF\loadAudioFile.cpp" />
     <ClCompile Include="MF\mfUtils.cpp" />
-    <ClCompile Include="source.compat\convertThings.cpp" />
-    <ClCompile Include="source.compat\ggmlMsvc.c" />
     <ClCompile Include="Whisper\ContextImpl.misc.cpp" />
     <ClCompile Include="Utils\Trace\TraceWriter.cpp" />
     <ClCompile Include="Utils\Trace\TraceStructures.cpp" />
@@ -65,21 +61,6 @@
     <ClCompile Include="Utils\Logger.cpp" />
     <ClCompile Include="Whisper\ContextImpl.capture.cpp" />
     <ClCompile Include="Whisper\voiceActivityDetection.cpp" />
-    <ClCompile Include="CPU\LargeBuffer.cpp" />
-    <ClCompile Include="CPU\ParallelForRunner.cpp" />
-    <ClCompile Include="CPU\simdUtils.cpp" />
-    <ClCompile Include="CPU\mulMat.cpp" />
-    <ClCompile Include="CPU\TensorCpu.cpp" />
-    <ClCompile Include="CPU\MlContextCpu.cpp" />
-    <ClCompile Include="CPU\BufferAllocator.cpp" />
-    <ClCompile Include="CPU\HybridLoader.cpp" />
-    <ClCompile Include="CPU\DecoderTensors.cpp" />
-    <ClCompile Include="Hybrid\HybridContext.cpp" />
-    <ClCompile Include="CPU\KvTensorsCpu.cpp" />
-    <ClCompile Include="Hybrid\KeyValueDownloader.cpp" />
-    <ClCompile Include="CPU\mulMatImpl.cpp" />
-    <ClCompile Include="CPU\mulMatImpl.avx2.cpp" />
-    <ClCompile Include="CPU\mulMatImpl.panel.cpp" />
     <ClCompile Include="ML\Reshaper.cpp" />
     <ClCompile Include="Utils\DelayExecution.cpp" />
     <ClCompile Include="Whisper\ContextImpl.diarize.cpp" />
@@ -104,7 +85,6 @@
     <ClInclude Include="D3D\createBuffer.h" />
     <ClInclude Include="ML\TempBuffers.h" />
     <ClInclude Include="ML\MlContext.h" />
-    <ClInclude Include="ML\tensorOpsTests.h" />
     <ClInclude Include="D3D\Binder.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="ML\testUtils.h" />
@@ -150,7 +130,6 @@
     <ClInclude Include="API\SpecialTokens.h" />
     <ClInclude Include="Whisper\sTokenData.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="source.compat\convertThings.h" />
     <ClInclude Include="Utils\Trace\TraceWriter.h" />
     <ClInclude Include="Utils\Trace\TraceStructures.h" />
     <ClInclude Include="Utils\Trace\tracing.h" />
@@ -167,28 +146,14 @@
     <ClInclude Include="API\loggerApi.h" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Whisper\voiceActivityDetection.h" />
-    <ClInclude Include="CPU\LargeBuffer.h" />
     <ClInclude Include="API\iContext.h" />
     <ClInclude Include="API\iMediaFoundation.h" />
     <ClInclude Include="API\iTranscribeResult.h" />
     <ClInclude Include="API\whisperComLight.h" />
     <ClInclude Include="API\whisperWindows.h" />
     <ClInclude Include="API\sLanguageList.h" />
-    <ClInclude Include="CPU\ParallelForRunner.h" />
-    <ClInclude Include="CPU\simdUtils.h" />
     <ClInclude Include="ML\testUtilsC.h" />
-    <ClInclude Include="CPU\mulMat.h" />
-    <ClInclude Include="CPU\Tensor.h" />
-    <ClInclude Include="CPU\MlContext.h" />
-    <ClInclude Include="CPU\BufferAllocator.h" />
-    <ClInclude Include="CPU\DecoderTensors.h" />
-    <ClInclude Include="CPU\HybridLoader.h" />
     <ClInclude Include="Whisper\sModelParams.h" />
-    <ClInclude Include="Hybrid\HybridContext.h" />
-    <ClInclude Include="CPU\KvTensors.h" />
-    <ClInclude Include="Hybrid\KeyValueDownloader.h" />
-    <ClInclude Include="CPU\mulMatUtils.hpp" />
-    <ClInclude Include="CPU\mulMatImpl.h" />
     <ClInclude Include="API\sLoadModelCallbacks.h" />
     <ClInclude Include="ML\Reshaper.h" />
     <ClInclude Include="ML\reshapedMultiply.h" />
@@ -209,7 +174,6 @@
     <None Include="D3D\shaderData-Release.inl" />
     <None Include="Whisper\languageCodez.inl" />
     <None Include="Whisper\languageCodez.tsv" />
-    <None Include="CPU\mulMat.kernel.hpp" />
     <None Include="source\LICENSE" />
     <None Include="ML\LookupTablesData.inl" />
   </ItemGroup>
@@ -222,9 +186,6 @@
   <ItemGroup>
     <Text Include="Readme.txt" />
     <Text Include="API\Readme.txt" />
-    <Text Include="source.compat\Readme.txt" />
     <Text Include="source\Readme.txt" />
-    <Text Include="Hybrid\Readme.txt" />
-    <Text Include="CPU\Readme.txt" />
   </ItemGroup>
 </Project>

@@ -14,7 +14,6 @@ namespace DirectCompute
 
 	public:
 
-		HRESULT create( const ggml_tensor& ggml, eBufferUse usage, bool uploadData );
 		HRESULT create( eDataType type, eBufferUse usage, const std::array<uint32_t, 4>& sizeElements );
 
 		HRESULT download( void* rdi, size_t cb ) const;

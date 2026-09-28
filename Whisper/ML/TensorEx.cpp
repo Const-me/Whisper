@@ -5,44 +5,6 @@
 #include "../D3D/MappedResource.h"
 using namespace DirectCompute;
 
-HRESULT TensorEx::create( const ggml_tensor& ggml, eBufferUse usage, bool uploadData )
-{
-	TensorGpuViews::clear();
-	buffer = nullptr;
-	stagingBuffer = nullptr;
-
-	CHECK( TensorShape::create( ggml ) );
-	const ggml_type dataType = ggml.type;
-	const uint32_t cbElement = (uint32_t)ggml_type_size( dataType );
-
-	const size_t totalBytes = ggml_nbytes( &ggml );
-	if( totalBytes > INT_MAX )
-		return DISP_E_OVERFLOW;
-	const uint32_t countElements = (uint32_t)( totalBytes / cbElement );
-
-	{
-		const void* const rsi = uploadData ? ggml.data : nullptr;
-		ID3D11Buffer** ppStagingBuffer = ( usage == eBufferUse::ReadWriteDownload ) ? &stagingBuffer : nullptr;
-		CHECK( createBuffer( usage, totalBytes, &buffer, rsi, ppStagingBuffer ) );
-	}
-
-	DXGI_FORMAT format;
-	switch( dataType )
-	{
-	case GGML_TYPE_F16:
-		format = DXGI_FORMAT_R16_FLOAT;
-		break;
-	case GGML_TYPE_F32:
-		format = DXGI_FORMAT_R32_FLOAT;
-		break;
-	default:
-		return E_NOTIMPL;
-	}
-
-	const bool makeUav = usage == eBufferUse::ReadWrite || usage == eBufferUse::ReadWriteDownload;
-	return TensorGpuViews::create( buffer, format, totalBytes / cbElement, makeUav );
-}
-
 HRESULT TensorEx::create( eDataType type, eBufferUse usage, const std::array<uint32_t, 4>& sizeElements )
 {
 	TensorGpuViews::clear();

@@ -25,8 +25,6 @@ namespace DirectCompute
 		TensorShape();
 		TensorShape( const TensorShape& that );
 		void operator=( const TensorShape& that );
-		HRESULT create( const ggml_tensor& ggml );
-		TensorShape( const ggml_tensor& ggml );
 
 		__m128i __vectorcall sizeVec() const
 		{
