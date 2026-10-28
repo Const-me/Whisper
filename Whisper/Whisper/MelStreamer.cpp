@@ -481,15 +481,13 @@ MelStreamerThread::~MelStreamerThread()
 
 	{
 		Lock lock( m_cs );
-		if( threadStatus != eThreadStatus::Working )
-			return;
 		shuttingDown = true;
 	}
 
-	DWORD res = WaitForSingleObject( threadHandle, 100 );
-	if( res == WAIT_OBJECT_0 )
-		return;
-	// TODO: log a warning
+	// An idle worker may be asleep; a not-yet-started worker still owns this.
+	// Keep all members alive until the worker has actually returned.
+	WakeAllConditionVariable( &wakeBackground );
+	WaitForSingleObject( threadHandle, INFINITE );
 }
 
 HRESULT MelStreamer::copyStereoPcm( size_t offset, size_t length, std::vector<StereoSample>& buffer ) const
