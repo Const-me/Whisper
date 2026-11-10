@@ -108,6 +108,9 @@ The repository includes a lot of code which was only used for development:
 couple alternative model implementations, compatible FP64 versions of some compute shaders, debug tracing and the tool to compare the traces, etc.<br/>
 That stuff is disabled by preprocessor macros or `constexpr` flags, I hope it’s fine to keep here.
 
+The `--language` option for the main.exe takes language codes defined in [Whisper/source/whisper.cpp](Whisper/source/whisper.cpp), 
+for example `en` for English, `zh` for Chinese, etc.
+
 ## Performance Notes
 
 I have a limited selection of GPUs in this house.<br/>
